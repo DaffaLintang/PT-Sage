@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/page/home_page.dart';
+
+import 'dashboard_page.dart';
 
 class PurchasePage extends StatefulWidget {
   const PurchasePage({Key? key}) : super(key: key);
@@ -26,8 +30,11 @@ class _PurchasePageState extends State<PurchasePage> {
               fontSize: 22),
         ),
         centerTitle: true,
-        leading:
-            IconButton(onPressed: () {}, icon: Image.asset('assets/Line.png')),
+        leading: IconButton(
+            onPressed: () {
+              Get.offAll(HomePage());
+            },
+            icon: Image.asset('assets/Line.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

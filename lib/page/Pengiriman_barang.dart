@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/page/home_page.dart';
 
 class PengirimanBarangPage extends StatefulWidget {
   const PengirimanBarangPage({Key? key}) : super(key: key);
@@ -24,8 +26,11 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
               fontSize: 22),
         ),
         centerTitle: true,
-        leading:
-            IconButton(onPressed: () {}, icon: Image.asset('assets/Line.png')),
+        leading: IconButton(
+            onPressed: () {
+              Get.offAll(HomePage());
+            },
+            icon: Image.asset('assets/Line.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

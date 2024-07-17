@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'dashboard_page.dart';
 
 class FeedBackPage extends StatefulWidget {
   const FeedBackPage({Key? key}) : super(key: key);
@@ -24,8 +27,11 @@ class _FeedBackPageState extends State<FeedBackPage> {
               fontSize: 22),
         ),
         centerTitle: true,
-        leading:
-            IconButton(onPressed: () {}, icon: Image.asset('assets/Line.png')),
+        leading: IconButton(
+            onPressed: () {
+              Get.offAll(DashboardPage());
+            },
+            icon: Image.asset('assets/Line.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
