@@ -5,6 +5,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
+import 'package:pt_sage/page/invoice_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _HomePageState extends State<HomePage> {
     PengirimanBarangPage(),
     PurchasePage(),
     FeedBackPage(),
+    InvoicePage()
   ];
 
   void _onTabTapped(int index) {
