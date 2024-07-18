@@ -20,7 +20,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
         title: Text(
           "Pengiriman Barang",
           style: TextStyle(
-              color: Color(0xff309E00),
+              color: Color(0xff9E0507),
               fontFamily: GoogleFonts.rubik().fontFamily,
               fontWeight: FontWeight.w600,
               fontSize: 22),
@@ -28,9 +28,9 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(HomePage());
+              Get.offAll(() => HomePage());
             },
-            icon: Image.asset('assets/Line.png')),
+            icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -185,7 +185,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff309E00),
+                                primary: Color(0xff9E0507),
                               ),
                             )),
                       ),

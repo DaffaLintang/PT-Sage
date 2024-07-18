@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'dashboard_page.dart';
+import 'package:pt_sage/page/home_page.dart';
 
 class FeedBackPage extends StatefulWidget {
   const FeedBackPage({Key? key}) : super(key: key);
@@ -21,7 +20,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
         title: Text(
           "Feedback",
           style: TextStyle(
-              color: Color(0xff309E00),
+              color: Color(0xffBF1619),
               fontFamily: GoogleFonts.rubik().fontFamily,
               fontWeight: FontWeight.w600,
               fontSize: 22),
@@ -29,9 +28,9 @@ class _FeedBackPageState extends State<FeedBackPage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(DashboardPage());
+              Get.offAll(() => HomePage());
             },
-            icon: Image.asset('assets/Line.png')),
+            icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -55,7 +54,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Kode Feedback",
+                      Text("Nama Customer",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -71,7 +70,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                           // controller: RegisterController.emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Kode Feedback',
+                            hintText: 'Nama Customer',
                           ),
                         ),
                       ),
@@ -85,7 +84,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Kode Pengiriman",
+                      Text("Kode Invoice",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -101,37 +100,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                           // controller: RegisterController.emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Kode Pengiriman',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Kode Customer",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Kode Customer',
+                            hintText: 'Kode Invoice',
                           ),
                         ),
                       ),
@@ -193,7 +162,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff309E00),
+                                primary: Color(0xffBF1619),
                               ),
                             )),
                       ),

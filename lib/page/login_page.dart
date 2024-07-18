@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
               width: getCircleDiameter(context),
               height: getCircleDiameter(context),
               decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xff7CD154)),
+                  shape: BoxShape.circle, color: Color(0xffBF1619)),
             ),
             top: -getCircleDiameter(context) / 1.2,
             left: -getCircleDiameter(context) / 2.7,
@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "PT. SAGE MASHLAHAT INDONESIA",
                             style: TextStyle(
-                              color: Color(0xff319F01),
+                              color: Color(0xffBF1619),
                               fontWeight: FontWeight.w900,
                               fontSize: 18,
                             ),
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              primary: Color(0xff7CD154),
+                              primary: Color(0xffBF1619),
                             ),
                           )),
                     ),

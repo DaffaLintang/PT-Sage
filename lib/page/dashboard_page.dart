@@ -31,7 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: getCircleDiameter(context),
               height: getCircleDiameter(context),
               decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xff85D264)),
+                  shape: BoxShape.circle, color: Color(0xffF29607)),
             ),
           ),
           Positioned(
@@ -45,7 +45,7 @@ class _DashboardPageState extends State<DashboardPage> {
               width: getCircleDiameter(context),
               height: getCircleDiameter(context),
               decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xffB4EE9B)),
+                  shape: BoxShape.circle, color: Color(0xffE86016)),
             ),
           ),
           SafeArea(
@@ -69,7 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Text(
                       "PT. SAGE MASHLAHAT INDONESIA",
                       style: TextStyle(
-                        color: Color(0xff319F01),
+                        color: Color(0xffBF1619),
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
                       ),
@@ -85,7 +85,15 @@ class _DashboardPageState extends State<DashboardPage> {
                   height: 197,
                   decoration: BoxDecoration(
                       color: Color.fromARGB(255, 252, 252, 252),
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 7,
+                          offset: Offset(4, 5),
+                        )
+                      ]),
                   child: Column(
                     children: [
                       Container(
@@ -116,19 +124,14 @@ class _DashboardPageState extends State<DashboardPage> {
                         width: double.infinity,
                         height: 87,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [Color(0xFFCCFCB7), Color(0xFF319F01)],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight),
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(3, 3),
-                                  blurRadius: 10)
-                            ]),
+                          gradient: LinearGradient(
+                              colors: [Color(0xFF9E0507), Color(0xFFF29607)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -136,7 +139,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               "Roles: " + "Martketing",
                               style: TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18),
                             ),
@@ -169,7 +172,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             height: 127,
                             width: 150,
                             decoration: BoxDecoration(
-                                color: Color(0xff7BEB8D),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(4, 5),
+                                  )
+                                ],
+                                color: Color(0xffF29607),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -205,7 +216,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             height: 127,
                             width: 150,
                             decoration: BoxDecoration(
-                                color: Color(0xff4CC217),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(4, 5),
+                                  )
+                                ],
+                                color: Color(0xffE86016),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -249,7 +268,15 @@ class _DashboardPageState extends State<DashboardPage> {
                             height: 127,
                             width: 150,
                             decoration: BoxDecoration(
-                                color: Color(0xff4CC217),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(4, 5),
+                                  )
+                                ],
+                                color: Color(0xffE86016),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -285,7 +312,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             height: 127,
                             width: 150,
                             decoration: BoxDecoration(
-                                color: Color(0xff7BEB8D),
+                                color: Color(0xffF29607),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),

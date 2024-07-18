@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
             gap: 8,
             onTabChange: _onTabTapped,
             padding: EdgeInsets.all(16),
-            tabBackgroundColor: Color(0xff7CD154),
+            tabBackgroundColor: Color(0xffF29607),
             tabs: [
               GButton(
                 icon: Icons.home,

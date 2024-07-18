@@ -24,7 +24,7 @@ class _PurchasePageState extends State<PurchasePage> {
         title: Text(
           "Purchase Order",
           style: TextStyle(
-              color: Color(0xff309E00),
+              color: Color(0xffBF1619),
               fontFamily: GoogleFonts.rubik().fontFamily,
               fontWeight: FontWeight.w600,
               fontSize: 22),
@@ -32,9 +32,9 @@ class _PurchasePageState extends State<PurchasePage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(HomePage());
+              Get.offAll(() => HomePage());
             },
-            icon: Image.asset('assets/Line.png')),
+            icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -58,7 +58,7 @@ class _PurchasePageState extends State<PurchasePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Kode Customer",
+                      Text("Nama Customer",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -74,7 +74,7 @@ class _PurchasePageState extends State<PurchasePage> {
                           // controller: RegisterController.emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Kode Customer',
+                            hintText: 'NamaCustomer',
                           ),
                         ),
                       ),
@@ -272,7 +272,7 @@ class _PurchasePageState extends State<PurchasePage> {
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff309E00),
+                                primary: Color(0xffBF1619),
                               ),
                             )),
                       ),

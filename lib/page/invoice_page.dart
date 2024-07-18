@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pt_sage/page/home_page.dart';
+import 'dart:io' as io;
 
 class InvoicePage extends StatefulWidget {
   const InvoicePage({Key? key}) : super(key: key);
@@ -11,6 +13,19 @@ class InvoicePage extends StatefulWidget {
 }
 
 class _InvoicePageState extends State<InvoicePage> {
+  io.File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = io.File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +33,7 @@ class _InvoicePageState extends State<InvoicePage> {
         title: Text(
           "Invoice",
           style: TextStyle(
-              color: Color(0xff309E00),
+              color: Color(0xffBF1619),
               fontFamily: GoogleFonts.rubik().fontFamily,
               fontWeight: FontWeight.w600,
               fontSize: 22),
@@ -26,9 +41,9 @@ class _InvoicePageState extends State<InvoicePage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(HomePage());
+              Get.offAll(() => HomePage());
             },
-            icon: Image.asset('assets/Line.png')),
+            icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -41,22 +56,41 @@ class _InvoicePageState extends State<InvoicePage> {
               children: [
                 Container(
                     margin: EdgeInsets.symmetric(vertical: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "#INVC0001",
+                              style: TextStyle(
+                                  fontFamily: GoogleFonts.rubik().fontFamily,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              "Tanggal : 15/06/2024 ",
+                              style: TextStyle(
+                                  fontFamily: GoogleFonts.rubik().fontFamily,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
                         Text(
-                          "#INVC0001",
+                          "#KodePengiriman",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily,
-                              fontSize: 22,
+                              fontSize: 20,
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "#Tanggal : 15/06/2024 ",
+                          "#KodePO",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily,
-                              fontSize: 14,
+                              fontSize: 20,
                               fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -66,14 +100,15 @@ class _InvoicePageState extends State<InvoicePage> {
                   width: double.infinity,
                   height: 300,
                   decoration: BoxDecoration(
-                    color: Color(0xffE2E2E2),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Color(0xff9E0507)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 7,
-                        offset: Offset(2, 5), // changes position of shadow
+                        offset: Offset(0, 5), // changes position of shadow
                       ),
                     ],
                   ),
@@ -93,7 +128,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       Text(
                         "Nama Customer",
                         style: TextStyle(
-                            color: Color(0xff000000),
+                            color: Color(0xff9E0507),
                             fontSize: 14,
                             fontWeight: FontWeight.w700),
                       ),
@@ -107,7 +142,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       Text(
                         "Alamat",
                         style: TextStyle(
-                            color: Color(0xff000000),
+                            color: Color(0xff9E0507),
                             fontSize: 14,
                             fontWeight: FontWeight.w700),
                       ),
@@ -121,7 +156,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       Text(
                         "Jenis Customer",
                         style: TextStyle(
-                            color: Color(0xff000000),
+                            color: Color(0xff9E0507),
                             fontSize: 14,
                             fontWeight: FontWeight.w700),
                       ),
@@ -135,7 +170,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       Text(
                         "No Hp/WA",
                         style: TextStyle(
-                            color: Color(0xff000000),
+                            color: Color(0xff9E0507),
                             fontSize: 14,
                             fontWeight: FontWeight.w700),
                       ),
@@ -153,14 +188,15 @@ class _InvoicePageState extends State<InvoicePage> {
                   // padding: EdgeInsets.all(18),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0xffE2E2E2),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Color(0xff9E0507)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 7,
-                        offset: Offset(2, 5), // changes position of shadow
+                        offset: Offset(0, 5), // changes position of shadow
                       ),
                     ],
                   ),
@@ -342,6 +378,203 @@ class _InvoicePageState extends State<InvoicePage> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Color(0xff9E0507)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Bukti Pengiriman",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff000000)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _image == null
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: Color(0xff9E0507))),
+                                  padding: EdgeInsets.all(8),
+                                  width: 70,
+                                  height: 70,
+                                  child: Center(
+                                      child: Text(
+                                    "No Image",
+                                    textAlign: TextAlign.center,
+                                  )),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: Color(0xff6B8A7A))),
+                                  padding: EdgeInsets.all(8),
+                                  width: 70,
+                                  height: 70,
+                                  child: Image.file(_image!),
+                                ),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                onPrimary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                primary: Color(0xff9E0507),
+                              ),
+                              onPressed: () => _pickImage(ImageSource.gallery),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 1),
+                                child: Text(
+                                  "Choose Photo",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Color(0xff9E0507)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: Offset(0, 5), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Bukti Pembayaran",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff000000)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _image == null
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: Color(0xff9E0507))),
+                                  padding: EdgeInsets.all(8),
+                                  width: 70,
+                                  height: 70,
+                                  child: Center(
+                                      child: Text(
+                                    "No Image",
+                                    textAlign: TextAlign.center,
+                                  )),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: Color(0xff6B8A7A))),
+                                  padding: EdgeInsets.all(8),
+                                  width: 70,
+                                  height: 70,
+                                  child: Image.file(_image!),
+                                ),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                onPrimary: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                primary: Color(0xff9E0507),
+                              ),
+                              onPressed: () => _pickImage(ImageSource.gallery),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 1),
+                                child: Text(
+                                  "Choose Photo",
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Tagihan Selanjutnya",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff000000)),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          // controller: RegisterController.emailController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Rp.10.000.000',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +590,7 @@ class _InvoicePageState extends State<InvoicePage> {
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff309E00),
+                                primary: Color(0xffBF1619),
                               ),
                             )),
                       ),
