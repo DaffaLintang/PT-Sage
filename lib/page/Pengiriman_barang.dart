@@ -31,8 +31,8 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
               Get.offAll(() => HomePage());
             },
             icon: Image.asset('assets/LineRed.png')),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 5,
       ),
       body: ListView(
         children: [

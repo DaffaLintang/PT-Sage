@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             child: Text('Masuk Sekarang'),
                             onPressed: () {
-                              Get.offAll(HomePage());
+                              Get.offAll(() => HomePage());
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

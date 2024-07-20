@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/page/login_page.dart';
 
 import 'home_page.dart';
 
@@ -41,19 +43,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 70,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage("assets/Logo(1).png"))),
+                            image: AssetImage("assets/Group 942.png"))),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    "PT. SAGE MASHLAHAT INDONESIA",
-                    style: TextStyle(
-                      color: Color(0xff9E0507),
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                    ),
-                  ),
+                  // Text(
+                  //   "PT. SAGE MASHLAHAT INDONESIA",
+                  //   style: TextStyle(
+                  //     color: Color(0xff9E0507),
+                  //     fontWeight: FontWeight.w900,
+                  //     fontSize: 18,
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 20,
                   ),
@@ -157,7 +159,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 50,
                               child: ElevatedButton(
                                 child: Text('Keluar'),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.offAll(() => LoginPage());
+                                },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),

@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +13,20 @@ class FeedBackPage extends StatefulWidget {
 
 class _FeedBackPageState extends State<FeedBackPage> {
   var _bottomNavIndex = 0;
+
+  final List<String> items = [
+    'Daffa',
+    'Lintang',
+    'Firzo',
+    'Firdaus',
+  ];
+  String? selectedValue;
+  final List<String> Invoiceitems = [
+    '#INVC0001 | 12/06/2024',
+    '#INVC0002 | 12/06/2024',
+    '#INVC0003 | 12/06/2024',
+  ];
+  String? selectedInvoiceValue;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +46,8 @@ class _FeedBackPageState extends State<FeedBackPage> {
               Get.offAll(() => HomePage());
             },
             icon: Image.asset('assets/LineRed.png')),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 5,
       ),
       body: ListView(
         children: [
@@ -60,17 +75,52 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       SizedBox(
                         height: 10,
                       ),
+                      // Container(
+                      //   padding:
+                      //       EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       color: Colors.black.withOpacity(0.05)),
+                      //   child: TextField(
+                      //     // controller: RegisterController.emailController,
+                      //     decoration: InputDecoration(
+                      //       border: InputBorder.none,
+                      //       hintText: 'Nama Customer',
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        padding: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Nama Customer',
+                            color: Colors.black.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(12)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Pilih Customer',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: items
+                                .map((String item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValue,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValue = value;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -90,17 +140,51 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       SizedBox(
                         height: 10,
                       ),
+                      // Container(
+                      //   padding:
+                      //       EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       color: Colors.black.withOpacity(0.05)),
+                      //   child: TextField(
+                      //     // controller: RegisterController.emailController,
+                      //     decoration: InputDecoration(
+                      //       border: InputBorder.none,
+                      //       hintText: 'Kode Invoice',
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        padding: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Kode Invoice',
+                            color: Colors.black.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(12)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Pilih Invoice',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: Invoiceitems.map((String Invoiceitem) =>
+                                DropdownMenuItem<String>(
+                                  value: Invoiceitem,
+                                  child: Text(
+                                    Invoiceitem,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                )).toList(),
+                            value: selectedInvoiceValue,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedInvoiceValue = value;
+                              });
+                            },
                           ),
                         ),
                       ),

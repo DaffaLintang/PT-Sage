@@ -43,7 +43,8 @@ class _HomePageState extends State<HomePage> {
             gap: 8,
             onTabChange: _onTabTapped,
             padding: EdgeInsets.all(16),
-            tabBackgroundColor: Color(0xffF29607),
+            activeColor: Colors.white,
+            tabBackgroundColor: Color(0xff9E0507),
             tabs: [
               GButton(
                 icon: Icons.home,
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
               GButton(
                 icon: Icons.person,
                 text: "Profile",
+                textColor: Colors.white,
               ),
             ]),
       ),

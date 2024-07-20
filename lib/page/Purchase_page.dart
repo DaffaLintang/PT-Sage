@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,6 +17,14 @@ class PurchasePage extends StatefulWidget {
 
 class _PurchasePageState extends State<PurchasePage> {
   var _bottomNavIndex = 0;
+
+  final List<String> items = [
+    'Daffa',
+    'Lintang',
+    'Firzo',
+    'Firdaus',
+  ];
+  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +79,33 @@ class _PurchasePageState extends State<PurchasePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'NamaCustomer',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Pilih Customer',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: items
+                                .map((String item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValue,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValue = value;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -84,36 +115,36 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Kode Purcher Order",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Kode Purcher Order',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text("Kode Purcher Order",
+                //           style: TextStyle(
+                //               fontFamily: GoogleFonts.rubik().fontFamily)),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Container(
+                //         padding:
+                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //         decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(12),
+                //             color: Colors.black.withOpacity(0.05)),
+                //         child: TextField(
+                //           // controller: RegisterController.emailController,
+                //           decoration: InputDecoration(
+                //             border: InputBorder.none,
+                //             hintText: 'Kode Purcher Order',
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

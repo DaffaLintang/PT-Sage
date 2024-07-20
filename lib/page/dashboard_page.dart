@@ -8,6 +8,7 @@ import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invoice_page.dart';
+import 'package:pt_sage/page/list_invoice_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -17,35 +18,43 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  double getCircleDiameter(BuildContext context) =>
-      MediaQuery.of(context).size.width * 2 / 4;
+  // double getCircleDiameter(BuildContext context) =>
+  //     MediaQuery.of(context).size.width * 2 / 4;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
+          // Positioned(
+          //   right: -getCircleDiameter(context) / 3,
+          //   top: 230,
+          //   child: Container(
+          //     width: getCircleDiameter(context),
+          //     height: getCircleDiameter(context),
+          //     decoration: BoxDecoration(
+          //         shape: BoxShape.circle, color: Color(0xffF29607)),
+          //   ),
+          // ),
+          // Positioned(
+          //   left: -70,
+          //   top: 500,
+          //   child: Container(
+          //     width: getCircleDiameter(context),
+          //     height: getCircleDiameter(context),
+          //     decoration: BoxDecoration(
+          //         shape: BoxShape.circle, color: Color(0xffE86016)),
+          //   ),
+          // ),
           Positioned(
-            right: -getCircleDiameter(context) / 3,
-            top: 230,
+            top: 10,
+            left: -320,
             child: Container(
-              width: getCircleDiameter(context),
-              height: getCircleDiameter(context),
+              width: 1000,
+              height: 1000,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xffF29607)),
-            ),
-          ),
-          Positioned(
-            left: -70
-            // -getCircleDiameter(context) / 2.5
-            ,
-            top: 500
-            // -getCircleDiameter(context) / -0.58
-            ,
-            child: Container(
-              width: getCircleDiameter(context),
-              height: getCircleDiameter(context),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xffE86016)),
+                  image: DecorationImage(
+                image: AssetImage('assets/bgDhs.png'),
+              )),
             ),
           ),
           SafeArea(
@@ -84,7 +93,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   width: 327,
                   height: 197,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 252, 252, 252),
+                      color: Color(0xff9E0507),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
@@ -106,7 +115,9 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               'Selamat Datang',
                               style: GoogleFonts.rubik(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
                             ),
                             SizedBox(
                               height: 10,
@@ -114,7 +125,9 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               'Daffa Lintang',
                               style: GoogleFonts.rubik(
-                                  fontSize: 17, fontWeight: FontWeight.w700),
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
                             ),
                           ],
                         ),
@@ -124,10 +137,11 @@ class _DashboardPageState extends State<DashboardPage> {
                         width: double.infinity,
                         height: 87,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [Color(0xFF9E0507), Color(0xFFF29607)],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight),
+                          // gradient: LinearGradient(
+                          //     colors: [Color(0xFF9E0507), Color(0xFFF29607)],
+                          //     begin: Alignment.centerLeft,
+                          //     end: Alignment.centerRight),
+                          color: Colors.white,
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10),
                               bottomRight: Radius.circular(10)),
@@ -139,7 +153,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             Text(
                               "Roles: " + "Martketing",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xff9E0507),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18),
                             ),
@@ -154,7 +168,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 Text(
                   "Fitur Tersedia",
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16, color: Color(0xff9E0507)),
                 ),
                 SizedBox(
                   height: 15,
@@ -166,7 +180,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Get.offAll(PengirimanBarangPage());
+                            Get.offAll(() => PengirimanBarangPage());
                           },
                           child: Container(
                             height: 127,
@@ -180,7 +194,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     offset: Offset(4, 5),
                                   )
                                 ],
-                                color: Color(0xffF29607),
+                                color: Color(0xff9E0507),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -193,15 +207,20 @@ class _DashboardPageState extends State<DashboardPage> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                              Colors.white,
+                                              BlendMode.srcATop,
+                                            ),
                                             image: AssetImage(
-                                                'assets/package_car.png'))),
+                                                'assets/Basket_alt_3.png'))),
                                   ),
                                   Text(
                                     textAlign: TextAlign.center,
-                                    "Pengiriman Barang",
+                                    "Purchase Order",
                                     style: TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
                                   )
                                 ],
                               ),
@@ -210,7 +229,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.offAll(PurchasePage());
+                            Get.offAll(() => PurchasePage());
                           },
                           child: Container(
                             height: 127,
@@ -224,7 +243,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     offset: Offset(4, 5),
                                   )
                                 ],
-                                color: Color(0xffE86016),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -237,15 +256,20 @@ class _DashboardPageState extends State<DashboardPage> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                              Color(0xff9E0507),
+                                              BlendMode.srcATop,
+                                            ),
                                             image: AssetImage(
-                                                'assets/Basket_alt_3.png'))),
+                                                'assets/package_car.png'))),
                                   ),
                                   Text(
                                     textAlign: TextAlign.center,
-                                    "Purchase Order ",
+                                    "Pengiriman Barang ",
                                     style: TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xff9E0507)),
                                   )
                                 ],
                               ),
@@ -262,7 +286,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         GestureDetector(
                           onTap: (() {
-                            Get.offAll(FeedBackPage());
+                            Get.offAll(() => FeedBackPage());
                           }),
                           child: Container(
                             height: 127,
@@ -276,7 +300,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     offset: Offset(4, 5),
                                   )
                                 ],
-                                color: Color(0xffE86016),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -289,6 +313,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                              Color(0xff9E0507),
+                                              BlendMode.srcATop,
+                                            ),
                                             image: AssetImage(
                                                 'assets/Chat_alt_3.png'))),
                                   ),
@@ -297,7 +325,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     "Feedback",
                                     style: TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xff9E0507)),
                                   )
                                 ],
                               ),
@@ -306,13 +335,21 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                         GestureDetector(
                           onTap: (() {
-                            Get.offAll(InvoicePage());
+                            Get.offAll(() => ListInvoicePage());
                           }),
                           child: Container(
                             height: 127,
                             width: 150,
                             decoration: BoxDecoration(
-                                color: Color(0xffF29607),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(4, 5),
+                                  )
+                                ],
+                                color: Color(0xff9E0507),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -325,6 +362,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                              Colors.white,
+                                              BlendMode.srcATop,
+                                            ),
                                             image: AssetImage(
                                                 'assets/File_dock.png'))),
                                   ),
@@ -333,7 +374,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     "Invoice",
                                     style: TextStyle(
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w600),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
                                   )
                                 ],
                               ),
