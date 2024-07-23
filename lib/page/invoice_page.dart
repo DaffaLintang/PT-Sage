@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pt_sage/models/customer.dart';
+import 'package:pt_sage/models/invoice.dart';
+import 'package:pt_sage/models/supplier.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'dart:io' as io;
+
+import 'package:pt_sage/providers/pdf_invoice_api.dart';
+
+import '../providers/pdf_api.dart';
 
 class InvoicePage extends StatefulWidget {
   const InvoicePage({Key? key}) : super(key: key);
@@ -22,6 +30,19 @@ class _InvoicePageState extends State<InvoicePage> {
     if (pickedFile != null) {
       setState(() {
         _image = io.File(pickedFile.path);
+      });
+    }
+  }
+
+  io.File? _image1;
+  final ImagePicker _picker1 = ImagePicker();
+
+  Future<void> _pickImage1(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image1 = io.File(pickedFile.path);
       });
     }
   }
@@ -214,98 +235,136 @@ class _InvoicePageState extends State<InvoicePage> {
                               color: Color(0xff000000)),
                         ),
                       ),
-                      DataTable(
-                        columnSpacing: 8.0,
-                        columns: [
-                          DataColumn(
-                              label: Text("Nama Barang",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ))),
-                          DataColumn(
-                              label: Text("Jumlah",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ))),
-                          DataColumn(
-                              label: Text("Nomor Lot",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ))),
-                          DataColumn(
-                              label: Text("Tanggal",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ))),
-                        ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(
-                              Container(
-                                width: 80, // Set a specific width if needed
-                                child: Text(
-                                  "Jaggung 100kg 5x",
-                                  style: TextStyle(fontSize: 12),
-                                  overflow: TextOverflow
-                                      .clip, // Optional: Specify the overflow behavior
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columnSpacing: 8.0,
+                          columns: [
+                            DataColumn(
+                              label: Text(
+                                "No",
+                                style: TextStyle(
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
-                            DataCell(
-                              Text("5"),
-                            ),
-                            DataCell(
-                              Text("1"),
-                            ),
-                            DataCell(
-                              Text("5/06/2024"),
-                            ),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(
-                              Container(
-                                width: 80, // Set a specific width if needed
-                                child: Text(
-                                  "Jaggung 100kg 5x",
-                                  style: TextStyle(fontSize: 12),
-                                  overflow: TextOverflow
-                                      .clip, // Optional: Specify the overflow behavior
+                            DataColumn(
+                              label: Text(
+                                "Produk",
+                                style: TextStyle(
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
-                            DataCell(
-                              Text("5"),
-                            ),
-                            DataCell(
-                              Text("1"),
-                            ),
-                            DataCell(
-                              Text("5/06/2024"),
-                            ),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(
-                              Container(
-                                width: 80, // Set a specific width if needed
-                                child: Text(
-                                  "Jaggung 100kg 5x",
-                                  style: TextStyle(fontSize: 12),
-                                  overflow: TextOverflow
-                                      .clip, // Optional: Specify the overflow behavior
+                            DataColumn(
+                              label: Text(
+                                "Unit",
+                                style: TextStyle(
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
-                            DataCell(
-                              Text("5"),
+                            DataColumn(
+                              label: Text(
+                                "Qty(Sack)",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                            DataCell(
-                              Text("1"),
+                            DataColumn(
+                              label: Text(
+                                "Tonase(kg)",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                            DataCell(
-                              Text("5/06/2024"),
+                            DataColumn(
+                              label: Text(
+                                "Harga/kg",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                          ]),
-                        ],
+                            DataColumn(
+                              label: Text(
+                                "Diskon",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                "Jumlah",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows: [
+                            DataRow(
+                              cells: [
+                                DataCell(Text("1")),
+                                DataCell(
+                                  Container(
+                                    width: 80, // Set a specific width if needed
+                                    child: Text(
+                                      "Jagung",
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text("1")),
+                                DataCell(Text("5")),
+                                DataCell(Text("7000")),
+                                DataCell(Text("Rp100.000.000")),
+                                DataCell(Text("-")),
+                                DataCell(Text("-")),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                DataCell(Text("2")),
+                                DataCell(
+                                  Container(
+                                    width: 80, // Set a specific width if needed
+                                    child: Text(
+                                      "Jagung",
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text("1")),
+                                DataCell(Text("5")),
+                                DataCell(Text("7000")),
+                                DataCell(Text("Rp100.000.000")),
+                                DataCell(Text("-")),
+                                DataCell(Text("-")),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                DataCell(Text("3")),
+                                DataCell(
+                                  Container(
+                                    width: 80, // Set a specific width if needed
+                                    child: Text(
+                                      "Jagung",
+                                    ),
+                                  ),
+                                ),
+                                DataCell(Text("1")),
+                                DataCell(Text("5")),
+                                DataCell(Text("7000")),
+                                DataCell(Text("Rp100.000.000")),
+                                DataCell(Text("-")),
+                                DataCell(Text("-")),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
                         width: double.infinity,
@@ -412,7 +471,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _image == null
+                          _image1 == null
                               ? Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -435,7 +494,7 @@ class _InvoicePageState extends State<InvoicePage> {
                                   padding: EdgeInsets.all(8),
                                   width: 70,
                                   height: 70,
-                                  child: Image.file(_image!),
+                                  child: Image.file(_image1!),
                                 ),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -444,7 +503,7 @@ class _InvoicePageState extends State<InvoicePage> {
                                     borderRadius: BorderRadius.circular(10)),
                                 primary: Color(0xff9E0507),
                               ),
-                              onPressed: () => _pickImage(ImageSource.gallery),
+                              onPressed: () => _pickImage1(ImageSource.gallery),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 1),
@@ -586,7 +645,47 @@ class _InvoicePageState extends State<InvoicePage> {
                             height: 50,
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
-                              onPressed: () {},
+                              onPressed: () async {
+                                final status =
+                                    await Permission.storage.request();
+                                if (status.isGranted) {
+                                  final date = DateTime.now();
+                                  final invoice = Invoice(
+                                    info: InvoiceInfo(
+                                        Pembayaran: 'BCA',
+                                        TanggalKirim: date,
+                                        description: 'Sales Invoice'),
+                                    supplier: Supplier(
+                                        Email: 'sagemashlahat.bwi@gmail.com',
+                                        address:
+                                            'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
+                                        name: 'PT SAGE MASHLAHAT INDONESIA',
+                                        noTlp: '+62 812-3063-8671',
+                                        paymentInfo: '5111835111'),
+                                    customer: Customer(
+                                        name: 'Sinaa',
+                                        contact: '+62 838-3073-7764',
+                                        tujuan: 'Merbabu'),
+                                    items: [
+                                      InvoiceItem(
+                                          no: 1,
+                                          produk: 'jagung',
+                                          unit: 1,
+                                          qty: 5,
+                                          tonase: 5000,
+                                          harga: 40000,
+                                          diskon: 0,
+                                          jumlah: 3),
+                                    ],
+                                  );
+
+                                  final pdfFile =
+                                      await PdfInvoiceApi.generate(invoice);
+                                  PdfApi.openFile(pdfFile);
+                                } else {
+                                  print('print error');
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),

@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // double getCircleDiameter(BuildContext context) =>
     //     MediaQuery.of(context).size.width * 8 / 2;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height * 0.35;
     return Scaffold(
       body: Stack(
         children: [
@@ -39,26 +41,28 @@ class _LoginPageState extends State<LoginPage> {
           //   left: -getCircleDiameter(context) / 2.7,
           // ),
           Positioned(
-            top: -400,
-            left: -320,
+            top: -40,
+            left: 0,
             child: Container(
-              width: 1000,
-              height: 1000,
+              width: screenWidth,
+              height: screenHeight,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage('assets/Ellipse1.png'),
+                fit: BoxFit.cover,
               )),
             ),
           ),
           Positioned(
-            top: 150,
-            left: -320,
+            bottom: -40,
+            left: 0,
             child: Container(
-              width: 1000,
-              height: 1000,
+              width: screenWidth,
+              height: screenHeight,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage('assets/btm01.png'),
+                fit: BoxFit.cover,
               )),
             ),
           ),
@@ -100,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                           StrokeText(
                             text: "PT. SAGE MASHLAHAT INDONESIA",
                             textStyle: TextStyle(
-                              color: Color(0xffBF1619),
+                              color: Colors.black,
                               fontWeight: FontWeight.w900,
                               fontSize: 18,
                             ),
@@ -128,9 +132,9 @@ class _LoginPageState extends State<LoginPage> {
                         // controller: LoginController.phoneController,
                         // keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.mail),
+                            prefixIcon: Icon(Icons.person),
                             border: InputBorder.none,
-                            hintText: 'Email'),
+                            hintText: 'Username'),
                       ),
                     ),
                     SizedBox(
