@@ -23,26 +23,53 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget build(BuildContext context) {
-    double getCircleDiameter(BuildContext context) =>
-        MediaQuery.of(context).size.width * 8 / 2;
+    // double getCircleDiameter(BuildContext context) =>
+    //     MediaQuery.of(context).size.width * 8 / 2;
     return Scaffold(
       body: Stack(
         children: [
+          // Positioned(
+          //   child: Container(
+          //     width: getCircleDiameter(context),
+          //     height: getCircleDiameter(context),
+          //     decoration: BoxDecoration(
+          //         shape: BoxShape.circle, color: Color(0xffBF1619)),
+          //   ),
+          //   top: -getCircleDiameter(context) / 1.2,
+          //   left: -getCircleDiameter(context) / 2.7,
+          // ),
           Positioned(
+            top: -400,
+            left: -320,
             child: Container(
-              width: getCircleDiameter(context),
-              height: getCircleDiameter(context),
+              width: 1000,
+              height: 1000,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xffBF1619)),
+                  image: DecorationImage(
+                image: AssetImage('assets/Ellipse1.png'),
+              )),
             ),
-            top: -getCircleDiameter(context) / 1.2,
-            left: -getCircleDiameter(context) / 2.7,
+          ),
+          Positioned(
+            top: 150,
+            left: -320,
+            child: Container(
+              width: 1000,
+              height: 1000,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage('assets/btm01.png'),
+              )),
+            ),
           ),
           Column(
             // crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+                margin: EdgeInsets.only(
+                  bottom: 24,
+                ),
                 child: Column(
                   children: [
                     Container(
@@ -70,15 +97,15 @@ class _LoginPageState extends State<LoginPage> {
                           //   strokeColor: Colors.white,
                           //   strokeWidth: 3,
                           // )
-                          Text(
-                            "PT. SAGE MASHLAHAT INDONESIA",
-                            style: TextStyle(
+                          StrokeText(
+                            text: "PT. SAGE MASHLAHAT INDONESIA",
+                            textStyle: TextStyle(
                               color: Color(0xffBF1619),
                               fontWeight: FontWeight.w900,
                               fontSize: 18,
                             ),
-                            // strokeColor: Colors.white,
-                            // strokeWidth: 3,
+                            strokeColor: Colors.white,
+                            strokeWidth: 3,
                           )
                         ],
                       ),
@@ -99,11 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                           ]),
                       child: TextField(
                         // controller: LoginController.phoneController,
-                        keyboardType: TextInputType.number,
+                        // keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.phone),
+                            prefixIcon: Icon(Icons.mail),
                             border: InputBorder.none,
-                            hintText: 'Nomor HP'),
+                            hintText: 'Email'),
                       ),
                     ),
                     SizedBox(
@@ -126,7 +153,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextField(
                         keyboardType: TextInputType.text,
                         obscureText: _obscureText,
-                        // controller: LoginController.passwordController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock_open),
                           suffixIcon: IconButton(
