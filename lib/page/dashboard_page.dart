@@ -83,7 +83,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         Text(
                           "PT. SAGE MASHLAHAT INDONESIA",
                           style: TextStyle(
-                            color: Color(0xffBF1619),
+                            color: Colors.black,
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
                           ),
@@ -171,140 +171,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    // Text(
-                    //   "Purchase Order Approveval",
-                    //   style: TextStyle(
-                    //       fontSize: 16,
-                    //       color: Colors.black,
-                    //       fontWeight: FontWeight.w600),
-                    // ),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 130,
-                    //   // color: Colors.grey[300],
-                    //   child: ListView.builder(
-                    //       itemCount: 10,
-                    //       itemBuilder: (BuildContext context, int index) {
-                    //         return Padding(
-                    //           padding:
-                    //               const EdgeInsets.symmetric(vertical: 5.0),
-                    //           child: Container(
-                    //             decoration: BoxDecoration(
-                    //                 borderRadius: BorderRadius.circular(12)),
-                    //             child: Slidable(
-                    //               key: const ValueKey(0),
-                    //               startActionPane: ActionPane(
-                    //                 motion: ScrollMotion(),
-                    //                 // dismissible:
-                    //                 //     DismissiblePane(onDismissed: () {}),
-                    //                 children: [
-                    //                   // A SlidableAction can have an icon and/or a label.
-                    //                   SlidableAction(
-                    //                     onPressed: (_) {},
-                    //                     backgroundColor: Color(0xFFFE4A49),
-                    //                     foregroundColor: Colors.white,
-                    //                     icon: Icons.delete,
-                    //                     label: 'Delete',
-                    //                   ),
-                    //                   SlidableAction(
-                    //                     onPressed: (_) {},
-                    //                     backgroundColor: Color(0xFF21B7CA),
-                    //                     foregroundColor: Colors.white,
-                    //                     icon:
-                    //                         Icons.assignment_turned_in_rounded,
-                    //                     label: 'Approve',
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               child: Container(
-                    //                 decoration: BoxDecoration(
-                    //                   // borderRadius: BorderRadius.circular(12),
-                    //                   color: Colors.white,
-                    //                 ),
-                    //                 child: ListTile(
-                    //                     title: Text("INVC0001",
-                    //                         style: TextStyle(
-                    //                             fontSize: 16,
-                    //                             color: Color(0xff9E0507)))),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         );
-                    //       }),
-                    // ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
-                    // Text(
-                    //   "Purchase Order Approveval",
-                    //   style: TextStyle(
-                    //       fontSize: 16,
-                    //       color: Colors.black,
-                    //       fontWeight: FontWeight.w600),
-                    // ),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Container(
-                    //   width: double.infinity,
-                    //   height: 130,
-                    //   // color: Colors.grey[300],
-                    //   child: ListView.builder(
-                    //       itemCount: 10,
-                    //       itemBuilder: (BuildContext context, int index) {
-                    //         return Padding(
-                    //           padding:
-                    //               const EdgeInsets.symmetric(vertical: 5.0),
-                    //           child: Container(
-                    //             decoration: BoxDecoration(
-                    //                 borderRadius: BorderRadius.circular(12)),
-                    //             child: Slidable(
-                    //               key: const ValueKey(0),
-                    //               startActionPane: ActionPane(
-                    //                 motion: ScrollMotion(),
-                    //                 // dismissible:
-                    //                 //     DismissiblePane(onDismissed: () {}),
-                    //                 children: [
-                    //                   // A SlidableAction can have an icon and/or a label.
-                    //                   SlidableAction(
-                    //                     onPressed: (_) {},
-                    //                     backgroundColor: Color(0xFFFE4A49),
-                    //                     foregroundColor: Colors.white,
-                    //                     icon: Icons.delete,
-                    //                     label: 'Delete',
-                    //                   ),
-                    //                   SlidableAction(
-                    //                     onPressed: (_) {},
-                    //                     backgroundColor: Color(0xFF21B7CA),
-                    //                     foregroundColor: Colors.white,
-                    //                     icon:
-                    //                         Icons.assignment_turned_in_rounded,
-                    //                     label: 'Approve',
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               child: Container(
-                    //                 decoration: BoxDecoration(
-                    //                   // borderRadius: BorderRadius.circular(12),
-                    //                   color: Colors.white,
-                    //                 ),
-                    //                 child: ListTile(
-                    //                     title: Text("INVC0001",
-                    //                         style: TextStyle(
-                    //                             fontSize: 16,
-                    //                             color: Color(0xff9E0507)))),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         );
-                    //       }),
-                    // ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
                     Text(
                       "Fitur Tersedia",
                       style: TextStyle(
