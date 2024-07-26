@@ -26,6 +26,28 @@ class _PurchasePageState extends State<PurchasePage> {
   ];
   String? selectedValue;
 
+  final List<String> itemsProduk = [
+    'asdasd',
+    'Lintang',
+    'Firzo',
+    'Firdaus',
+  ];
+  String? selectedValueProduk;
+
+  final List<String> itemsTempo = [
+    '7 Hari',
+    '30 Hari',
+    '60 Hari',
+    '90 Hari',
+  ];
+  String? selectedValueTempo;
+
+  final List<String> itemsDp = [
+    'DP',
+    'Tidak',
+  ];
+  String? selectedValueDp;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +66,8 @@ class _PurchasePageState extends State<PurchasePage> {
               Get.offAll(() => HomePage());
             },
             icon: Image.asset('assets/LineRed.png')),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 5,
       ),
       body: ListView(
         children: [
@@ -115,11 +137,64 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Pilih Produk",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Pilih Produk',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: itemsProduk
+                                .map((String itemsProduk) =>
+                                    DropdownMenuItem<String>(
+                                      value: itemsProduk,
+                                      child: Text(
+                                        itemsProduk,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValueProduk,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValueProduk = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
                 // Container(
                 //   child: Column(
                 //     crossAxisAlignment: CrossAxisAlignment.start,
                 //     children: [
-                //       Text("Kode Purcher Order",
+                //       Text("Tempo",
                 //           style: TextStyle(
                 //               fontFamily: GoogleFonts.rubik().fontFamily)),
                 //       SizedBox(
@@ -135,7 +210,7 @@ class _PurchasePageState extends State<PurchasePage> {
                 //           // controller: RegisterController.emailController,
                 //           decoration: InputDecoration(
                 //             border: InputBorder.none,
-                //             hintText: 'Kode Purcher Order',
+                //             hintText: 'Tempo',
                 //           ),
                 //         ),
                 //       ),
@@ -161,11 +236,34 @@ class _PurchasePageState extends State<PurchasePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Tempo',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Berapa Hari',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: itemsTempo
+                                .map((String itemsTempo) =>
+                                    DropdownMenuItem<String>(
+                                      value: itemsTempo,
+                                      child: Text(
+                                        itemsTempo,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValueTempo,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValueTempo = value;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -175,66 +273,36 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Tanggal",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Tanggal',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Diskon (opsional)",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Diskon',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text("Diskon (opsional)",
+                //           style: TextStyle(
+                //               fontFamily: GoogleFonts.rubik().fontFamily)),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Container(
+                //         padding:
+                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //         decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(12),
+                //             color: Colors.black.withOpacity(0.05)),
+                //         child: TextField(
+                //           // controller: RegisterController.emailController,
+                //           decoration: InputDecoration(
+                //             border: InputBorder.none,
+                //             hintText: 'Diskon',
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,6 +324,89 @@ class _PurchasePageState extends State<PurchasePage> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Jumlah',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("DP?",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Dp?',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: itemsDp
+                                .map((String itemsDp) =>
+                                    DropdownMenuItem<String>(
+                                      value: itemsDp,
+                                      child: Text(
+                                        itemsDp,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValueDp,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValueDp = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Total Bayar Dp",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          // controller: RegisterController.emailController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Total Bayar Dp',
                           ),
                         ),
                       ),
@@ -292,23 +443,23 @@ class _PurchasePageState extends State<PurchasePage> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              child: Text('Kirim'),
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xffBF1619),
-                              ),
-                            )),
-                      ),
                     ],
                   ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        child: Text('Kirim'),
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          primary: Color(0xffBF1619),
+                        ),
+                      )),
                 ),
               ],
             ),

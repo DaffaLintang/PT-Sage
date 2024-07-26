@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invc_approvel_page.dart';
-import 'package:pt_sage/page/invoice_page.dart';
 import 'package:pt_sage/page/list_invoice_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
+import 'package:pt_sage/utils/menu.dart';
+import 'package:sp_util/sp_util.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -21,33 +18,46 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // double getCircleDiameter(BuildContext context) =>
-  //     MediaQuery.of(context).size.width * 2 / 4;
+  String? username;
+  int? roles;
+
+  String getRole(int i) {
+    switch (i) {
+      case 1:
+        return "Super Admin";
+        break;
+      case 2:
+        return "Admin";
+        break;
+      case 3:
+        return "Direktur";
+        break;
+      case 4:
+        return "manajer";
+        break;
+      case 5:
+        return "Marketing";
+        break;
+      default:
+        return "Unknown role";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      username = SpUtil.getString('username') ?? "Username";
+      roles = SpUtil.getInt('roles');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    String roleText = roles != null ? getRole(roles!) : "Role not set";
     return Scaffold(
       body: Stack(
         children: [
-          // Positioned(
-          //   right: -getCircleDiameter(context) / 3,
-          //   top: 230,
-          //   child: Container(
-          //     width: getCircleDiameter(context),
-          //     height: getCircleDiameter(context),
-          //     decoration: BoxDecoration(
-          //         shape: BoxShape.circle, color: Color(0xffF29607)),
-          //   ),
-          // ),
-          // Positioned(
-          //   left: -70,
-          //   top: 500,
-          //   child: Container(
-          //     width: getCircleDiameter(context),
-          //     height: getCircleDiameter(context),
-          //     decoration: BoxDecoration(
-          //         shape: BoxShape.circle, color: Color(0xffE86016)),
-          //   ),
-          // ),
           Positioned(
             top: -50,
             left: -320,
@@ -111,7 +121,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Column(
                         children: [
                           Container(
-                            padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                             height: 110,
                             width: double.infinity,
                             child: Column(
@@ -128,7 +138,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Daffa Lintang',
+                                  '$username',
                                   style: GoogleFonts.rubik(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w700,
@@ -156,7 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Roles: " + "Martketing",
+                                  "Roles: " + roleText,
                                   style: TextStyle(
                                       color: Color(0xff9E0507),
                                       fontWeight: FontWeight.w600,
@@ -186,108 +196,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: (() {
-                                Get.offAll(() => ListPOApprovel());
-                              }),
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Color(0xff9E0507),
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/Done_ring_round.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Purchase Order Approvel",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff9E0507)),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: (() {
-                                Get.offAll(() => ListInvcApprovePage());
-                              }),
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Color(0xff9E0507),
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Colors.white,
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/Done_ring_round.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Invoice Approvel",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => ListPOApprovel());
+                                },
+                                title: 'Purchase Order Approvel',
+                                imageAsset: 'assets/Done_ring_round.png'),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => ListInvcApprovePage());
+                                },
+                                title: 'Invoice Approvel',
+                                imageAsset: 'assets/Done_ring_round.png'),
                           ],
                         ),
                         SizedBox(
@@ -296,108 +216,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.offAll(() => PengirimanBarangPage());
-                              },
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Color(0xff9E0507),
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Colors.white,
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/Basket_alt_3.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Purchase Order",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Get.offAll(() => PurchasePage());
-                              },
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Color(0xff9E0507),
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/package_car.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Pengiriman Barang ",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff9E0507)),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => PurchasePage());
+                                },
+                                title: 'Purchase Order',
+                                imageAsset: 'assets/Basket_alt_3.png'),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => PengirimanBarangPage());
+                                },
+                                title: 'Pengiriman Barang',
+                                imageAsset: 'assets/package_car.png'),
                           ],
                         ),
                         SizedBox(
@@ -406,108 +236,18 @@ class _DashboardPageState extends State<DashboardPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: (() {
-                                Get.offAll(() => FeedBackPage());
-                              }),
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Color(0xff9E0507),
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/Chat_alt_3.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Feedback",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff9E0507)),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: (() {
-                                Get.offAll(() => ListInvoicePage());
-                              }),
-                              child: Container(
-                                height: 127,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        spreadRadius: 2,
-                                        blurRadius: 7,
-                                        offset: Offset(4, 5),
-                                      )
-                                    ],
-                                    color: Color(0xff9E0507),
-                                    borderRadius: BorderRadius.circular(16)),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                colorFilter: ColorFilter.mode(
-                                                  Colors.white,
-                                                  BlendMode.srcATop,
-                                                ),
-                                                image: AssetImage(
-                                                    'assets/File_dock.png'))),
-                                      ),
-                                      Text(
-                                        textAlign: TextAlign.center,
-                                        "Invoice",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => FeedBackPage());
+                                },
+                                title: 'Feedback',
+                                imageAsset: 'assets/Chat_alt_3.png'),
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => ListInvoicePage());
+                                },
+                                title: 'Invoice',
+                                imageAsset: 'assets/File_dock.png'),
                           ],
                         )
                       ]),

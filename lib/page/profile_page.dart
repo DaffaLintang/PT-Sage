@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pt_sage/page/login_page.dart';
-
-import 'home_page.dart';
+import 'package:sp_util/sp_util.dart';
+import 'dart:io' as io;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -15,8 +14,58 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String? username;
+  String? email;
+  int? roles;
+
+  String getRole(int i) {
+    switch (i) {
+      case 1:
+        return "Super Admin";
+        break;
+      case 2:
+        return "Admin";
+        break;
+      case 3:
+        return "Direktur";
+        break;
+      case 4:
+        return "manajer";
+        break;
+      case 5:
+        return "Marketing";
+        break;
+      default:
+        return "Unknown role";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      username = SpUtil.getString('username') ?? "Username";
+      email = SpUtil.getString('email') ?? "email";
+      roles = SpUtil.getInt('roles');
+    });
+  }
+
+  io.File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = io.File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String roleText = roles != null ? getRole(roles!) : "Role not set";
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -33,29 +82,52 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: ListView(
         children: [
+          GestureDetector(
+            onTap: () => _pickImage(ImageSource.gallery),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Center(
+                child: _image == null
+                    ? Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(150),
+                            border: Border.all(color: Color(0xff9E0507))),
+                        padding: EdgeInsets.all(8),
+                        width: 70,
+                        height: 70,
+                        child: Center(
+                            child: Text(
+                          "No Profile",
+                          textAlign: TextAlign.center,
+                        )),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(150),
+                            border: Border.all(color: Color(0xff6B8A7A))),
+                        padding: EdgeInsets.all(8),
+                        width: 70,
+                        height: 70,
+                        child: Image.file(_image!),
+                      ),
+              ),
+            ),
+          ),
           Center(
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Column(
                 children: [
-                  Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("assets/Group 942.png"))),
-                  ),
+                  // Container(
+                  //   width: 70,
+                  //   height: 70,
+                  //   decoration: BoxDecoration(
+                  //       image: DecorationImage(
+                  //           image: AssetImage("assets/Group 942.png"))),
+                  // ),
                   SizedBox(
                     height: 10,
                   ),
-                  // Text(
-                  //   "PT. SAGE MASHLAHAT INDONESIA",
-                  //   style: TextStyle(
-                  //     color: Color(0xff9E0507),
-                  //     fontWeight: FontWeight.w900,
-                  //     fontSize: 18,
-                  //   ),
-                  // ),
                   SizedBox(
                     height: 20,
                   ),
@@ -76,10 +148,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.black.withOpacity(0.05)),
                           child: TextField(
+                            enabled: false,
                             // controller: RegisterController.emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Daffa Lintang',
+                              hintText: username,
                             ),
                           ),
                         ),
@@ -106,10 +179,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.black.withOpacity(0.05)),
                           child: TextField(
+                            enabled: false,
                             // controller: RegisterController.emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Daffalintang@gmail.com',
+                              hintText: email,
                             ),
                           ),
                         ),
@@ -136,10 +210,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.black.withOpacity(0.05)),
                           child: TextField(
+                            enabled: false,
                             // controller: RegisterController.emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Marketting',
+                              hintText: roleText,
                             ),
                           ),
                         ),

@@ -5,6 +5,8 @@ import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:stroke_text/stroke_text.dart';
 
+import '../controllers/login_controller.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -82,8 +84,8 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 110,
-                            height: 110,
+                            width: 100,
+                            height: 100,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage('assets/Logo(1).png'))),
@@ -91,16 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          // StrokeText(
-                          //   text: "PT. SAGE MASHLAHAT INDONESIA",
-                          //   textStyle: TextStyle(
-                          //     color: Color(0xff7CD154),
-                          //     fontWeight: FontWeight.w900,
-                          //     fontSize: 18,
-                          //   ),
-                          //   strokeColor: Colors.white,
-                          //   strokeWidth: 3,
-                          // )
                           StrokeText(
                             text: "PT. SAGE MASHLAHAT INDONESIA",
                             textStyle: TextStyle(
@@ -129,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                             )
                           ]),
                       child: TextField(
-                        // controller: LoginController.phoneController,
+                        controller: LoginController.usernameController,
                         // keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.person),
@@ -155,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                             )
                           ]),
                       child: TextField(
+                        controller: LoginController.passwordController,
                         keyboardType: TextInputType.text,
                         obscureText: _obscureText,
                         decoration: InputDecoration(
@@ -185,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             child: Text('Masuk Sekarang'),
                             onPressed: () {
-                              Get.offAll(() => HomePage());
+                              LoginController().auth();
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

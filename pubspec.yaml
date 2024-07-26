@@ -45,6 +45,9 @@ dependencies:
   open_file: ^3.3.2
   intl: ^0.18.1
   permission_handler: ^10.2.0
+  flutter_easyloading: ^3.0.0
+  sp_util: ^2.0.3
+  http: ^0.13.5
   
 dev_dependencies:
   flutter_test:
