@@ -193,23 +193,26 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     Container(
                       child: Column(children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Menu(
-                                onTap: () {
-                                  Get.offAll(() => ListPOApprovel());
-                                },
-                                title: 'Purchase Order Approvel',
-                                imageAsset: 'assets/Done_ring_round.png'),
-                            Menu(
-                                onTap: () {
-                                  Get.offAll(() => ListInvcApprovePage());
-                                },
-                                title: 'Invoice Approvel',
-                                imageAsset: 'assets/Done_ring_round.png'),
-                          ],
-                        ),
+                        roleText == 'Marketing'
+                            ? Text("")
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Menu(
+                                      onTap: () {
+                                        Get.offAll(() => ListPOApprovel());
+                                      },
+                                      title: 'Purchase Order Approvel',
+                                      imageAsset: 'assets/Done_ring_round.png'),
+                                  Menu(
+                                      onTap: () {
+                                        Get.offAll(() => ListInvcApprovePage());
+                                      },
+                                      title: 'Invoice Approvel',
+                                      imageAsset: 'assets/Done_ring_round.png'),
+                                ],
+                              ),
                         SizedBox(
                           height: 15,
                         ),
