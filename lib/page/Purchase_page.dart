@@ -1,11 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pt_sage/page/home_page.dart';
+import 'package:pt_sage/models/warper.dart';
+import 'package:pt_sage/page/list_po_page.dart';
+import 'package:sp_util/sp_util.dart';
 
+import '../controllers/purchase_order_controller.dart';
 import 'dashboard_page.dart';
 
 class PurchasePage extends StatefulWidget {
@@ -18,24 +19,18 @@ class PurchasePage extends StatefulWidget {
 class _PurchasePageState extends State<PurchasePage> {
   var _bottomNavIndex = 0;
 
-  final List<String> items = [
-    'Daffa',
-    'Lintang',
-    'Firzo',
-    'Firdaus',
-  ];
+  final List<String> items = [];
   String? selectedValue;
+  final Map<String, int> customertMap = {};
 
-  final List<String> itemsProduk = [
-    'asdasd',
-    'Lintang',
-    'Firzo',
-    'Firdaus',
-  ];
+  final List<String> itemsProduk = [];
   String? selectedValueProduk;
+  final Map<String, int> productMap = {};
+  final Map<String, String> hargaMap = {};
 
   final List<String> itemsTempo = [
     '7 Hari',
+    '15 Hari',
     '30 Hari',
     '60 Hari',
     '90 Hari',
@@ -43,10 +38,59 @@ class _PurchasePageState extends State<PurchasePage> {
   String? selectedValueTempo;
 
   final List<String> itemsDp = [
-    'DP',
+    'ya',
     'Tidak',
   ];
   String? selectedValueDp;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProduct();
+    fetchCustomer();
+  }
+
+  void fetchProduct() async {
+    final poController = PoController();
+    DataWrapper? dataWrapper = await poController.getProductData();
+    setState(() {
+      dataWrapper?.products.forEach((product) {
+        itemsProduk.add(product.productName);
+        productMap[product.productName] = product.id;
+        hargaMap[product.productName] = product.price;
+      });
+    });
+  }
+
+  void fetchCustomer() async {
+    final poController = PoController();
+    DataWrapper? dataWrapper = await poController.getProductData();
+    setState(() {
+      dataWrapper?.customers.forEach((customer) {
+        items.add(customer.customersName);
+        customertMap[customer.customersName] = customer.id;
+      });
+    });
+  }
+
+  void hitungHarga() {
+    setState(() {
+      int jumlah = int.parse(PoController.jumlahConroller.text);
+      String? hargaString = SpUtil.getString("harga");
+      int harga = int.parse(hargaString ?? '0');
+      int total = harga * jumlah;
+      PoController.hargaController.text = total.toString();
+    });
+  }
+
+  void handleTextChange(String value) {
+    if (value.isEmpty || int.tryParse(value) == null || int.parse(value) < 1) {
+      PoController.jumlahConroller.text = '1';
+      PoController.jumlahConroller.selection = TextSelection.fromPosition(
+          TextPosition(offset: PoController.jumlahConroller.text.length));
+    }
+    hitungHarga();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +107,7 @@ class _PurchasePageState extends State<PurchasePage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(() => HomePage());
+              Get.offAll(() => listPoPage());
             },
             icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.white,
@@ -112,10 +156,11 @@ class _PurchasePageState extends State<PurchasePage> {
                               ),
                             ),
                             items: items
-                                .map((String item) => DropdownMenuItem<String>(
-                                      value: item,
+                                .map((String customerName) =>
+                                    DropdownMenuItem<String>(
+                                      value: customerName,
                                       child: Text(
-                                        item,
+                                        customerName,
                                         style: const TextStyle(
                                           fontSize: 14,
                                         ),
@@ -126,6 +171,8 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValue = value;
+                                int? customerId = customertMap[selectedValue!];
+                                SpUtil.putInt('customer', customerId!);
                               });
                             },
                           ),
@@ -164,11 +211,11 @@ class _PurchasePageState extends State<PurchasePage> {
                               ),
                             ),
                             items: itemsProduk
-                                .map((String itemsProduk) =>
+                                .map((String productName) =>
                                     DropdownMenuItem<String>(
-                                      value: itemsProduk,
+                                      value: productName,
                                       child: Text(
-                                        itemsProduk,
+                                        productName,
                                         style: const TextStyle(
                                           fontSize: 14,
                                         ),
@@ -178,7 +225,15 @@ class _PurchasePageState extends State<PurchasePage> {
                             value: selectedValueProduk,
                             onChanged: (String? value) {
                               setState(() {
+                                PoController.jumlahConroller.text = '1';
+                                hitungHarga();
                                 selectedValueProduk = value;
+                                int? productId =
+                                    productMap[selectedValueProduk!];
+                                String? productPrice =
+                                    hargaMap[selectedValueProduk!];
+                                SpUtil.putInt('produk', productId!);
+                                SpUtil.putString('harga', productPrice!);
                               });
                             },
                           ),
@@ -190,36 +245,69 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                // Container(
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text("Tempo",
-                //           style: TextStyle(
-                //               fontFamily: GoogleFonts.rubik().fontFamily)),
-                //       SizedBox(
-                //         height: 10,
-                //       ),
-                //       Container(
-                //         padding:
-                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(12),
-                //             color: Colors.black.withOpacity(0.05)),
-                //         child: TextField(
-                //           // controller: RegisterController.emailController,
-                //           decoration: InputDecoration(
-                //             border: InputBorder.none,
-                //             hintText: 'Tempo',
-                //           ),
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         height: 20,
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Jumlah",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          onChanged: handleTextChange,
+                          keyboardType: TextInputType.number,
+                          controller: PoController.jumlahConroller,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Jumlah',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Total Bayar",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          enabled: false,
+                          controller: PoController.hargaController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Total Bayar',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,6 +350,8 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValueTempo = value;
+                                SpUtil.putString(
+                                    'tempo', selectedValueTempo.toString());
                               });
                             },
                           ),
@@ -307,36 +397,6 @@ class _PurchasePageState extends State<PurchasePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Jumlah",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Jumlah',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
                       Text("DP?",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
@@ -375,6 +435,8 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValueDp = value;
+                                SpUtil.putString(
+                                    "dp", selectedValueDp.toString());
                               });
                             },
                           ),
@@ -403,7 +465,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
-                          // controller: RegisterController.emailController,
+                          controller: PoController.jDpController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Total Bayar Dp',
@@ -416,36 +478,7 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Total Bayar",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Total Bayar',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: SizedBox(
@@ -453,7 +486,9 @@ class _PurchasePageState extends State<PurchasePage> {
                       height: 50,
                       child: ElevatedButton(
                         child: Text('Kirim'),
-                        onPressed: () {},
+                        onPressed: () {
+                          PoController().store();
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),

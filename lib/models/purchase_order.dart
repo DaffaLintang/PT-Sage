@@ -1,0 +1,57 @@
+class Order {
+  final String kodePo;
+  final int usersId;
+  final int customersId;
+  final int productId;
+  final String quantity;
+  final String totalPrice;
+  final String paymentTerm;
+  final String dp;
+  final String dpAmount;
+  final String status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Order({
+    required this.kodePo,
+    required this.usersId,
+    required this.customersId,
+    required this.productId,
+    required this.quantity,
+    required this.totalPrice,
+    required this.paymentTerm,
+    required this.dp,
+    required this.dpAmount,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      kodePo: json['kode_po'],
+      usersId: json['users_id'],
+      customersId: json['customers_id'],
+      productId: json['product_id'],
+      quantity: json['quantity'],
+      totalPrice: json['total_price'],
+      paymentTerm: json['payment_term'],
+      dp: json['dp'],
+      dpAmount: json['dp_amount'],
+      status: json['status'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+}
+
+class Orders {
+  final List<Order> orders;
+
+  Orders({required this.orders});
+
+  factory Orders.fromJson(List<dynamic> parsedJson) {
+    List<Order> orders = parsedJson.map((i) => Order.fromJson(i)).toList();
+    return Orders(orders: orders);
+  }
+}

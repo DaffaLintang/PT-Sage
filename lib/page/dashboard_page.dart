@@ -6,6 +6,7 @@ import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invc_approvel_page.dart';
 import 'package:pt_sage/page/list_invoice_page.dart';
+import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
 import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
@@ -54,15 +55,15 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     String roleText = roles != null ? getRole(roles!) : "Role not set";
     return Scaffold(
       body: Stack(
         children: [
           Positioned(
             top: -50,
-            left: -320,
             child: Container(
-              width: 1000,
+              width: screenWidth,
               height: 1000,
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -221,7 +222,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => PurchasePage());
+                                  Get.offAll(() => listPoPage());
                                 },
                                 title: 'Purchase Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
