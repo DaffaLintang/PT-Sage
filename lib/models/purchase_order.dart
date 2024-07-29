@@ -2,7 +2,8 @@ class Order {
   final String kodePo;
   final int usersId;
   final int customersId;
-  final int productId;
+  final String customersName;
+  final String productName;
   final String quantity;
   final String totalPrice;
   final String paymentTerm;
@@ -16,7 +17,8 @@ class Order {
     required this.kodePo,
     required this.usersId,
     required this.customersId,
-    required this.productId,
+    required this.customersName,
+    required this.productName,
     required this.quantity,
     required this.totalPrice,
     required this.paymentTerm,
@@ -32,7 +34,8 @@ class Order {
       kodePo: json['kode_po'],
       usersId: json['users_id'],
       customersId: json['customers_id'],
-      productId: json['product_id'],
+      customersName: json['customers_name'],
+      productName: json['product_name'],
       quantity: json['quantity'],
       totalPrice: json['total_price'],
       paymentTerm: json['payment_term'],

@@ -5,6 +5,7 @@ import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invc_approvel_page.dart';
+import 'package:pt_sage/page/kuisoner_page.dart';
 import 'package:pt_sage/page/list_invoice_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
@@ -252,6 +253,20 @@ class _DashboardPageState extends State<DashboardPage> {
                                 },
                                 title: 'Invoice',
                                 imageAsset: 'assets/File_dock.png'),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Menu(
+                                onTap: () {
+                                  Get.offAll(() => KuisonerPage());
+                                },
+                                title: 'Kuisioner',
+                                imageAsset: 'assets/Chat_alt_3.png'),
                           ],
                         )
                       ]),

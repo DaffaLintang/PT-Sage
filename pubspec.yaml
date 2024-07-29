@@ -48,6 +48,7 @@ dependencies:
   flutter_easyloading: ^3.0.0
   sp_util: ^2.0.3
   http: ^0.13.5
+  shimmer: ^2.0.0
   
 dev_dependencies:
   flutter_test:

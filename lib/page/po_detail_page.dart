@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:pt_sage/models/purchase_order.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 
@@ -16,21 +17,10 @@ class PoDetailPage extends StatefulWidget {
 
 class _PoDetailPageState extends State<PoDetailPage> {
   final order = Get.arguments;
-  // Orders? orders;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchOrders();
-  // }
-
-  // void fetchOrders() async {
-  //   final poController = PoController();
-  //   Orders? fetchedOrders = await poController.getPoData();
-  //   setState(() {
-  //     orders = fetchedOrders;
-  //   });
-  // }
+  final NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    symbol: 'Rp',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +98,21 @@ class _PoDetailPageState extends State<PoDetailPage> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(order.kodePo),
+                  Text(order.customersName),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    "Nama Produk",
+                    style: TextStyle(
+                        color: Color(0xff9E0507),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(order.productName),
                   SizedBox(
                     height: 15,
                   ),
@@ -136,7 +140,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(order.totalPrice),
+                  Text(currencyFormatter.format(int.parse(order.totalPrice))),
                   SizedBox(
                     height: 15,
                   ),
@@ -178,7 +182,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(order.dpAmount),
+                  Text(currencyFormatter.format(int.parse(order.dpAmount))),
                   SizedBox(
                     height: 15,
                   ),
