@@ -86,7 +86,7 @@ class _listPoPageState extends State<listPoPage> {
                     subtitle: Text(order.status),
                     trailing: Icon(Icons.arrow_forward),
                     onTap: () {
-                      Get.offAll(() => PoDetailPage());
+                      Get.offAll(() => PoDetailPage(), arguments: order);
                     },
                   );
                 }));

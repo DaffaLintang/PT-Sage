@@ -83,7 +83,8 @@ class _PurchasePageState extends State<PurchasePage> {
     });
   }
 
-  void handleTextChange(String value) {
+  void handleTextChange() {
+    String value = PoController.jumlahConroller.text;
     if (value.isEmpty || int.tryParse(value) == null || int.parse(value) < 1) {
       PoController.jumlahConroller.text = '1';
       PoController.jumlahConroller.selection = TextSelection.fromPosition(
@@ -262,7 +263,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
-                          onChanged: handleTextChange,
+                          onEditingComplete: handleTextChange,
                           keyboardType: TextInputType.number,
                           controller: PoController.jumlahConroller,
                           decoration: InputDecoration(
@@ -465,6 +466,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
+                          keyboardType: TextInputType.number,
                           controller: PoController.jDpController,
                           decoration: InputDecoration(
                             border: InputBorder.none,

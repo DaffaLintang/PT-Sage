@@ -82,15 +82,9 @@ class PoController extends GetxController {
           "dp": dp,
           "jumlah_dp": jumlahDp
         };
-        PoProvider().store(data).then((value) {
+        PoProvider().store(token, data).then((value) {
           print(value.statusCode);
-          if (value.statusCode == 200) {
-            // var token = value.body["token"];
-            // var data = value.body["user"];
-            // SpUtil.putString('token', token);
-            // SpUtil.putString('username', data["username"]);
-            // SpUtil.putString('email', data["email"]);
-            // SpUtil.putInt('roles', data["levels_id"]);
+          if (value.statusCode == 201) {
             Get.offAll(() => listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
