@@ -25,6 +25,7 @@ class LoginController extends GetxController {
           if (value.statusCode == 200) {
             var token = value.body["token"];
             var data = value.body["user"];
+            SpUtil.putInt('id', data["id"]);
             SpUtil.putString('token', token);
             SpUtil.putString('username', data["username"]);
             SpUtil.putString('email', data["email"]);

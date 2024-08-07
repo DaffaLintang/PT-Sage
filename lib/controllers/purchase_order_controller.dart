@@ -39,7 +39,6 @@ class PoController extends GetxController {
       final uri = Uri.parse(PoCreateAPI);
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
-
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         return DataWrapper.fromJson(jsonResponse);

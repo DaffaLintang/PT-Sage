@@ -61,6 +61,7 @@ class _PurchasePageState extends State<PurchasePage> {
     super.initState();
     fetchProduct();
     fetchCustomer();
+    print(productId);
     PoController.jDpController.text = '';
   }
 
