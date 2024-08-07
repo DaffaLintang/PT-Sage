@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
+import 'package:pt_sage/models/product.dart';
 import 'package:pt_sage/models/purchase_order.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/list_po_page.dart';
@@ -13,7 +14,8 @@ import 'package:http/http.dart' as http;
 class PoController extends GetxController {
   static TextEditingController jumlahConroller = TextEditingController();
   static TextEditingController hargaController = TextEditingController();
-  static TextEditingController jDpController = TextEditingController();
+  static TextEditingController jDpController = TextEditingController(text: '');
+  static TextEditingController diskonController = TextEditingController();
   String? token = SpUtil.getString('token');
 
   Future<Orders?> getPoData() async {
@@ -50,14 +52,14 @@ class PoController extends GetxController {
     }
   }
 
-  void store() {
-    int? customer = SpUtil.getInt('customer');
-    int? product = SpUtil.getInt('produk');
+  void store(customers, products, totals, tempos, dps, jumlahDps) {
+    int? customer = customers;
+    int? product = products;
     int? jumlah = int.tryParse(jumlahConroller.text);
-    int? totalHarga = int.tryParse(hargaController.text);
-    String? tempo = SpUtil.getString('tempo');
-    String? dp = SpUtil.getString('dp');
-    int? jumlahDp = int.tryParse(jDpController.text);
+    int? totalHarga = totals;
+    String? tempo = tempos;
+    String? dp = dps;
+    String? jumlahDp = jumlahDps;
 
     try {
       if (customer == null ||
@@ -69,6 +71,7 @@ class PoController extends GetxController {
           tempo.isEmpty ||
           dp == null ||
           dp.isEmpty) {
+        // print(jumlahDp);
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {

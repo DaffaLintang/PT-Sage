@@ -48,7 +48,7 @@ dependencies:
   flutter_easyloading: ^3.0.0
   sp_util: ^2.0.3
   http: ^0.13.5
-  shimmer: ^2.0.0
+  currency_text_input_formatter: ^2.1.7
   
 dev_dependencies:
   flutter_test:
@@ -103,3 +103,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+dependency_overrides:
+  intl: ^0.18.1

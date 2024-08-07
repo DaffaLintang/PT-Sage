@@ -196,7 +196,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     Container(
                       child: Column(children: [
                         roleText == 'Marketing'
-                            ? Text("")
+                            ? SizedBox()
                             : Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

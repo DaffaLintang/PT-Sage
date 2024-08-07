@@ -1,13 +1,16 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:sp_util/sp_util.dart';
+import 'package:intl/intl.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 import '../controllers/purchase_order_controller.dart';
-import 'dashboard_page.dart';
 
 class PurchasePage extends StatefulWidget {
   const PurchasePage({Key? key}) : super(key: key);
@@ -18,6 +21,12 @@ class PurchasePage extends StatefulWidget {
 
 class _PurchasePageState extends State<PurchasePage> {
   var _bottomNavIndex = 0;
+  bool isFormatting = false;
+
+  final NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    symbol: 'Rp',
+  );
 
   final List<String> items = [];
   String? selectedValue;
@@ -43,11 +52,16 @@ class _PurchasePageState extends State<PurchasePage> {
   ];
   String? selectedValueDp;
 
+  int? customerId;
+  int? productId;
+  int? total;
+
   @override
   void initState() {
     super.initState();
     fetchProduct();
     fetchCustomer();
+    PoController.jDpController.text = '';
   }
 
   void fetchProduct() async {
@@ -78,9 +92,16 @@ class _PurchasePageState extends State<PurchasePage> {
       int jumlah = int.parse(PoController.jumlahConroller.text);
       String? hargaString = SpUtil.getString("harga");
       int harga = int.parse(hargaString ?? '0');
-      int total = harga * jumlah;
-      PoController.hargaController.text = total.toString();
+      total = harga * jumlah;
+      PoController.hargaController.text =
+          currencyFormatter.format(int.parse(total.toString()));
+      // SpUtil.putInt('total', total);
     });
+  }
+
+  String getRawValue(String formattedValue) {
+    // Remove all non-digit characters
+    return formattedValue.replaceAll(RegExp(r'[^\d]'), '');
   }
 
   void handleTextChange() {
@@ -172,8 +193,7 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValue = value;
-                                int? customerId = customertMap[selectedValue!];
-                                SpUtil.putInt('customer', customerId!);
+                                customerId = customertMap[selectedValue!];
                               });
                             },
                           ),
@@ -229,11 +249,10 @@ class _PurchasePageState extends State<PurchasePage> {
                                 PoController.jumlahConroller.text = '1';
                                 hitungHarga();
                                 selectedValueProduk = value;
-                                int? productId =
-                                    productMap[selectedValueProduk!];
+                                productId = productMap[selectedValueProduk!];
                                 String? productPrice =
                                     hargaMap[selectedValueProduk!];
-                                SpUtil.putInt('produk', productId!);
+                                // SpUtil.putInt('produk', productId!);
                                 SpUtil.putString('harga', productPrice!);
                               });
                             },
@@ -351,8 +370,8 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValueTempo = value;
-                                SpUtil.putString(
-                                    'tempo', selectedValueTempo.toString());
+                                // SpUtil.putString(
+                                //     'tempo', selectedValueTempo.toString());
                               });
                             },
                           ),
@@ -364,36 +383,36 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                // Container(
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text("Diskon (opsional)",
-                //           style: TextStyle(
-                //               fontFamily: GoogleFonts.rubik().fontFamily)),
-                //       SizedBox(
-                //         height: 10,
-                //       ),
-                //       Container(
-                //         padding:
-                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(12),
-                //             color: Colors.black.withOpacity(0.05)),
-                //         child: TextField(
-                //           // controller: RegisterController.emailController,
-                //           decoration: InputDecoration(
-                //             border: InputBorder.none,
-                //             hintText: 'Diskon',
-                //           ),
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         height: 20,
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Diskon (opsional)",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          controller: PoController.diskonController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Diskon',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -449,38 +468,49 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Total Bayar Dp",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          keyboardType: TextInputType.number,
-                          controller: PoController.jDpController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Total Bayar Dp',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-
+                selectedValueDp == null
+                    ? SizedBox()
+                    : selectedValueDp == "ya"
+                        ? Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Total Bayar Dp",
+                                    style: TextStyle(
+                                        fontFamily:
+                                            GoogleFonts.rubik().fontFamily)),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.black.withOpacity(0.05)),
+                                  child: TextField(
+                                    inputFormatters: <TextInputFormatter>[
+                                      CurrencyTextInputFormatter(
+                                        locale: 'id',
+                                        decimalDigits: 0,
+                                        symbol: 'Rp',
+                                      ),
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    controller: PoController.jDpController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Total Bayar Dp',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: SizedBox(
@@ -489,7 +519,11 @@ class _PurchasePageState extends State<PurchasePage> {
                       child: ElevatedButton(
                         child: Text('Kirim'),
                         onPressed: () {
-                          PoController().store();
+                          String jumlahDp =
+                              getRawValue(PoController.jDpController.text);
+                          print(jumlahDp);
+                          PoController().store(customerId, productId, total,
+                              selectedValueTempo, selectedValueDp, jumlahDp);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
