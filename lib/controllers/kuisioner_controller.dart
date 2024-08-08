@@ -1,14 +1,11 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import 'package:http/http.dart' as http;
-
-import '../page/home_page.dart';
+import 'package:pt_sage/page/kuisoner_page.dart';
 import '../providers/kuisioner_provider.dart';
 
 class KuisionerController extends GetxController {
@@ -66,7 +63,7 @@ class KuisionerController extends GetxController {
     }
   }
 
-  void store(customerId, jawaban, catatan) {
+  void storePb(customerId, jawaban, catatan) {
     int? customer = customerId;
 
     try {
@@ -83,15 +80,45 @@ class KuisionerController extends GetxController {
           "jawaban": jawaban,
           "catatan": catatan,
         };
-        print(data);
-        KuisionerProvider().store(data).then((value) {
+        KuisionerProvider().storePb(data).then((value) {
+          if (value.statusCode == 200) {
+            Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
+                backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                colorText: Colors.white);
+            Get.offAll(() => KuisonerPage());
+          } else {
+            Get.snackbar('Error', 'Terjadi lesalahan',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+          EasyLoading.dismiss();
+        });
+      }
+    } catch (e, stackTrace) {
+      print('Exception occurred: $e\n$stackTrace');
+    }
+  }
+
+  void storeKp(customerId, jawaban) {
+    int? customer = customerId;
+
+    try {
+      if (customer == null || jawaban.isEmpty || jawaban.length < 26) {
+        Get.snackbar('Error', 'Data Tidak Boleh Kosong',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        EasyLoading.show();
+        var data = {
+          "customer_id": customerId,
+          "jawaban": jawaban,
+        };
+        KuisionerProvider().storePb(data).then((value) {
           print(value.statusCode);
 
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);
-            Get.offAll(() => HomePage());
+            Get.offAll(() => KuisonerPage());
           } else {
             Get.snackbar('Error', 'Terjadi lesalahan',
                 backgroundColor: Colors.red, colorText: Colors.white);

@@ -4,12 +4,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class KuisionerProvider extends GetConnect {
-  // Future<http.Response> store(Map<String, dynamic> data) {
-  //   final uri = Uri.parse('$KuisionerPosisiBersaingApi/store');
-  //   print(uri);
-  //   return http.post(uri, body: jsonEncode(data));
-  // }
-  Future<Response> store(var data) {
+  Future<Response> storePb(var data) {
+    return post("${KuisionerPosisiBersaingApi}/store", data);
+  }
+
+  Future<Response> storeKp(var data) {
     return post("${KuisionerPosisiBersaingApi}/store", data);
   }
 }

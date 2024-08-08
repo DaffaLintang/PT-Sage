@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/controllers/kuisioner_controller.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import '../controllers/purchase_order_controller.dart';
-import '../models/pbData.dart';
 import '../models/warper.dart';
 import 'home_page.dart';
 
@@ -107,9 +106,10 @@ class _KuisonerPageState extends State<KuisonerPage> {
     }
   }
 
-  void printAllValues() {
-    // Print values for Kepuasan Pelanggan
-    print("Kepuasan Pelanggan Values:");
+  KpData printKpValues() {
+    List<int> subKuisionerId = [];
+    List<String> selectedValue = [];
+
     for (int i = 0; i < _selectedValues.length; i++) {
       for (int j = 0; j < _selectedValues[i].length; j++) {
         print(
@@ -117,14 +117,26 @@ class _KuisonerPageState extends State<KuisonerPage> {
       }
     }
 
-    // Print values for Posisi Bersaing
+    for (int z = 0; z < kuisionerKpList!.kuisionerList.length; z++) {
+      for (int n = 0;
+          n < kuisionerKpList!.kuisionerList[z].subKuisioner.length;
+          n++) {
+        subKuisionerId
+            .add(kuisionerKpList!.kuisionerList[z].subKuisioner[n].id);
+      }
+    }
+    for (int i = 0; i < _selectedValues.length; i++) {
+      for (int j = 0; j < _selectedValues[i].length; j++) {
+        selectedValue.add(_selectedValues[i][j].toString());
+      }
+    }
+    return KpData(subKuisionerId, selectedValue);
   }
 
   PbData printPbValue() {
     List<int> subKuisionerId = [];
     List<String> selectedValue = [];
     List<String> catatanValue = [];
-    var data = {};
 
     for (int z = 0;
         z < kuisionerPbList!.kuisionerList[0].subKuisioner.length;
@@ -139,6 +151,19 @@ class _KuisonerPageState extends State<KuisonerPage> {
     }
 
     return PbData(subKuisionerId, selectedValue, catatanValue);
+  }
+
+  Map<String, int> processKpJawaban(KpData kpData) {
+    Map<String, int> jawaban = {};
+    for (int i = 0; i < kpData.subKuisionerIds.length; i++) {
+      try {
+        int value = int.parse(kpData.selectedValues[i]);
+        jawaban[kpData.subKuisionerIds[i].toString()] = value;
+      } catch (e) {
+        print("Gagal mengubah nilai ke integer: $e");
+      }
+    }
+    return jawaban;
   }
 
   Map<String, int> processJawaban(PbData pbData) {
@@ -443,7 +468,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     var catatan = processCatatan(result);
 
                                     KuisionerController()
-                                        .store(customerId, jawaban, catatan);
+                                        .storePb(customerId, jawaban, catatan);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -619,7 +644,14 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                 child: ElevatedButton(
                                   child: Text('Kirim'),
                                   onPressed: () {
-                                    printAllValues();
+                                    var result = printKpValues();
+                                    var jawaban = processKpJawaban(result);
+
+                                    // KuisionerController()
+                                    //     .storePb(customerId, jawaban, catatan);
+                                    KuisionerController()
+                                        .storeKp(customerId, jawaban);
+                                    print(jawaban);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
