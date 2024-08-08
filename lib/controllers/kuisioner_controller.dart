@@ -1,10 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import 'package:http/http.dart' as http;
+
+import '../page/home_page.dart';
+import '../providers/kuisioner_provider.dart';
 
 class KuisionerController extends GetxController {
   List<List<TextEditingController>> PbCatatanController = [];
@@ -34,7 +39,6 @@ class KuisionerController extends GetxController {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
         return KuisionerKpList.fromJson(jsonResponse);
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
@@ -52,7 +56,6 @@ class KuisionerController extends GetxController {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
         return KuisionerPbList.fromJson(jsonResponse);
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
@@ -63,50 +66,41 @@ class KuisionerController extends GetxController {
     }
   }
 
-  // void store() {
-  //   int? product = products;
-  //   int? jumlah = int.tryParse(jumlahConroller.text);
+  void store(customerId, jawaban, catatan) {
+    int? customer = customerId;
 
-  //   try {
-  //     if (customer == null ||
-  //         product == null ||
-  //         jumlah == null ||
-  //         jumlah < 1 ||
-  //         totalHarga == null ||
-  //         tempo == null ||
-  //         tempo.isEmpty ||
-  //         dp == null ||
-  //         dp.isEmpty) {
-  //       // print(jumlahDp);
-  //       Get.snackbar('Error', 'Data Tidak Boleh Kosong',
-  //           backgroundColor: Colors.red, colorText: Colors.white);
-  //     } else {
-  //       EasyLoading.show();
-  //       var data = {
-  //         "customers": customer,
-  //         "product": product,
-  //         "jumlah": jumlah,
-  //         "total_harga": totalHarga,
-  //         "tempo": tempo,
-  //         "dp": dp,
-  //         "jumlah_dp": jumlahDp
-  //       };
-  //       PoProvider().store(token, data).then((value) {
-  //         print(value.statusCode);
-  //         if (value.statusCode == 201) {
-  //           Get.offAll(() => listPoPage());
-  //           Get.snackbar('Success', 'Pembelian Berhasil',
-  //               backgroundColor: Color.fromARGB(255, 75, 212, 146),
-  //               colorText: Colors.white);
-  //         } else {
-  //           Get.snackbar('Error', 'Pembelian Gagal',
-  //               backgroundColor: Colors.red, colorText: Colors.white);
-  //         }
-  //         EasyLoading.dismiss();
-  //       });
-  //     }
-  //   } catch (e, stackTrace) {
-  //     print('Exception occurred: $e\n$stackTrace');
-  //   }
-  // }
+    try {
+      if (customer == null ||
+          jawaban.isEmpty ||
+          jawaban.length < catatan.length) {
+        // print(jumlahDp);
+        Get.snackbar('Error', 'Data Tidak Boleh Kosong',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        EasyLoading.show();
+        var data = {
+          "customer_id": customerId,
+          "jawaban": jawaban,
+          "catatan": catatan,
+        };
+        print(data);
+        KuisionerProvider().store(data).then((value) {
+          print(value.statusCode);
+
+          if (value.statusCode == 200) {
+            Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
+                backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                colorText: Colors.white);
+            Get.offAll(() => HomePage());
+          } else {
+            Get.snackbar('Error', 'Terjadi lesalahan',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+          EasyLoading.dismiss();
+        });
+      }
+    } catch (e, stackTrace) {
+      print('Exception occurred: $e\n$stackTrace');
+    }
+  }
 }

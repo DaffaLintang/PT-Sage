@@ -70,7 +70,6 @@ class PoController extends GetxController {
           tempo.isEmpty ||
           dp == null ||
           dp.isEmpty) {
-        // print(jumlahDp);
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {

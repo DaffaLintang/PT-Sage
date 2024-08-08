@@ -1,8 +1,12 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/controllers/kuisioner_controller.dart';
 import 'package:pt_sage/models/kuisioner.dart';
+import '../controllers/purchase_order_controller.dart';
+import '../models/pbData.dart';
+import '../models/warper.dart';
 import 'home_page.dart';
 
 class KuisonerPage extends StatefulWidget {
@@ -19,18 +23,36 @@ class _KuisonerPageState extends State<KuisonerPage> {
   KuisionerPbList? kuisionerPbList;
   List<List<int?>> _selectedValues = [];
   List<List<int?>> _selectedValues1 = [];
+  String? selectedValue;
+  final Map<String, int> customertMap = {};
+  final List<String> itemsCustomer = [];
+  int? customerId;
+
+  get items => null;
 
   @override
   void initState() {
     super.initState();
     fetchKuisioner();
     fetchKuisionerPb();
+    fetchCustomer();
   }
 
   @override
   void dispose() {
     // Tidak perlu menghapus controller di sini karena GetX akan mengelola siklus hidup controller
     super.dispose();
+  }
+
+  void fetchCustomer() async {
+    final poController = PoController();
+    DataWrapper? dataWrapper = await poController.getProductData();
+    setState(() {
+      dataWrapper?.customers.forEach((customer) {
+        itemsCustomer.add(customer.customersName);
+        customertMap[customer.customersName] = customer.id;
+      });
+    });
   }
 
   void fetchKuisioner() async {
@@ -96,14 +118,48 @@ class _KuisonerPageState extends State<KuisonerPage> {
     }
 
     // Print values for Posisi Bersaing
-    print("Posisi Bersaing Values:");
+  }
+
+  PbData printPbValue() {
+    List<int> subKuisionerId = [];
+    List<String> selectedValue = [];
+    List<String> catatanValue = [];
+    var data = {};
+
+    for (int z = 0;
+        z < kuisionerPbList!.kuisionerList[0].subKuisioner.length;
+        z++) {
+      subKuisionerId.add(kuisionerPbList!.kuisionerList[0].subKuisioner[z].id);
+    }
     for (int i = 0; i < _selectedValues1.length; i++) {
       for (int j = 0; j < _selectedValues1[i].length; j++) {
-        print(
-            "Question ${i + 1}, Sub-question ${j + 1}: ${_selectedValues1[i][j]}");
-        print("Catatan: ${kuisionerController.PbCatatanController[i][j].text}");
+        selectedValue.add(_selectedValues1[i][j].toString());
+        catatanValue.add(kuisionerController.PbCatatanController[i][j].text);
       }
     }
+
+    return PbData(subKuisionerId, selectedValue, catatanValue);
+  }
+
+  Map<String, int> processJawaban(PbData pbData) {
+    Map<String, int> jawaban = {};
+    for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
+      try {
+        int value = int.parse(pbData.selectedValues[i]);
+        jawaban[pbData.subKuisionerIds[i].toString()] = value;
+      } catch (e) {
+        print("Gagal mengubah nilai ke integer: $e");
+      }
+    }
+    return jawaban;
+  }
+
+  Map<String, String> processCatatan(PbData pbData) {
+    Map<String, String> catatan = {};
+    for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
+      catatan[pbData.subKuisionerIds[i].toString()] = pbData.catatanValues[i];
+    }
+    return catatan;
   }
 
   @override
@@ -134,6 +190,44 @@ class _KuisonerPageState extends State<KuisonerPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.black.withOpacity(0.05)),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      hint: Text(
+                        'Pilih Customer',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                      items: itemsCustomer
+                          .map(
+                              (String customerName) => DropdownMenuItem<String>(
+                                    value: customerName,
+                                    child: Text(
+                                      customerName,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                          .toList(),
+                      value: selectedValue,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedValue = value;
+                          customerId = customertMap[selectedValue!];
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 ToggleButtons(
                   children: <Widget>[
                     Padding(
@@ -172,7 +266,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                 _currentSelection == 1
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0,
+                          horizontal: 10.0,
                         ),
                         child: Column(
                           children: [
@@ -265,39 +359,46 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                         height: 5,
                                                       ),
                                                       Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
-                                                          Row(
-                                                            children: List<
-                                                                Widget>.generate(
-                                                              5,
-                                                              (int index) =>
-                                                                  Padding(
-                                                                padding:
-                                                                    const EdgeInsets
+                                                          Flexible(
+                                                            child: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: List<
+                                                                  Widget>.generate(
+                                                                5,
+                                                                (int index) =>
+                                                                    Expanded(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
                                                                             .only(
                                                                         right:
-                                                                            8.0),
-                                                                child:
-                                                                    Radio<int>(
-                                                                  value:
-                                                                      index + 1,
-                                                                  groupValue: _selectedValues1[
-                                                                          questionIndex]
-                                                                      [
-                                                                      subQuestionIndex],
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    setState(
-                                                                        () {
-                                                                      _selectedValues1[questionIndex]
-                                                                              [
-                                                                              subQuestionIndex] =
-                                                                          value;
-                                                                    });
-                                                                  },
+                                                                            0.0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Radio<
+                                                                            int>(
+                                                                          value:
+                                                                              index + 1,
+                                                                          groupValue:
+                                                                              _selectedValues1[questionIndex][subQuestionIndex],
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              _selectedValues1[questionIndex][subQuestionIndex] = value;
+                                                                            });
+                                                                          },
+                                                                        ),
+                                                                        Text(
+                                                                            '${index + 1}'),
+                                                                      ],
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -329,12 +430,39 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                 },
                               ),
                             ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  child: Text('Kirim'),
+                                  onPressed: () {
+                                    var result = printPbValue();
+                                    var jawaban = processJawaban(result);
+                                    var catatan = processCatatan(result);
+
+                                    KuisionerController()
+                                        .store(customerId, jawaban, catatan);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    primary: Color(0xffBF1619),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            )
                           ],
                         ),
                       )
                     : Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0,
+                          horizontal: 10.0,
                         ),
                         child: Column(
                           children: [
@@ -427,39 +555,43 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                         height: 5,
                                                       ),
                                                       Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
-                                                          Row(
-                                                            children: List<
-                                                                Widget>.generate(
-                                                              5,
-                                                              (int index) =>
-                                                                  Padding(
-                                                                padding:
-                                                                    const EdgeInsets
+                                                          Flexible(
+                                                            child: Row(
+                                                              children: List<
+                                                                  Widget>.generate(
+                                                                5,
+                                                                (int index) =>
+                                                                    Expanded(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
                                                                             .only(
                                                                         right:
-                                                                            8.0),
-                                                                child:
-                                                                    Radio<int>(
-                                                                  value:
-                                                                      index + 1,
-                                                                  groupValue: _selectedValues[
-                                                                          questionIndex]
-                                                                      [
-                                                                      subQuestionIndex],
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    setState(
-                                                                        () {
-                                                                      _selectedValues[questionIndex]
-                                                                              [
-                                                                              subQuestionIndex] =
-                                                                          value;
-                                                                    });
-                                                                  },
+                                                                            0.0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Radio<
+                                                                            int>(
+                                                                          value:
+                                                                              index + 1,
+                                                                          groupValue:
+                                                                              _selectedValues[questionIndex][subQuestionIndex],
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              _selectedValues[questionIndex][subQuestionIndex] = value;
+                                                                            });
+                                                                          },
+                                                                        ),
+                                                                        Text(
+                                                                            '${index + 1}'),
+                                                                      ],
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -471,7 +603,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                 );
                                               },
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -479,30 +611,31 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                 },
                               ),
                             ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  child: Text('Kirim'),
+                                  onPressed: () {
+                                    printAllValues();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    primary: Color(0xffBF1619),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            )
                           ],
                         ),
                       ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      child: Text('Kirim'),
-                      onPressed: () {
-                        printAllValues();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        primary: Color(0xffBF1619),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                )
               ],
             ),
           )
