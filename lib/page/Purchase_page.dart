@@ -1,9 +1,13 @@
+import 'dart:ffi';
+
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:number_text_input_formatter/number_text_input_formatter.dart'
+    as numFormat;
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:sp_util/sp_util.dart';
@@ -20,22 +24,21 @@ class PurchasePage extends StatefulWidget {
 }
 
 class _PurchasePageState extends State<PurchasePage> {
-  var _bottomNavIndex = 0;
   bool isFormatting = false;
+  int _currentSelection = 0;
+  String? totalBayar;
+  final List<String> items = [];
+  String? selectedValue;
+  final Map<String, int> customertMap = {};
+  final List<String> itemsProduk = [];
+  String? selectedValueProduk;
+  final Map<String, int> productMap = {};
+  final Map<String, String> hargaMap = {};
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
     symbol: 'Rp',
   );
-
-  final List<String> items = [];
-  String? selectedValue;
-  final Map<String, int> customertMap = {};
-
-  final List<String> itemsProduk = [];
-  String? selectedValueProduk;
-  final Map<String, int> productMap = {};
-  final Map<String, String> hargaMap = {};
 
   final List<String> itemsTempo = [
     '7 Hari',
@@ -63,6 +66,7 @@ class _PurchasePageState extends State<PurchasePage> {
     fetchCustomer();
     print(productId);
     PoController.jDpController.text = '';
+    PoController.diskonController.clear();
   }
 
   void fetchProduct() async {
@@ -101,8 +105,13 @@ class _PurchasePageState extends State<PurchasePage> {
   }
 
   String getRawValue(String formattedValue) {
-    // Remove all non-digit characters
-    return formattedValue.replaceAll(RegExp(r'[^\d]'), '');
+    String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
+    if (formattedValue.contains(',')) {
+      plainValue = plainValue.substring(0, plainValue.length - 2);
+    }
+
+    return plainValue;
+    // return formattedValue.replaceAll(RegExp(r'[^\d]'), '');
   }
 
   void handleTextChange() {
@@ -113,6 +122,48 @@ class _PurchasePageState extends State<PurchasePage> {
           TextPosition(offset: PoController.jumlahConroller.text.length));
     }
     hitungHarga();
+  }
+
+  void hitungDiskonNominal(String diskon) {
+    int total = int.parse(getRawValue(PoController.hargaController.text));
+
+    if (diskon.isEmpty) {
+      return;
+    }
+    try {
+      setState(() {
+        int totalDiskon = int.parse(diskon);
+        if ((total - totalDiskon) < 0) {
+          Get.snackbar('Error', 'Diskon Melebihi Harga',
+              backgroundColor: Colors.red, colorText: Colors.white);
+        } else {
+          totalBayar = (total - totalDiskon).toString();
+        }
+      });
+    } catch (e) {
+      // Handle the error case where diskon is not a valid number
+      print("Error parsing diskon: $e");
+    }
+  }
+
+  void hitungDiskonPersen(String diskon) {
+    int total = int.parse(getRawValue(PoController.hargaController.text));
+
+    if (diskon.isEmpty) {
+      return;
+    }
+    try {
+      setState(() {
+        int totalDiskon = int.parse(diskon);
+        double totalDiskonPersen = total * (totalDiskon / 100);
+        double hasil = total - totalDiskonPersen;
+        String formattedValue = hasil.toStringAsFixed(0);
+        totalBayar = formattedValue;
+      });
+    } catch (e) {
+      // Handle the error case where diskon is not a valid number
+      print("Error parsing diskon: $e");
+    }
   }
 
   @override
@@ -302,7 +353,7 @@ class _PurchasePageState extends State<PurchasePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Total Bayar",
+                      Text("Total Harga",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -371,8 +422,6 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValueTempo = value;
-                                // SpUtil.putString(
-                                //     'tempo', selectedValueTempo.toString());
                               });
                             },
                           ),
@@ -394,20 +443,101 @@ class _PurchasePageState extends State<PurchasePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          controller: PoController.diskonController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Diskon',
+                      ToggleButtons(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              '%',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
                           ),
-                        ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              'Rp',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                        isSelected: List.generate(
+                            2, (index) => index == _currentSelection),
+                        onPressed: (int newIndex) {
+                          setState(() {
+                            _currentSelection = newIndex;
+                            totalBayar = int.parse(getRawValue(
+                                    PoController.hargaController.text))
+                                .toString();
+                            PoController.diskonController.clear();
+                          });
+                        },
+                        selectedColor: Colors.white,
+                        fillColor: Color(0xffBF1619),
+                        borderColor: Color(0xffBF1619),
+                        borderRadius: BorderRadius.circular(12),
+                        borderWidth: 1,
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _currentSelection == 0
+                          ? Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.black.withOpacity(0.05)),
+                              child: TextField(
+                                onSubmitted: (value) {
+                                  hitungDiskonPersen(
+                                      PoController.diskonController.text);
+                                  print(PoController.diskonController.text);
+                                },
+                                controller: PoController.diskonController,
+                                inputFormatters: [
+                                  numFormat.PercentageTextInputFormatter()
+                                ],
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.percent,
+                                    color: Color(0xffBF1619),
+                                  ),
+                                  border: InputBorder.none,
+                                  hintText: 'Persentase Diskon',
+                                ),
+                              ),
+                            )
+                          : Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.black.withOpacity(0.05)),
+                              child: TextField(
+                                inputFormatters: <TextInputFormatter>[
+                                  CurrencyTextInputFormatter(
+                                    locale: 'id',
+                                    decimalDigits: 0,
+                                    symbol: 'Rp',
+                                  ),
+                                ],
+                                keyboardType: TextInputType.number,
+                                controller: PoController.diskonController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Nominal Diskon',
+                                ),
+                                onSubmitted: (String? value) {
+                                  hitungDiskonNominal(getRawValue(
+                                      PoController.diskonController.text));
+                                },
+                              ),
+                            ),
                       SizedBox(
                         height: 20,
                       ),
@@ -512,6 +642,26 @@ class _PurchasePageState extends State<PurchasePage> {
                             ),
                           )
                         : SizedBox(),
+                totalBayar == null
+                    ? SizedBox()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Total Bayar",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 20)),
+                          Text(
+                              totalBayar == null
+                                  ? ""
+                                  : currencyFormatter
+                                      .format(int.parse(totalBayar.toString())),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 20)),
+                        ],
+                      ),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: SizedBox(
@@ -522,7 +672,6 @@ class _PurchasePageState extends State<PurchasePage> {
                         onPressed: () {
                           String jumlahDp =
                               getRawValue(PoController.jDpController.text);
-                          print(jumlahDp);
                           PoController().store(customerId, productId, total,
                               selectedValueTempo, selectedValueDp, jumlahDp);
                         },
