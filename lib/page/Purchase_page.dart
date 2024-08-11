@@ -27,6 +27,7 @@ class _PurchasePageState extends State<PurchasePage> {
   bool isFormatting = false;
   int _currentSelection = 0;
   String? totalBayar;
+  int? totalHarga;
   final List<String> items = [];
   String? selectedValue;
   final Map<String, int> customertMap = {};
@@ -97,9 +98,9 @@ class _PurchasePageState extends State<PurchasePage> {
       int jumlah = int.parse(PoController.jumlahConroller.text);
       String? hargaString = SpUtil.getString("harga");
       int harga = int.parse(hargaString ?? '0');
-      total = harga * jumlah;
-      PoController.hargaController.text =
-          currencyFormatter.format(int.parse(total.toString()));
+      totalHarga = (harga * jumlah);
+      totalBayar = (harga * jumlah).toString();
+      PoController.hargaController.text = currencyFormatter.format(harga);
       // SpUtil.putInt('total', total);
     });
   }
@@ -125,7 +126,7 @@ class _PurchasePageState extends State<PurchasePage> {
   }
 
   void hitungDiskonNominal(String diskon) {
-    int total = int.parse(getRawValue(PoController.hargaController.text));
+    int? total = totalHarga;
 
     if (diskon.isEmpty) {
       return;
@@ -133,7 +134,7 @@ class _PurchasePageState extends State<PurchasePage> {
     try {
       setState(() {
         int totalDiskon = int.parse(diskon);
-        if ((total - totalDiskon) < 0) {
+        if ((total! - totalDiskon) < 0) {
           Get.snackbar('Error', 'Diskon Melebihi Harga',
               backgroundColor: Colors.red, colorText: Colors.white);
         } else {
@@ -147,22 +148,26 @@ class _PurchasePageState extends State<PurchasePage> {
   }
 
   void hitungDiskonPersen(String diskon) {
-    int total = int.parse(getRawValue(PoController.hargaController.text));
+    int? total = totalHarga;
 
     if (diskon.isEmpty) {
       return;
     }
-    try {
-      setState(() {
-        int totalDiskon = int.parse(diskon);
-        double totalDiskonPersen = total * (totalDiskon / 100);
-        double hasil = total - totalDiskonPersen;
-        String formattedValue = hasil.toStringAsFixed(0);
-        totalBayar = formattedValue;
-      });
-    } catch (e) {
-      // Handle the error case where diskon is not a valid number
-      print("Error parsing diskon: $e");
+    if (diskon == 0) {
+      totalBayar = total.toString();
+    } else {
+      try {
+        setState(() {
+          int totalDiskon = int.parse(diskon);
+          double totalDiskonPersen = total! * (totalDiskon / 100);
+          double hasil = total - totalDiskonPersen;
+          String formattedValue = hasil.toStringAsFixed(0);
+          totalBayar = formattedValue;
+        });
+      } catch (e) {
+        // Handle the error case where diskon is not a valid number
+        print("Error parsing diskon: $e");
+      }
     }
   }
 
@@ -353,7 +358,7 @@ class _PurchasePageState extends State<PurchasePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Total Harga",
+                      Text("Harga Produk",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -469,10 +474,11 @@ class _PurchasePageState extends State<PurchasePage> {
                         onPressed: (int newIndex) {
                           setState(() {
                             _currentSelection = newIndex;
-                            totalBayar = int.parse(getRawValue(
-                                    PoController.hargaController.text))
-                                .toString();
+                            // totalBayar = int.parse(getRawValue(
+                            //         PoController.hargaController.text))
+                            //     .toString();
                             PoController.diskonController.clear();
+                            hitungDiskonPersen("0");
                           });
                         },
                         selectedColor: Colors.white,
@@ -672,8 +678,17 @@ class _PurchasePageState extends State<PurchasePage> {
                         onPressed: () {
                           String jumlahDp =
                               getRawValue(PoController.jDpController.text);
-                          PoController().store(customerId, productId, total,
-                              selectedValueTempo, selectedValueDp, jumlahDp);
+                          String jumlahDiskon =
+                              PoController.diskonController.text;
+                          PoController().store(
+                              customerId,
+                              productId,
+                              totalBayar,
+                              selectedValueTempo,
+                              selectedValueDp,
+                              jumlahDp,
+                              jumlahDiskon,
+                              _currentSelection);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

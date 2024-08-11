@@ -51,15 +51,27 @@ class PoController extends GetxController {
     }
   }
 
-  void store(customers, products, totals, tempos, dps, jumlahDps) {
+  void store(customers, products, totals, tempos, dps, jumlahDps, diskons,
+      diskonTypes) {
     int? customer = customers;
     int? product = products;
     int? jumlah = int.tryParse(jumlahConroller.text);
-    int? totalHarga = totals;
+    String? totalHarga = totals;
     String? tempo = tempos;
     String? dp = dps;
     String? jumlahDp = jumlahDps;
-
+    String? diskon = diskons;
+    String? diskonType;
+    switch (diskonTypes) {
+      case 0:
+        diskonType = "persen";
+        break;
+      case 1:
+        diskonType = "nominal";
+        break;
+      default:
+        diskonType = "-";
+    }
     try {
       if (customer == null ||
           product == null ||
@@ -81,7 +93,9 @@ class PoController extends GetxController {
           "total_harga": totalHarga,
           "tempo": tempo,
           "dp": dp,
-          "jumlah_dp": jumlahDp
+          "jumlah_dp": jumlahDp,
+          "diskon": diskon,
+          "diskon_type": diskonType
         };
         PoProvider().store(token, data).then((value) {
           print(value.statusCode);
