@@ -98,7 +98,7 @@ class PoController extends GetxController {
           "diskon_type": diskonType
         };
         PoProvider().store(token, data).then((value) {
-          print(value.statusCode);
+          print(value.body);
           if (value.statusCode == 201) {
             Get.offAll(() => listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',

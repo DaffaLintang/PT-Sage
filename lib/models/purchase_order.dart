@@ -10,6 +10,8 @@ class Order {
   final String dp;
   final String dpAmount;
   final String status;
+  final String diskon;
+  final String diskonType;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -25,6 +27,8 @@ class Order {
     required this.dp,
     required this.dpAmount,
     required this.status,
+    required this.diskon,
+    required this.diskonType,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -42,6 +46,8 @@ class Order {
       dp: json['dp'],
       dpAmount: json['dp_amount'],
       status: json['status'],
+      diskon: json['diskon'],
+      diskonType: json['diskon_type'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );

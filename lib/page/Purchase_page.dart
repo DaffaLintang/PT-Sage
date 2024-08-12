@@ -112,7 +112,6 @@ class _PurchasePageState extends State<PurchasePage> {
     }
 
     return plainValue;
-    // return formattedValue.replaceAll(RegExp(r'[^\d]'), '');
   }
 
   void handleTextChange() {
@@ -687,7 +686,7 @@ class _PurchasePageState extends State<PurchasePage> {
                               selectedValueTempo,
                               selectedValueDp,
                               jumlahDp,
-                              jumlahDiskon,
+                              getRawValue(jumlahDiskon),
                               _currentSelection);
                         },
                         style: ElevatedButton.styleFrom(
