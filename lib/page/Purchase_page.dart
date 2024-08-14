@@ -67,19 +67,16 @@ class _PurchasePageState extends State<PurchasePage> {
   @override
   void initState() {
     super.initState();
-    poController = Get.put(PoController());
     fetchProduct();
-    fetchCustomer();
-    PoController.jDpController.text = '';
-    PoController.diskonController.clear();
+    poController = Get.put(PoController());
     fetchKemasan();
-    // try {
-    //   poController = Get.find<PoController>();
-    // } catch (e) {
-    //   print('Error fetching PoController: $e');
-    // }
-    // selectedKemasanValues =
-    //     List<String?>.filled(poController.jummlahKemasan.length, null);
+    try {
+      poController = Get.find<PoController>();
+    } catch (e) {
+      print('Error fetching PoController: $e');
+    }
+    selectedKemasanValues =
+        List<String?>.filled(poController.jummlahKemasan.length, null);
   }
 
   Future<void> fetchKemasan() async {
@@ -392,6 +389,7 @@ class _PurchasePageState extends State<PurchasePage> {
                           setState(() {
                             poController.jummlahKemasan
                                 .add(TextEditingController());
+                            print(poController.jummlahKemasan.length);
                           });
                         })
                   ],
@@ -402,90 +400,75 @@ class _PurchasePageState extends State<PurchasePage> {
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: poController.jummlahKemasan.length,
-                  itemBuilder: (context, index) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: poController.jummlahKemasan.length,
-                      itemBuilder: (context, index) {
-                        // Ensure that the index is within bounds
-                        if (index >= selectedKemasanValues.length) {
-                          return Container();
-                        }
-
-                        return Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  itemBuilder: (context, i) {
+                    return Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.black.withOpacity(0.05),
-                                      ),
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton2<String>(
-                                          isExpanded: true,
-                                          hint: Text(
-                                            'Pilih Kemasan',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                            ),
-                                          ),
-                                          items: itemsKemasan.map((int weight) {
-                                            return DropdownMenuItem<String>(
-                                              value: weight.toString(),
-                                              child: Text(
-                                                '${weight.toString()} Kg',
-                                                style: const TextStyle(
-                                                    fontSize: 14),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          value: selectedKemasanValues[index],
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              selectedKemasanValues[index] =
-                                                  value;
-                                            });
-                                          },
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.black.withOpacity(0.05),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Pilih Kemasan',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
                                         ),
                                       ),
+                                      items: itemsKemasan.map((int weight) {
+                                        return DropdownMenuItem<String>(
+                                          value: weight.toString(),
+                                          child: Text(
+                                            '${weight.toString()} Kg',
+                                            style:
+                                                const TextStyle(fontSize: 14),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      value: selectedKemasanValues[0],
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          selectedKemasanValues[0] = value;
+                                        });
+                                      },
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  index != 0
-                                      ? IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () {
-                                            setState(() {
-                                              poController.jummlahKemasan
-                                                  .removeAt(index);
-                                              selectedKemasanValues
-                                                  .removeAt(index);
-                                            });
-                                          },
-                                        )
-                                      : SizedBox(),
-                                ],
+                                ),
                               ),
-                              SizedBox(height: 5),
-                              TextField(
-                                controller: poController.jummlahKemasan[index],
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                    labelText: 'Jumlah kemasan'),
-                              ),
-                              SizedBox(height: 20),
+                              SizedBox(width: 8),
+                              i != 0
+                                  ? IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        setState(() {
+                                          poController.jummlahKemasan
+                                              .removeAt(i);
+                                        });
+                                      },
+                                    )
+                                  : SizedBox(),
                             ],
                           ),
-                        );
-                      },
+                          SizedBox(height: 5),
+                          TextField(
+                            controller: poController.jummlahKemasan[i],
+                            maxLines: null,
+                            decoration:
+                                InputDecoration(labelText: 'Jumlah kemasan'),
+                          ),
+                          SizedBox(height: 20),
+                        ],
+                      ),
                     );
                   },
                 ),
