@@ -11,11 +11,14 @@ import 'package:pt_sage/providers/purchase_order_provide.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/kemasan.dart';
+
 class PoController extends GetxController {
   static TextEditingController jumlahConroller = TextEditingController();
   static TextEditingController hargaController = TextEditingController();
   static TextEditingController jDpController = TextEditingController(text: '');
   static TextEditingController diskonController = TextEditingController();
+  List<TextEditingController> jummlahKemasan = [TextEditingController()];
   String? token = SpUtil.getString('token');
 
   Future<Orders?> getPoData() async {
@@ -31,6 +34,23 @@ class PoController extends GetxController {
       }
     } catch (e) {
       print('Error: ${e.toString()}');
+    }
+  }
+
+  Future<KemasanList?> getKemasan() async {
+    try {
+      final uri = Uri.parse('$PoAPI/kemasan');
+      final response =
+          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        return KemasanList.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return null;
     }
   }
 

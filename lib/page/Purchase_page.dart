@@ -8,11 +8,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:number_text_input_formatter/number_text_input_formatter.dart'
     as numFormat;
+import 'package:pt_sage/models/kemasan.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:intl/intl.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 import '../controllers/purchase_order_controller.dart';
 
@@ -33,8 +33,12 @@ class _PurchasePageState extends State<PurchasePage> {
   final Map<String, int> customertMap = {};
   final List<String> itemsProduk = [];
   String? selectedValueProduk;
+  late PoController poController;
+  List<int> itemsKemasan = [];
+  List<String?> selectedKemasanValues = [];
   final Map<String, int> productMap = {};
   final Map<String, String> hargaMap = {};
+  KemasanList? kemasanList;
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -63,11 +67,29 @@ class _PurchasePageState extends State<PurchasePage> {
   @override
   void initState() {
     super.initState();
+    poController = Get.put(PoController());
     fetchProduct();
     fetchCustomer();
-    print(productId);
     PoController.jDpController.text = '';
     PoController.diskonController.clear();
+    fetchKemasan();
+    // try {
+    //   poController = Get.find<PoController>();
+    // } catch (e) {
+    //   print('Error fetching PoController: $e');
+    // }
+    // selectedKemasanValues =
+    //     List<String?>.filled(poController.jummlahKemasan.length, null);
+  }
+
+  Future<void> fetchKemasan() async {
+    var kemasanList = await poController.getKemasan();
+    setState(() {
+      itemsKemasan =
+          kemasanList?.kemasan.map((kemasan) => kemasan.weight).toList() ?? [];
+      selectedKemasanValues =
+          List<String?>.filled(poController.jummlahKemasan.length, null);
+    });
   }
 
   void fetchProduct() async {
@@ -186,6 +208,11 @@ class _PurchasePageState extends State<PurchasePage> {
         leading: IconButton(
             onPressed: () {
               Get.offAll(() => listPoPage());
+              if (poController.jummlahKemasan.isNotEmpty) {
+                var firstElement = poController.jummlahKemasan.first;
+                poController.jummlahKemasan.clear();
+                poController.jummlahKemasan.add(firstElement);
+              }
             },
             icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.white,
@@ -353,6 +380,118 @@ class _PurchasePageState extends State<PurchasePage> {
                     ],
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Pilih Kemasan",
+                        style: TextStyle(
+                            fontFamily: GoogleFonts.rubik().fontFamily)),
+                    GestureDetector(
+                        child: Icon(Icons.add_box_outlined),
+                        onTap: () {
+                          setState(() {
+                            poController.jummlahKemasan
+                                .add(TextEditingController());
+                          });
+                        })
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: poController.jummlahKemasan.length,
+                  itemBuilder: (context, index) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: poController.jummlahKemasan.length,
+                      itemBuilder: (context, index) {
+                        // Ensure that the index is within bounds
+                        if (index >= selectedKemasanValues.length) {
+                          return Container();
+                        }
+
+                        return Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.black.withOpacity(0.05),
+                                      ),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton2<String>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            'Pilih Kemasan',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: itemsKemasan.map((int weight) {
+                                            return DropdownMenuItem<String>(
+                                              value: weight.toString(),
+                                              child: Text(
+                                                '${weight.toString()} Kg',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          value: selectedKemasanValues[index],
+                                          onChanged: (String? value) {
+                                            setState(() {
+                                              selectedKemasanValues[index] =
+                                                  value;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  index != 0
+                                      ? IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            setState(() {
+                                              poController.jummlahKemasan
+                                                  .removeAt(index);
+                                              selectedKemasanValues
+                                                  .removeAt(index);
+                                            });
+                                          },
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              TextField(
+                                controller: poController.jummlahKemasan[index],
+                                maxLines: null,
+                                decoration: InputDecoration(
+                                    labelText: 'Jumlah kemasan'),
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -500,7 +639,6 @@ class _PurchasePageState extends State<PurchasePage> {
                                 onSubmitted: (value) {
                                   hitungDiskonPersen(
                                       PoController.diskonController.text);
-                                  print(PoController.diskonController.text);
                                 },
                                 controller: PoController.diskonController,
                                 inputFormatters: [

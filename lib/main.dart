@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:pt_sage/page/Pengiriman_barang.dart';
-import 'package:pt_sage/page/dashboard_page.dart';
-import 'package:pt_sage/page/feedback_page.dart';
-import 'package:pt_sage/page/home_page.dart';
+import 'package:get/get.dart';
 import 'package:pt_sage/page/login_page.dart';
 import 'package:sp_util/sp_util.dart';
+
+import 'controllers/purchase_order_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: BindingsBuilder(() {
+        Get.put(PoController()); // Daftarkan controller di sini
+      }),
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
