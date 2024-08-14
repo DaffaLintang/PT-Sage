@@ -19,21 +19,24 @@ class PoController extends GetxController {
   static TextEditingController jDpController = TextEditingController(text: '');
   static TextEditingController diskonController = TextEditingController();
   List<TextEditingController> jummlahKemasan = [TextEditingController()];
+  static TextEditingController dateController = TextEditingController();
   String? token = SpUtil.getString('token');
 
-  Future<Orders?> getPoData() async {
+  Future<PurchaseOrderList?> getPoData() async {
     try {
       final uri = Uri.parse(PoAPI);
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
+        print(response.statusCode);
         List<dynamic> jsonResponse = jsonDecode(response.body);
-        return Orders.fromJson(jsonResponse);
+        return PurchaseOrderList.fromJson(jsonResponse);
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: ${e.toString()}');
+      return null;
     }
   }
 
@@ -72,7 +75,7 @@ class PoController extends GetxController {
   }
 
   void store(customers, products, totals, tempos, dps, jumlahDps, diskons,
-      diskonTypes) {
+      diskonTypes, kemasans) {
     int? customer = customers;
     int? product = products;
     int? jumlah = int.tryParse(jumlahConroller.text);
@@ -82,7 +85,6 @@ class PoController extends GetxController {
     String? jumlahDp = jumlahDps;
     String? diskon = diskons;
     String? diskonType;
-    List? kemasans;
     switch (diskonTypes) {
       case 0:
         diskonType = "persen";

@@ -228,7 +228,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Text(order.diskon),
+                                // Text(order.diskon),
                                 SizedBox(
                                   height: 15,
                                 )
@@ -259,6 +259,34 @@ class _PoDetailPageState extends State<PoDetailPage> {
                         height: 5,
                       ),
                       Text(order.status),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Kemasan",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: order.kemasan.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Kemasan ID: ${order.kemasan[index].kemasanId}'),
+                              Text(
+                                  'Quantity: ${order.kemasan[index].quantity}'),
+                            ],
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

@@ -15,7 +15,7 @@ class listPoPage extends StatefulWidget {
 }
 
 class _listPoPageState extends State<listPoPage> {
-  Orders? orders;
+  PurchaseOrderList? orders;
 
   @override
   void initState() {
@@ -25,9 +25,10 @@ class _listPoPageState extends State<listPoPage> {
 
   void fetchOrders() async {
     final poController = PoController();
-    Orders? fetchedOrders = await poController.getPoData();
+    PurchaseOrderList? fetchedOrders = await poController.getPoData();
     setState(() {
       orders = fetchedOrders;
+      print(orders);
     });
   }
 

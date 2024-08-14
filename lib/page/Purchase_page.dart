@@ -70,6 +70,7 @@ class _PurchasePageState extends State<PurchasePage> {
   void initState() {
     super.initState();
     fetchProduct();
+    fetchCustomer();
     poController = Get.put(PoController());
     fetchKemasan();
     try {
@@ -79,7 +80,19 @@ class _PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  Future<void> selectedData() async {}
+  Future<void> selectedData() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1945),
+        lastDate: DateTime(2900));
+
+    if (pickedDate != null) {
+      setState(() {
+        PoController.dateController.text = pickedDate.toString().split(" ")[0];
+      });
+    }
+  }
 
   Future<void> fetchKemasan() async {
     var kemasanList = await poController.getKemasan();
@@ -401,7 +414,10 @@ class _PurchasePageState extends State<PurchasePage> {
                         style: TextStyle(
                             fontFamily: GoogleFonts.rubik().fontFamily)),
                     GestureDetector(
-                        child: Icon(Icons.add_box_outlined),
+                        child: Icon(
+                          Icons.add_box_outlined,
+                          color: Color(0xffBF1619),
+                        ),
                         onTap: () {
                           setState(() {
                             poController.jummlahKemasan
@@ -815,39 +831,46 @@ class _PurchasePageState extends State<PurchasePage> {
                                   fontWeight: FontWeight.w600, fontSize: 20)),
                         ],
                       ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Tanggal Pengiriman",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: PoController.hargaController,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Tanggal Pengiriman',
-                              prefixIcon: Icon(Icons.date_range)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
+                // Container(
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text("Tanggal Pengiriman",
+                //           style: TextStyle(
+                //               fontFamily: GoogleFonts.rubik().fontFamily)),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Container(
+                //         padding:
+                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //         decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(12),
+                //             color: Colors.black.withOpacity(0.05)),
+                //         child: TextField(
+                //             controller: PoController.dateController,
+                //             decoration: InputDecoration(
+                //                 border: InputBorder.none,
+                //                 hintText: 'Tanggal Pengiriman',
+                //                 prefixIcon: Icon(
+                //                   Icons.date_range,
+                //                   color: Color(0xffBF1619),
+                //                 )),
+                //             onTap: () {
+                //               selectedData();
+                //             },
+                //             showCursor: true,
+                //             readOnly: true),
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 10,
+                // ),
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: SizedBox(
@@ -856,6 +879,7 @@ class _PurchasePageState extends State<PurchasePage> {
                       child: ElevatedButton(
                         child: Text('Kirim'),
                         onPressed: () {
+                          printValue();
                           String jumlahDp =
                               getRawValue(PoController.jDpController.text);
                           String jumlahDiskon =
@@ -868,8 +892,9 @@ class _PurchasePageState extends State<PurchasePage> {
                               selectedValueDp,
                               jumlahDp,
                               getRawValue(jumlahDiskon),
-                              _currentSelection);
-                          printValue();
+                              _currentSelection,
+                              formattedValues);
+                          print(formattedValues);
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
