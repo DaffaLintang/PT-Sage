@@ -75,8 +75,6 @@ class _PurchasePageState extends State<PurchasePage> {
     } catch (e) {
       print('Error fetching PoController: $e');
     }
-    selectedKemasanValues =
-        List<String?>.filled(poController.jummlahKemasan.length, null);
   }
 
   Future<void> fetchKemasan() async {
@@ -84,8 +82,11 @@ class _PurchasePageState extends State<PurchasePage> {
     setState(() {
       itemsKemasan =
           kemasanList?.kemasan.map((kemasan) => kemasan.weight).toList() ?? [];
-      selectedKemasanValues =
-          List<String?>.filled(poController.jummlahKemasan.length, null);
+      selectedKemasanValues = List<String?>.generate(
+        poController.jummlahKemasan.length,
+        (index) => null, // Inisialisasi semua nilai dengan null
+        growable: true, // Pastikan list bisa ditambah atau dikurangi elemennya
+      );
     });
   }
 
@@ -389,6 +390,7 @@ class _PurchasePageState extends State<PurchasePage> {
                           setState(() {
                             poController.jummlahKemasan
                                 .add(TextEditingController());
+                            selectedKemasanValues.add(null);
                             print(poController.jummlahKemasan.length);
                           });
                         })
@@ -400,7 +402,11 @@ class _PurchasePageState extends State<PurchasePage> {
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: poController.jummlahKemasan.length,
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, i) {
+                    if (i >= selectedKemasanValues.length) {
+                      return Container(); // Pastikan indeks berada dalam batas
+                    }
                     return Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,10 +441,10 @@ class _PurchasePageState extends State<PurchasePage> {
                                           ),
                                         );
                                       }).toList(),
-                                      value: selectedKemasanValues[0],
+                                      value: selectedKemasanValues[i],
                                       onChanged: (String? value) {
                                         setState(() {
-                                          selectedKemasanValues[0] = value;
+                                          selectedKemasanValues[i] = value;
                                         });
                                       },
                                     ),
@@ -451,8 +457,13 @@ class _PurchasePageState extends State<PurchasePage> {
                                       icon: Icon(Icons.delete),
                                       onPressed: () {
                                         setState(() {
+                                          poController.jummlahKemasan[i]
+                                              .clear();
+                                          poController.jummlahKemasan[i]
+                                              .dispose();
                                           poController.jummlahKemasan
                                               .removeAt(i);
+                                          selectedKemasanValues.removeAt(i);
                                         });
                                       },
                                     )
