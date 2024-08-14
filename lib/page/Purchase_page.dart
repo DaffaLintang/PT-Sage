@@ -34,11 +34,13 @@ class _PurchasePageState extends State<PurchasePage> {
   final List<String> itemsProduk = [];
   String? selectedValueProduk;
   late PoController poController;
-  List<int> itemsKemasan = [];
+  List<int> itemsKemasanIds = [];
+  List<int> itemsKemasanWeights = [];
   List<String?> selectedKemasanValues = [];
   final Map<String, int> productMap = {};
   final Map<String, String> hargaMap = {};
   KemasanList? kemasanList;
+  List<Map<String, dynamic>> formattedValues = [];
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -77,15 +79,20 @@ class _PurchasePageState extends State<PurchasePage> {
     }
   }
 
+  Future<void> selectedData() async {}
+
   Future<void> fetchKemasan() async {
     var kemasanList = await poController.getKemasan();
     setState(() {
-      itemsKemasan =
+      itemsKemasanIds =
+          kemasanList?.kemasan.map((kemasan) => kemasan.id).toList() ?? [];
+      itemsKemasanWeights =
           kemasanList?.kemasan.map((kemasan) => kemasan.weight).toList() ?? [];
+
       selectedKemasanValues = List<String?>.generate(
         poController.jummlahKemasan.length,
         (index) => null, // Inisialisasi semua nilai dengan null
-        growable: true, // Pastikan list bisa ditambah atau dikurangi elemennya
+        growable: true,
       );
     });
   }
@@ -142,6 +149,15 @@ class _PurchasePageState extends State<PurchasePage> {
           TextPosition(offset: PoController.jumlahConroller.text.length));
     }
     hitungHarga();
+  }
+
+  void printValue() {
+    for (int i = 0; i < selectedKemasanValues.length; i++) {
+      var id = selectedKemasanValues[i];
+      var quantity = int.tryParse(poController.jummlahKemasan[i].text) ?? 0;
+
+      formattedValues.add({"id": int.parse(id ?? "0"), "quantity": quantity});
+    }
   }
 
   void hitungDiskonNominal(String diskon) {
@@ -431,16 +447,18 @@ class _PurchasePageState extends State<PurchasePage> {
                                           color: Theme.of(context).hintColor,
                                         ),
                                       ),
-                                      items: itemsKemasan.map((int weight) {
+                                      items: List.generate(
+                                          itemsKemasanIds.length, (index) {
                                         return DropdownMenuItem<String>(
-                                          value: weight.toString(),
+                                          value: itemsKemasanIds[index]
+                                              .toString(), // Simpan ID sebagai nilai
                                           child: Text(
-                                            '${weight.toString()} Kg',
+                                            '${itemsKemasanWeights[index]} Kg', // Tampilkan weight
                                             style:
                                                 const TextStyle(fontSize: 14),
                                           ),
                                         );
-                                      }).toList(),
+                                      }),
                                       value: selectedKemasanValues[i],
                                       onChanged: (String? value) {
                                         setState(() {
@@ -474,6 +492,7 @@ class _PurchasePageState extends State<PurchasePage> {
                           TextField(
                             controller: poController.jummlahKemasan[i],
                             maxLines: null,
+                            keyboardType: TextInputType.number,
                             decoration:
                                 InputDecoration(labelText: 'Jumlah kemasan'),
                           ),
@@ -796,6 +815,36 @@ class _PurchasePageState extends State<PurchasePage> {
                                   fontWeight: FontWeight.w600, fontSize: 20)),
                         ],
                       ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Tanggal Pengiriman",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          // controller: PoController.hargaController,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Tanggal Pengiriman',
+                              prefixIcon: Icon(Icons.date_range)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -820,6 +869,7 @@ class _PurchasePageState extends State<PurchasePage> {
                               jumlahDp,
                               getRawValue(jumlahDiskon),
                               _currentSelection);
+                          printValue();
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

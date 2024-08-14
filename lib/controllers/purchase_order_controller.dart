@@ -82,6 +82,7 @@ class PoController extends GetxController {
     String? jumlahDp = jumlahDps;
     String? diskon = diskons;
     String? diskonType;
+    List? kemasans;
     switch (diskonTypes) {
       case 0:
         diskonType = "persen";
@@ -101,7 +102,8 @@ class PoController extends GetxController {
           tempo == null ||
           tempo.isEmpty ||
           dp == null ||
-          dp.isEmpty) {
+          dp.isEmpty ||
+          kemasans!.length < 0) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
@@ -115,7 +117,8 @@ class PoController extends GetxController {
           "dp": dp,
           "jumlah_dp": jumlahDp,
           "diskon": diskon,
-          "diskon_type": diskonType
+          "diskon_type": diskonType,
+          "kemasan": kemasans,
         };
         PoProvider().store(token, data).then((value) {
           print(value.body);
