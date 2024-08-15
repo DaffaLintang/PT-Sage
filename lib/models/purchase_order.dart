@@ -95,15 +95,18 @@ class PurchaseOrder {
 class Kemasan {
   final int kemasanId;
   final int quantity;
+  final int berat;
 
   Kemasan({
     required this.kemasanId,
     required this.quantity,
+    required this.berat,
   });
 
   factory Kemasan.fromJson(Map<String, dynamic> json) {
     return Kemasan(
       kemasanId: json['kemasan_id'],
+      berat: json['berat'],
       quantity: json['quantity'],
     );
   }
@@ -111,6 +114,7 @@ class Kemasan {
   Map<String, dynamic> toJson() {
     return {
       'kemasan_id': kemasanId,
+      'berat': berat,
       'quantity': quantity,
     };
   }

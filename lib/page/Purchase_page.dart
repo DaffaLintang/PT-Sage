@@ -41,6 +41,7 @@ class _PurchasePageState extends State<PurchasePage> {
   final Map<String, String> hargaMap = {};
   KemasanList? kemasanList;
   List<Map<String, dynamic>> formattedValues = [];
+  int jumlahQuantity = 0;
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -171,6 +172,13 @@ class _PurchasePageState extends State<PurchasePage> {
 
       formattedValues.add({"id": int.parse(id ?? "0"), "quantity": quantity});
     }
+  }
+
+  void totalQuantity() {
+    for (int i = 0; i < formattedValues.length; i++) {
+      jumlahQuantity += (formattedValues[i]['quantity'] as num).toInt();
+    }
+    print(jumlahQuantity);
   }
 
   void hitungDiskonNominal(String diskon) {
@@ -880,6 +888,7 @@ class _PurchasePageState extends State<PurchasePage> {
                         child: Text('Kirim'),
                         onPressed: () {
                           printValue();
+                          totalQuantity();
                           String jumlahDp =
                               getRawValue(PoController.jDpController.text);
                           String jumlahDiskon =
@@ -893,8 +902,10 @@ class _PurchasePageState extends State<PurchasePage> {
                               jumlahDp,
                               getRawValue(jumlahDiskon),
                               _currentSelection,
-                              formattedValues);
-                          print(formattedValues);
+                              formattedValues,
+                              jumlahQuantity);
+                          formattedValues.clear();
+                          jumlahQuantity = 0;
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

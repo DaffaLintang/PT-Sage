@@ -75,7 +75,7 @@ class PoController extends GetxController {
   }
 
   void store(customers, products, totals, tempos, dps, jumlahDps, diskons,
-      diskonTypes, kemasans) {
+      diskonTypes, kemasans, quantity) {
     int? customer = customers;
     int? product = products;
     int? jumlah = int.tryParse(jumlahConroller.text);
@@ -85,6 +85,7 @@ class PoController extends GetxController {
     String? jumlahDp = jumlahDps;
     String? diskon = diskons;
     String? diskonType;
+    int? quantitys = quantity;
     switch (diskonTypes) {
       case 0:
         diskonType = "persen";
@@ -95,6 +96,7 @@ class PoController extends GetxController {
       default:
         diskonType = "-";
     }
+    print(quantitys);
     try {
       if (customer == null ||
           product == null ||
@@ -107,6 +109,9 @@ class PoController extends GetxController {
           dp.isEmpty ||
           kemasans!.length < 0) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else if (quantitys! != jumlah) {
+        Get.snackbar('Error', 'Quantity melebihi/kurang dari jumlah produk',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
         EasyLoading.show();
