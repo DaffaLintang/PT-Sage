@@ -266,7 +266,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   Get.offAll(() => KuisonerPage());
                                 },
                                 title: 'Kuisioner',
-                                imageAsset: 'assets/Chat_alt_3.png'),
+                                imageAsset: 'assets/Desk_alt.png'),
                           ],
                         )
                       ]),
