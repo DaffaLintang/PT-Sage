@@ -216,3 +216,112 @@ class KpData {
 
   KpData(this.subKuisionerIds, this.selectedValues);
 }
+
+class SurveyData {
+  final List<DataPerAspek> dataPerAspek;
+  final CountJawaban totalJawabanAll;
+  final List<IndeksKepuasan> indeksKepuasan;
+  final CountJawaban totalIndeksKeseluruhan;
+  final String totalPercentage;
+
+  SurveyData({
+    required this.dataPerAspek,
+    required this.totalJawabanAll,
+    required this.indeksKepuasan,
+    required this.totalIndeksKeseluruhan,
+    required this.totalPercentage,
+  });
+
+  factory SurveyData.fromJson(Map<String, dynamic> json) {
+    return SurveyData(
+      dataPerAspek: (json['dataPerAspek'] as List<dynamic>)
+          .map((e) => DataPerAspek.fromJson(e))
+          .toList(),
+      totalJawabanAll: CountJawaban.fromJson(json['totalJawabanAll']),
+      indeksKepuasan: (json['indeksKepuasan'] as List<dynamic>)
+          .map((e) => IndeksKepuasan.fromJson(e))
+          .toList(),
+      totalIndeksKeseluruhan:
+          CountJawaban.fromJson(json['totalIndeksKeseluruhan']),
+      totalPercentage: json['totalPercentage'],
+    );
+  }
+}
+
+class DataPerAspek {
+  final int index;
+  final String aspek;
+  final CountJawaban countJawaban;
+  final int totalJawaban;
+
+  DataPerAspek({
+    required this.index,
+    required this.aspek,
+    required this.countJawaban,
+    required this.totalJawaban,
+  });
+
+  factory DataPerAspek.fromJson(Map<String, dynamic> json) {
+    return DataPerAspek(
+      index: json['index'],
+      aspek: json['aspek'],
+      countJawaban: CountJawaban.fromJson(json['countJawaban']),
+      totalJawaban: json['totalJawaban'],
+    );
+  }
+}
+
+class CountJawaban {
+  final int one;
+  final int two;
+  final int three;
+  final int four;
+  final int five;
+
+  CountJawaban({
+    required this.one,
+    required this.two,
+    required this.three,
+    required this.four,
+    required this.five,
+  });
+
+  factory CountJawaban.fromJson(Map<String, dynamic> json) {
+    return CountJawaban(
+      one: json['1'],
+      two: json['2'],
+      three: json['3'],
+      four: json['4'],
+      five: json['5'],
+    );
+  }
+}
+
+class IndeksKepuasan {
+  final int index;
+  final String aspek;
+  final CountJawaban indeksAspek;
+  final int totalIndeks;
+  final double indeksKepuasanAspek;
+  final String presentase;
+
+  IndeksKepuasan({
+    required this.index,
+    required this.aspek,
+    required this.indeksAspek,
+    required this.totalIndeks,
+    required this.indeksKepuasanAspek,
+    required this.presentase,
+  });
+
+  factory IndeksKepuasan.fromJson(Map<String, dynamic> json) {
+    return IndeksKepuasan(
+      index: json['index'],
+      aspek: json['aspek'],
+      indeksAspek: CountJawaban.fromJson(json['indeksAspek']),
+      totalIndeks: json['totalIndeks'],
+      indeksKepuasanAspek: json['indeksKepuasanAspek'].toDouble(),
+      presentase: json['presentase'],
+    );
+  }
+}

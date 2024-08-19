@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/controllers/kuisioner_controller.dart';
@@ -17,7 +18,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
   final KuisionerController kuisionerController =
       Get.put(KuisionerController());
   int _currentSelection = 0;
-
   KuisionerKpList? kuisionerKpList;
   KuisionerPbList? kuisionerPbList;
   List<List<int?>> _selectedValues = [];
@@ -39,41 +39,52 @@ class _KuisonerPageState extends State<KuisonerPage> {
 
   @override
   void dispose() {
-    // Tidak perlu menghapus controller di sini karena GetX akan mengelola siklus hidup controller
     super.dispose();
   }
 
   void fetchCustomer() async {
+    EasyLoading.show();
     final poController = PoController();
     DataWrapper? dataWrapper = await poController.getProductData();
-    setState(() {
-      dataWrapper?.customers.forEach((customer) {
-        itemsCustomer.add(customer.customersName);
-        customertMap[customer.customersName] = customer.id;
+    if (mounted) {
+      setState(() {
+        dataWrapper?.customers.forEach((customer) {
+          itemsCustomer.add(customer.customersName);
+          customertMap[customer.customersName] = customer.id;
+        });
       });
-    });
+    }
+    EasyLoading.dismiss();
   }
 
   void fetchKuisioner() async {
+    EasyLoading.show();
     KuisionerKpList? fetchedOrders =
         await kuisionerController.getKepuasanPelangan();
-    setState(() {
-      kuisionerKpList = fetchedOrders;
-      if (kuisionerKpList != null) {
-        _initializeSelectedValues();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        kuisionerKpList = fetchedOrders;
+        if (kuisionerKpList != null) {
+          _initializeSelectedValues();
+        }
+      });
+    }
+    EasyLoading.dismiss();
   }
 
   void fetchKuisionerPb() async {
+    EasyLoading.show();
     KuisionerPbList? fetchedOrders =
         await kuisionerController.getPosisiBersaing();
-    setState(() {
-      kuisionerPbList = fetchedOrders;
-      if (kuisionerPbList != null) {
-        _initializeSelectedValuesPb();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        kuisionerPbList = fetchedOrders;
+        if (kuisionerPbList != null) {
+          _initializeSelectedValuesPb();
+        }
+      });
+    }
+    EasyLoading.dismiss();
   }
 
   void _initializeSelectedValuesPb() {

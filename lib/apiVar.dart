@@ -6,3 +6,4 @@ const String KuisionerKepuasanPelangganApi =
     "http://10.0.2.2:8000/api/kepuasan-pelanggan";
 const String KuisionerPosisiBersaingApi =
     "http://10.0.2.2:8000/api/posisi-bersaing";
+const String IndeksAspek = "http://10.0.2.2:8000/api/indeks-aspek";

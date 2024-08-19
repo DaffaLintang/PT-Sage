@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
+import 'package:pt_sage/page/detail_kuisioner_page.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invc_approvel_page.dart';
 import 'package:pt_sage/page/kuisoner_page.dart';

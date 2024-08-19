@@ -63,9 +63,25 @@ class KuisionerController extends GetxController {
     }
   }
 
+  Future<SurveyData?> getDataSurveyKp() async {
+    try {
+      final uri = Uri.parse(IndeksAspek);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        return SurveyData.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return null;
+    }
+  }
+
   void storePb(customerId, jawaban, catatan) {
     int? customer = customerId;
-
     try {
       if (customer == null ||
           jawaban.isEmpty ||
