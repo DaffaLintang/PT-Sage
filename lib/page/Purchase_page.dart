@@ -42,6 +42,8 @@ class _PurchasePageState extends State<PurchasePage> {
   KemasanList? kemasanList;
   List<Map<String, dynamic>> formattedValues = [];
   int jumlahQuantity = 0;
+  int? calculatedValue;
+  int totalValue = 0;
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -169,16 +171,8 @@ class _PurchasePageState extends State<PurchasePage> {
     for (int i = 0; i < selectedKemasanValues.length; i++) {
       var id = selectedKemasanValues[i];
       var quantity = int.tryParse(poController.jummlahKemasan[i].text) ?? 0;
-
       formattedValues.add({"id": int.parse(id ?? "0"), "quantity": quantity});
     }
-  }
-
-  void totalQuantity() {
-    for (int i = 0; i < formattedValues.length; i++) {
-      jumlahQuantity += (formattedValues[i]['quantity'] as num).toInt();
-    }
-    print(jumlahQuantity);
   }
 
   void hitungDiskonNominal(String diskon) {
@@ -245,6 +239,7 @@ class _PurchasePageState extends State<PurchasePage> {
               Get.offAll(() => listPoPage());
               if (poController.jummlahKemasan.isNotEmpty) {
                 var firstElement = poController.jummlahKemasan.first;
+                firstElement.text = '';
                 poController.jummlahKemasan.clear();
                 poController.jummlahKemasan.add(firstElement);
               }
@@ -387,7 +382,38 @@ class _PurchasePageState extends State<PurchasePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Jumlah",
+                      Text("Harga Produk",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                          enabled: false,
+                          controller: PoController.hargaController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Total Bayar',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Jumlah (kg)",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -431,7 +457,6 @@ class _PurchasePageState extends State<PurchasePage> {
                             poController.jummlahKemasan
                                 .add(TextEditingController());
                             selectedKemasanValues.add(null);
-                            print(poController.jummlahKemasan.length);
                           });
                         })
                   ],
@@ -439,6 +464,7 @@ class _PurchasePageState extends State<PurchasePage> {
                 SizedBox(
                   height: 10,
                 ),
+
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: poController.jummlahKemasan.length,
@@ -447,6 +473,16 @@ class _PurchasePageState extends State<PurchasePage> {
                     if (i >= selectedKemasanValues.length) {
                       return Container(); // Pastikan indeks berada dalam batas
                     }
+
+                    int weight = 0;
+                    if (selectedKemasanValues[i] != null) {
+                      int? selectedId = int.tryParse(selectedKemasanValues[i]!);
+                      int index = itemsKemasanIds.indexOf(selectedId!);
+                      if (index != -1) {
+                        weight = itemsKemasanWeights[index];
+                      }
+                    }
+
                     return Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -487,6 +523,42 @@ class _PurchasePageState extends State<PurchasePage> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           selectedKemasanValues[i] = value;
+
+                                          // Update weight setelah pemilihan baru
+                                          int? selectedId =
+                                              int.tryParse(value!);
+                                          int index = itemsKemasanIds
+                                              .indexOf(selectedId!);
+                                          if (index != -1) {
+                                            weight = itemsKemasanWeights[index];
+                                          }
+
+                                          // Hitung dan update total
+                                          totalValue = 0;
+                                          for (int j = 0;
+                                              j <
+                                                  poController
+                                                      .jummlahKemasan.length;
+                                              j++) {
+                                            int jumlah = int.tryParse(
+                                                    poController
+                                                        .jummlahKemasan[j]
+                                                        .text) ??
+                                                0;
+                                            int itemWeight = 0;
+                                            if (selectedKemasanValues[j] !=
+                                                null) {
+                                              int? selectedId = int.tryParse(
+                                                  selectedKemasanValues[j]!);
+                                              int index = itemsKemasanIds
+                                                  .indexOf(selectedId!);
+                                              if (index != -1) {
+                                                itemWeight =
+                                                    itemsKemasanWeights[index];
+                                              }
+                                            }
+                                            totalValue += jumlah * itemWeight;
+                                          }
                                         });
                                       },
                                     ),
@@ -506,6 +578,33 @@ class _PurchasePageState extends State<PurchasePage> {
                                           poController.jummlahKemasan
                                               .removeAt(i);
                                           selectedKemasanValues.removeAt(i);
+
+                                          // Recalculate total after deletion
+                                          totalValue = 0;
+                                          for (int j = 0;
+                                              j <
+                                                  poController
+                                                      .jummlahKemasan.length;
+                                              j++) {
+                                            int jumlah = int.tryParse(
+                                                    poController
+                                                        .jummlahKemasan[j]
+                                                        .text) ??
+                                                0;
+                                            int itemWeight = 0;
+                                            if (selectedKemasanValues[j] !=
+                                                null) {
+                                              int? selectedId = int.tryParse(
+                                                  selectedKemasanValues[j]!);
+                                              int index = itemsKemasanIds
+                                                  .indexOf(selectedId!);
+                                              if (index != -1) {
+                                                itemWeight =
+                                                    itemsKemasanWeights[index];
+                                              }
+                                            }
+                                            totalValue += jumlah * itemWeight;
+                                          }
                                         });
                                       },
                                     )
@@ -519,6 +618,30 @@ class _PurchasePageState extends State<PurchasePage> {
                             keyboardType: TextInputType.number,
                             decoration:
                                 InputDecoration(labelText: 'Jumlah kemasan'),
+                            onChanged: (value) {
+                              setState(() {
+                                // Recalculate total when the text changes
+                                totalValue = 0;
+                                for (int j = 0;
+                                    j < poController.jummlahKemasan.length;
+                                    j++) {
+                                  int jumlah = int.tryParse(poController
+                                          .jummlahKemasan[j].text) ??
+                                      0;
+                                  int itemWeight = 0;
+                                  if (selectedKemasanValues[j] != null) {
+                                    int? selectedId =
+                                        int.tryParse(selectedKemasanValues[j]!);
+                                    int index =
+                                        itemsKemasanIds.indexOf(selectedId!);
+                                    if (index != -1) {
+                                      itemWeight = itemsKemasanWeights[index];
+                                    }
+                                  }
+                                  totalValue += jumlah * itemWeight;
+                                }
+                              });
+                            },
                           ),
                           SizedBox(height: 20),
                         ],
@@ -528,37 +651,6 @@ class _PurchasePageState extends State<PurchasePage> {
                 ),
                 SizedBox(
                   height: 20,
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Harga Produk",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          enabled: false,
-                          controller: PoController.hargaController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Total Bayar',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
                 ),
                 Container(
                   child: Column(
@@ -876,9 +968,9 @@ class _PurchasePageState extends State<PurchasePage> {
                 //     ],
                 //   ),
                 // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: SizedBox(
@@ -888,7 +980,6 @@ class _PurchasePageState extends State<PurchasePage> {
                         child: Text('Kirim'),
                         onPressed: () {
                           printValue();
-                          totalQuantity();
                           String jumlahDp =
                               getRawValue(PoController.jDpController.text);
                           String jumlahDiskon =
@@ -903,9 +994,8 @@ class _PurchasePageState extends State<PurchasePage> {
                               getRawValue(jumlahDiskon),
                               _currentSelection,
                               formattedValues,
-                              jumlahQuantity);
+                              totalValue);
                           formattedValues.clear();
-                          jumlahQuantity = 0;
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
