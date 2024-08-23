@@ -95,3 +95,171 @@ class Customers {
     };
   }
 }
+
+class CustomersKp {
+  final int id;
+  final String customersName;
+  final String phone;
+  final String provinceCode;
+  final String regencyCode;
+  final String districtCode;
+  final String address;
+  final String noMoU;
+  final String activePeriodFrom;
+  final String activePeriodTo;
+  final String latitude;
+  final String longitude;
+  final String statusActive;
+  final String statusApprove;
+  final int usersId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  CustomersKp({
+    required this.id,
+    required this.customersName,
+    required this.phone,
+    required this.provinceCode,
+    required this.regencyCode,
+    required this.districtCode,
+    required this.address,
+    required this.noMoU,
+    required this.activePeriodFrom,
+    required this.activePeriodTo,
+    required this.latitude,
+    required this.longitude,
+    required this.statusActive,
+    required this.statusApprove,
+    required this.usersId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory CustomersKp.fromJson(Map<String, dynamic> json) {
+    return CustomersKp(
+      id: json['id'],
+      customersName: json['customers_name'],
+      phone: json['phone'],
+      provinceCode: json['province_code'],
+      regencyCode: json['regency_code'],
+      districtCode: json['district_code'],
+      address: json['address'],
+      noMoU: json['noMoU'],
+      activePeriodFrom: json['active_period_from'],
+      activePeriodTo: json['active_period_to'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      statusActive: json['status_active'],
+      statusApprove: json['status_approve'],
+      usersId: json['users_id'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'customers_name': customersName,
+      'phone': phone,
+      'province_code': provinceCode,
+      'regency_code': regencyCode,
+      'district_code': districtCode,
+      'address': address,
+      'noMoU': noMoU,
+      'active_period_from': activePeriodFrom,
+      'active_period_to': activePeriodTo,
+      'latitude': latitude,
+      'longitude': longitude,
+      'status_active': statusActive,
+      'status_approve': statusApprove,
+      'users_id': usersId,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+}
+
+class CustomersPb {
+  final int id;
+  final String customersName;
+  final String phone;
+  final String provinceCode;
+  final String regencyCode;
+  final String districtCode;
+  final String address;
+  final String noMoU;
+  final String activePeriodFrom;
+  final String activePeriodTo;
+  final String latitude;
+  final String longitude;
+  final String statusActive;
+  final String statusApprove;
+  final int usersId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  CustomersPb({
+    required this.id,
+    required this.customersName,
+    required this.phone,
+    required this.provinceCode,
+    required this.regencyCode,
+    required this.districtCode,
+    required this.address,
+    required this.noMoU,
+    required this.activePeriodFrom,
+    required this.activePeriodTo,
+    required this.latitude,
+    required this.longitude,
+    required this.statusActive,
+    required this.statusApprove,
+    required this.usersId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory CustomersPb.fromJson(Map<String, dynamic> json) {
+    return CustomersPb(
+      id: json['id'],
+      customersName: json['customers_name'],
+      phone: json['phone'],
+      provinceCode: json['province_code'],
+      regencyCode: json['regency_code'],
+      districtCode: json['district_code'],
+      address: json['address'],
+      noMoU: json['noMoU'],
+      activePeriodFrom: json['active_period_from'],
+      activePeriodTo: json['active_period_to'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      statusActive: json['status_active'],
+      statusApprove: json['status_approve'],
+      usersId: json['users_id'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'customers_name': customersName,
+      'phone': phone,
+      'province_code': provinceCode,
+      'regency_code': regencyCode,
+      'district_code': districtCode,
+      'address': address,
+      'noMoU': noMoU,
+      'active_period_from': activePeriodFrom,
+      'active_period_to': activePeriodTo,
+      'latitude': latitude,
+      'longitude': longitude,
+      'status_active': statusActive,
+      'status_approve': statusApprove,
+      'users_id': usersId,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
+import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import 'package:http/http.dart' as http;
 import 'package:pt_sage/page/kuisoner_page.dart';
@@ -63,6 +64,28 @@ class KuisionerController extends GetxController {
     }
   }
 
+  Future<List<CustomersPb>> getPosisiBersaingCs() async {
+    final response = await http.get(Uri.parse(PosisiBersaingPb));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body)['customers'];
+      return jsonResponse.map((data) => CustomersPb.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load customers');
+    }
+  }
+
+  Future<List<CustomersKp>> getKepuasanPelangganCs() async {
+    final response = await http.get(Uri.parse(KepuasanPelangganPb));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body)['customers'];
+      return jsonResponse.map((data) => CustomersKp.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load customers');
+    }
+  }
+
   Future<SurveyData?> getDataSurveyKp() async {
     try {
       final uri = Uri.parse(IndeksAspek);
@@ -97,6 +120,7 @@ class KuisionerController extends GetxController {
           "catatan": catatan,
         };
         KuisionerProvider().storePb(data).then((value) {
+          print(value.statusCode);
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),

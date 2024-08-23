@@ -7,3 +7,7 @@ const String KuisionerKepuasanPelangganApi =
 const String KuisionerPosisiBersaingApi =
     "http://10.0.2.2:8000/api/posisi-bersaing";
 const String IndeksAspek = "http://10.0.2.2:8000/api/indeks-aspek";
+const String PosisiBersaingPb =
+    "http://10.0.2.2:8000/api/posisi-bersaing/getCS";
+const String KepuasanPelangganPb =
+    "http://10.0.2.2:8000/api/kepuasan-pelanggan/getCS";

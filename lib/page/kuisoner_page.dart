@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pt_sage/controllers/kuisioner_controller.dart';
+import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import '../controllers/purchase_order_controller.dart';
 import '../models/warper.dart';
@@ -20,11 +21,19 @@ class _KuisonerPageState extends State<KuisonerPage> {
   int _currentSelection = 0;
   KuisionerKpList? kuisionerKpList;
   KuisionerPbList? kuisionerPbList;
+  late List<CustomersPb> customersPb;
+  late List<CustomersKp> customersKp;
   List<List<int?>> _selectedValues = [];
   List<List<int?>> _selectedValues1 = [];
   String? selectedValue;
+  String? selectedValuePb;
+  String? selectedValueKp;
   final Map<String, int> customertMap = {};
+  final Map<String, int> customertMapPb = {};
+  final Map<String, int> customertMapKp = {};
   final List<String> itemsCustomer = [];
+  final List<String> itemsCustomerPb = [];
+  final List<String> itemsCustomerKp = [];
   int? customerId;
 
   get items => null;
@@ -35,6 +44,8 @@ class _KuisonerPageState extends State<KuisonerPage> {
     fetchKuisioner();
     fetchKuisionerPb();
     fetchCustomer();
+    loadCustomersPb();
+    loadCustomersKp();
   }
 
   @override
@@ -70,6 +81,38 @@ class _KuisonerPageState extends State<KuisonerPage> {
       });
     }
     EasyLoading.dismiss();
+  }
+
+  void loadCustomersPb() async {
+    try {
+      List<CustomersPb> customers =
+          await kuisionerController.getPosisiBersaingCs();
+      customers.forEach((customer) {
+        itemsCustomerPb.add(customer.customersName);
+        customertMapPb[customer.customersName] = customer.id;
+      });
+      for (var customer in customers) {
+        print('Customer Name: ${customer.customersName}');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void loadCustomersKp() async {
+    try {
+      List<CustomersKp> customers =
+          await kuisionerController.getKepuasanPelangganCs();
+      customers.forEach((customer) {
+        itemsCustomerKp.add(customer.customersName);
+        customertMapKp[customer.customersName] = customer.id;
+      });
+      for (var customer in customers) {
+        print('Customer Name: ${customer.customersName}');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   void fetchKuisionerPb() async {
@@ -120,13 +163,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
   KpData printKpValues() {
     List<int> subKuisionerId = [];
     List<String> selectedValue = [];
-
-    for (int i = 0; i < _selectedValues.length; i++) {
-      for (int j = 0; j < _selectedValues[i].length; j++) {
-        print(
-            "Question ${i + 1}, Sub-question ${j + 1}: ${_selectedValues[i][j]}");
-      }
-    }
 
     for (int z = 0; z < kuisionerKpList!.kuisionerList.length; z++) {
       for (int n = 0;
@@ -226,44 +262,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: 20),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.black.withOpacity(0.05)),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      isExpanded: true,
-                      hint: Text(
-                        'Pilih Customer',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
-                      items: itemsCustomer
-                          .map(
-                              (String customerName) => DropdownMenuItem<String>(
-                                    value: customerName,
-                                    child: Text(
-                                      customerName,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ))
-                          .toList(),
-                      value: selectedValue,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedValue = value;
-                          customerId = customertMap[selectedValue!];
-                        });
-                      },
-                    ),
-                  ),
-                ),
                 ToggleButtons(
                   children: <Widget>[
                     Padding(
@@ -310,6 +308,48 @@ class _KuisonerPageState extends State<KuisonerPage> {
                               'Kuisioner Posisi Bersaing',
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.black.withOpacity(0.05)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Pilih Customer',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: itemsCustomerPb
+                                      .map((String customerName) =>
+                                          DropdownMenuItem<String>(
+                                            value: customerName,
+                                            child: Text(
+                                              customerName,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedValue,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedValue = value;
+                                      customerId =
+                                          customertMapPb[selectedValue!];
+                                      print(customerId);
+                                    });
+                                  },
+                                ),
+                              ),
                             ),
                             SizedBox(
                               height: 15,
@@ -480,6 +520,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
 
                                     KuisionerController()
                                         .storePb(customerId, jawaban, catatan);
+                                    print(customerId);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -509,6 +550,47 @@ class _KuisonerPageState extends State<KuisonerPage> {
                             ),
                             SizedBox(
                               height: 15,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 5),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.black.withOpacity(0.05)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Pilih Customer',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: itemsCustomerKp
+                                      .map((String customerName) =>
+                                          DropdownMenuItem<String>(
+                                            value: customerName,
+                                            child: Text(
+                                              customerName,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedValueKp,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      selectedValueKp = value;
+                                      customerId =
+                                          customertMapPb[selectedValueKp!];
+                                    });
+                                  },
+                                ),
+                              ),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -663,6 +745,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     KuisionerController()
                                         .storeKp(customerId, jawaban);
                                     print(jawaban);
+                                    print(customerId);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
