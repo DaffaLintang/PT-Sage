@@ -21,6 +21,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   int _currentSelection = 0;
   KuisionerKpList? kuisionerKpList;
   KuisionerPbList? kuisionerPbList;
+  CompetitorResponse? competitorResponse;
   late List<CustomersPb> customersPb;
   late List<CustomersKp> customersKp;
   List<List<int?>> _selectedValues = [];
@@ -28,13 +29,17 @@ class _KuisonerPageState extends State<KuisonerPage> {
   String? selectedValue;
   String? selectedValuePb;
   String? selectedValueKp;
+  List<List<String?>> selectedValueKompetitor = [];
   final Map<String, int> customertMap = {};
   final Map<String, int> customertMapPb = {};
   final Map<String, int> customertMapKp = {};
+  final Map<String, int> competitorMap = {};
+  final List<String> itemCompetitor = [];
   final List<String> itemsCustomer = [];
   final List<String> itemsCustomerPb = [];
   final List<String> itemsCustomerKp = [];
   int? customerId;
+  int? competitorId;
 
   get items => null;
 
@@ -43,9 +48,9 @@ class _KuisonerPageState extends State<KuisonerPage> {
     super.initState();
     fetchKuisioner();
     fetchKuisionerPb();
-    fetchCustomer();
-    loadCustomersPb();
     loadCustomersKp();
+    loadCustomersPb();
+    getCompetitors();
   }
 
   @override
@@ -83,7 +88,38 @@ class _KuisonerPageState extends State<KuisonerPage> {
     EasyLoading.dismiss();
   }
 
+  void getCompetitors() async {
+    EasyLoading.show();
+    try {
+      CompetitorResponse? getCompetitor =
+          await kuisionerController.fetchCompetitors();
+      if (mounted) {
+        setState(() {
+          competitorResponse = getCompetitor;
+          getCompetitor?.data.forEach((competitor) {
+            itemCompetitor.add(competitor.name);
+            competitorMap[competitor.name] = competitor.id;
+          });
+          if (kuisionerPbList != null) {
+            selectedValueKompetitor = List<List<String?>>.generate(
+              kuisionerPbList!.kuisionerList.length,
+              (index) => List<String?>.generate(
+                kuisionerPbList!.kuisionerList[index].subKuisioner.length,
+                (subIndex) => null,
+              ),
+            );
+          }
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
   void loadCustomersPb() async {
+    // EasyLoading.show();
     try {
       List<CustomersPb> customers =
           await kuisionerController.getPosisiBersaingCs();
@@ -91,15 +127,15 @@ class _KuisonerPageState extends State<KuisonerPage> {
         itemsCustomerPb.add(customer.customersName);
         customertMapPb[customer.customersName] = customer.id;
       });
-      for (var customer in customers) {
-        print('Customer Name: ${customer.customersName}');
-      }
     } catch (e) {
       print(e);
+    } finally {
+      // EasyLoading.dismiss();
     }
   }
 
   void loadCustomersKp() async {
+    // EasyLoading.show();
     try {
       List<CustomersKp> customers =
           await kuisionerController.getKepuasanPelangganCs();
@@ -107,11 +143,10 @@ class _KuisonerPageState extends State<KuisonerPage> {
         itemsCustomerKp.add(customer.customersName);
         customertMapKp[customer.customersName] = customer.id;
       });
-      for (var customer in customers) {
-        print('Customer Name: ${customer.customersName}');
-      }
     } catch (e) {
       print(e);
+    } finally {
+      // EasyLoading.dismiss();
     }
   }
 
@@ -390,9 +425,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
+                                          SizedBox(height: 5),
                                           Container(
                                             child: ListView.builder(
                                               itemCount:
@@ -405,18 +438,26 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                 var subQuestion =
                                                     question.subKuisioner[
                                                         subQuestionIndex];
+                                                // Verify that the index is within bounds
+                                                if (subQuestionIndex >=
+                                                    selectedValueKompetitor[
+                                                            questionIndex]
+                                                        .length) {
+                                                  return Container(); // or handle as appropriate
+                                                }
                                                 return Container(
                                                   margin: EdgeInsets.symmetric(
                                                       vertical: 5),
                                                   padding: EdgeInsets.all(5),
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Color(
-                                                              0xffBF1619))),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color:
+                                                            Color(0xffBF1619)),
+                                                  ),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -431,9 +472,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                                 FontWeight
                                                                     .w400),
                                                       ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
+                                                      SizedBox(height: 5),
                                                       Row(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -481,24 +520,102 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      TextField(
-                                                        controller: kuisionerController
-                                                                    .PbCatatanController[
-                                                                questionIndex]
-                                                            [subQuestionIndex],
-                                                        maxLines: null,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          labelText:
-                                                              'Catatan Tambahan',
+                                                      DropdownButtonHideUnderline(
+                                                        child: DropdownButton2<
+                                                            String>(
+                                                          isExpanded: true,
+                                                          hint: Text(
+                                                            'Pilih Kompetitor',
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .hintColor,
+                                                            ),
+                                                          ),
+                                                          items: itemCompetitor
+                                                              .map((String
+                                                                  competitor) {
+                                                            return DropdownMenuItem<
+                                                                String>(
+                                                              value: competitor,
+                                                              child: Text(
+                                                                  competitor),
+                                                            );
+                                                          }).toList(),
+                                                          value: selectedValueKompetitor[
+                                                                  questionIndex]
+                                                              [
+                                                              subQuestionIndex],
+                                                          onChanged:
+                                                              (String? value) {
+                                                            setState(() {
+                                                              selectedValueKompetitor[
+                                                                      questionIndex]
+                                                                  [
+                                                                  subQuestionIndex] = value;
+                                                              competitorId = competitorMap[
+                                                                  selectedValueKompetitor[
+                                                                          questionIndex]
+                                                                      [
+                                                                      subQuestionIndex]!];
+                                                            });
+                                                          },
                                                         ),
                                                       ),
+                                                      selectedValueKompetitor[
+                                                                      questionIndex]
+                                                                  [
+                                                                  subQuestionIndex] !=
+                                                              null
+                                                          ? Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Flexible(
+                                                                  child: Row(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: List<
+                                                                        Widget>.generate(
+                                                                      5,
+                                                                      (int index) =>
+                                                                          Expanded(
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(right: 0.0),
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Radio<int>(
+                                                                                value: index + 1,
+                                                                                groupValue: _selectedValues1[questionIndex][subQuestionIndex],
+                                                                                onChanged: (value) {
+                                                                                  setState(() {
+                                                                                    _selectedValues1[questionIndex][subQuestionIndex] = value;
+                                                                                  });
+                                                                                },
+                                                                              ),
+                                                                              Text('${index + 1}'),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : SizedBox()
                                                     ],
                                                   ),
                                                 );
                                               },
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -521,6 +638,8 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     KuisionerController()
                                         .storePb(customerId, jawaban, catatan);
                                     print(customerId);
+                                    print(jawaban);
+                                    print(catatan);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -586,7 +705,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     setState(() {
                                       selectedValueKp = value;
                                       customerId =
-                                          customertMapPb[selectedValueKp!];
+                                          customertMapKp[selectedValueKp!];
                                     });
                                   },
                                 ),
@@ -746,6 +865,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                         .storeKp(customerId, jawaban);
                                     print(jawaban);
                                     print(customerId);
+                                    print(selectedValueKp);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(

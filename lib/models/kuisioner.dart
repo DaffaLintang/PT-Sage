@@ -325,3 +325,64 @@ class IndeksKepuasan {
     );
   }
 }
+
+class CompetitorResponse {
+  bool success;
+  List<Competitor> data;
+
+  CompetitorResponse({
+    required this.success,
+    required this.data,
+  });
+
+  factory CompetitorResponse.fromJson(Map<String, dynamic> json) {
+    return CompetitorResponse(
+      success: json['success'],
+      data: List<Competitor>.from(
+          json['data'].map((x) => Competitor.fromJson(x))),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'data': List<dynamic>.from(data.map((x) => x.toJson())),
+    };
+  }
+}
+
+class Competitor {
+  int id;
+  int usersId;
+  String name;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Competitor({
+    required this.id,
+    required this.usersId,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Competitor.fromJson(Map<String, dynamic> json) {
+    return Competitor(
+      id: json['id'],
+      usersId: json['users_id'],
+      name: json['name'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'users_id': usersId,
+      'name': name,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+}

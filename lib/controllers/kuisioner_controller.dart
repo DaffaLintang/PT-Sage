@@ -64,9 +64,24 @@ class KuisionerController extends GetxController {
     }
   }
 
-  Future<List<CustomersPb>> getPosisiBersaingCs() async {
-    final response = await http.get(Uri.parse(PosisiBersaingPb));
+  Future<CompetitorResponse?> fetchCompetitors() async {
+    final url = Uri.parse('$PosisiBersaing/getCompetitor');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        return CompetitorResponse.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load competitors');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
 
+  Future<List<CustomersPb>> getPosisiBersaingCs() async {
+    final response = await http.get(Uri.parse("$PosisiBersaing/getCS"));
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body)['customers'];
       return jsonResponse.map((data) => CustomersPb.fromJson(data)).toList();
@@ -76,7 +91,7 @@ class KuisionerController extends GetxController {
   }
 
   Future<List<CustomersKp>> getKepuasanPelangganCs() async {
-    final response = await http.get(Uri.parse(KepuasanPelangganPb));
+    final response = await http.get(Uri.parse("$KepuasanPelanggan/getCS"));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body)['customers'];
@@ -121,6 +136,7 @@ class KuisionerController extends GetxController {
         };
         KuisionerProvider().storePb(data).then((value) {
           print(value.statusCode);
+          print(data);
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
@@ -153,6 +169,7 @@ class KuisionerController extends GetxController {
         };
         KuisionerProvider().storePb(data).then((value) {
           print(value.statusCode);
+          print(data);
 
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',

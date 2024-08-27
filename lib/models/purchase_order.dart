@@ -1,23 +1,25 @@
+import 'dart:ffi';
+
 class PurchaseOrder {
-  final String kodePo;
-  final int usersId;
-  final int customersId;
-  final String customersName;
-  final int productId;
-  final String productName;
-  final String quantity;
-  final String totalPrice;
-  final String paymentTerm;
-  final String dp;
-  final String dpAmount;
-  final String status;
-  final String? diskon;
-  final String diskonType;
-  final String statusPengiriman;
-  final String? tanggalPengiriman;
-  final List<Kemasan> kemasan;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  String kodePo;
+  int usersId;
+  int customersId;
+  String customersName;
+  int productId;
+  String productName;
+  int quantity;
+  int totalPrice;
+  String paymentTerm;
+  String dp;
+  int dpAmount;
+  String status;
+  double? diskon;
+  String? diskonType;
+  String? statusPengiriman;
+  DateTime? tanggalPengiriman;
+  List<Kemasan> kemasan;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   PurchaseOrder({
     required this.kodePo,
@@ -32,10 +34,10 @@ class PurchaseOrder {
     required this.dp,
     required this.dpAmount,
     required this.status,
-    required this.diskon,
-    required this.diskonType,
-    required this.statusPengiriman,
-    required this.tanggalPengiriman,
+    this.diskon,
+    this.diskonType,
+    this.statusPengiriman,
+    this.tanggalPengiriman,
     required this.kemasan,
     required this.createdAt,
     required this.updatedAt,
@@ -49,19 +51,21 @@ class PurchaseOrder {
       customersName: json['customers_name'],
       productId: json['product_id'],
       productName: json['product_name'],
-      quantity: json['quantity'],
-      totalPrice: json['total_price'],
+      quantity: int.parse(json['quantity']),
+      totalPrice: int.parse(json['total_price']),
       paymentTerm: json['payment_term'],
       dp: json['dp'],
-      dpAmount: json['dp_amount'],
+      dpAmount: int.parse(json['dp_amount']),
       status: json['status'],
-      diskon: json['diskon'],
+      diskon: json['diskon'] != null ? double.tryParse(json['diskon']) : null,
       diskonType: json['diskon_type'],
       statusPengiriman: json['status_pengiriman'],
-      tanggalPengiriman: json['tanggal_pengiriman'],
-      kemasan: (json['kemasan'] as List)
-          .map((item) => Kemasan.fromJson(item))
-          .toList(),
+      tanggalPengiriman: json['tanggal_pengiriman'] != null
+          ? DateTime.parse(json['tanggal_pengiriman'])
+          : null,
+      kemasan: List<Kemasan>.from(
+        json['kemasan'].map((x) => Kemasan.fromJson(x)),
+      ),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -75,17 +79,17 @@ class PurchaseOrder {
       'customers_name': customersName,
       'product_id': productId,
       'product_name': productName,
-      'quantity': quantity,
-      'total_price': totalPrice,
+      'quantity': quantity.toString(),
+      'total_price': totalPrice.toString(),
       'payment_term': paymentTerm,
       'dp': dp,
-      'dp_amount': dpAmount,
+      'dp_amount': dpAmount.toString(),
       'status': status,
-      'diskon': diskon,
+      'diskon': diskon?.toString(),
       'diskon_type': diskonType,
       'status_pengiriman': statusPengiriman,
-      'tanggal_pengiriman': tanggalPengiriman,
-      'kemasan': kemasan.map((item) => item.toJson()).toList(),
+      'tanggal_pengiriman': tanggalPengiriman?.toIso8601String(),
+      'kemasan': List<dynamic>.from(kemasan.map((x) => x.toJson())),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -93,14 +97,14 @@ class PurchaseOrder {
 }
 
 class Kemasan {
-  final int kemasanId;
-  final int quantity;
-  final int berat;
+  int kemasanId;
+  int berat;
+  int quantity;
 
   Kemasan({
     required this.kemasanId,
-    required this.quantity,
     required this.berat,
+    required this.quantity,
   });
 
   factory Kemasan.fromJson(Map<String, dynamic> json) {

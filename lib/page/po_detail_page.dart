@@ -133,7 +133,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(order.quantity),
+                      Text(order.quantity.toString()),
                       SizedBox(
                         height: 15,
                       ),
@@ -147,8 +147,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(currencyFormatter
-                          .format(int.parse(order.totalPrice))),
+                      Text(currencyFormatter.format(order.totalPrice)),
                       SizedBox(
                         height: 15,
                       ),
@@ -190,7 +189,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(currencyFormatter.format(int.parse(order.dpAmount))),
+                      Text(currencyFormatter.format(order.dpAmount)),
                       SizedBox(
                         height: 15,
                       ),
@@ -210,8 +209,8 @@ class _PoDetailPageState extends State<PoDetailPage> {
                                 ),
                                 order.diskon == null
                                     ? Text("-")
-                                    : Text(currencyFormatter.format(
-                                        int.parse(getRawValue(order.diskon)))),
+                                    : Text(currencyFormatter.format(int.parse(
+                                        getRawValue(order.diskon.toString())))),
                                 SizedBox(
                                   height: 15,
                                 )
@@ -232,7 +231,7 @@ class _PoDetailPageState extends State<PoDetailPage> {
                                 ),
                                 order.diskon == null
                                     ? Text("-")
-                                    : Text(order.diskon),
+                                    : Text(order.diskon.toString()),
                                 SizedBox(
                                   height: 15,
                                 )
@@ -263,6 +262,20 @@ class _PoDetailPageState extends State<PoDetailPage> {
                         height: 5,
                       ),
                       Text(order.status),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Status Pengiriman",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(order.statusPengiriman),
                       SizedBox(
                         height: 5,
                       ),

@@ -28,7 +28,6 @@ class _listPoPageState extends State<listPoPage> {
     PurchaseOrderList? fetchedOrders = await poController.getPoData();
     setState(() {
       orders = fetchedOrders;
-      print(orders);
     });
   }
 

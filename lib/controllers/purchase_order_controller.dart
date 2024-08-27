@@ -28,7 +28,6 @@ class PoController extends GetxController {
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
-        print(response.statusCode);
         List<dynamic> jsonResponse = jsonDecode(response.body);
         return PurchaseOrderList.fromJson(jsonResponse);
       } else {
@@ -128,7 +127,7 @@ class PoController extends GetxController {
           "kemasan": kemasans,
         };
         PoProvider().store(token, data).then((value) {
-          print(value.body);
+          print(value.statusCode);
           if (value.statusCode == 201) {
             Get.offAll(() => listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',

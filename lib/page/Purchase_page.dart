@@ -107,7 +107,7 @@ class _PurchasePageState extends State<PurchasePage> {
 
       selectedKemasanValues = List<String?>.generate(
         poController.jummlahKemasan.length,
-        (index) => null, // Inisialisasi semua nilai dengan null
+        (index) => null,
         growable: true,
       );
     });
@@ -243,6 +243,8 @@ class _PurchasePageState extends State<PurchasePage> {
                 poController.jummlahKemasan.clear();
                 poController.jummlahKemasan.add(firstElement);
               }
+              PoController.diskonController.text = '';
+              PoController.jDpController.text = '';
             },
             icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.white,
