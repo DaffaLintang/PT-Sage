@@ -205,9 +205,11 @@ class SubKuisionerPb {
 class PbData {
   List<int> subKuisionerIds;
   List<String> selectedValues;
-  List<String> catatanValues;
+  List<int> kompetitorId;
+  List<String> selectedValueKompetitor;
 
-  PbData(this.subKuisionerIds, this.selectedValues, this.catatanValues);
+  PbData(this.subKuisionerIds, this.selectedValues, this.kompetitorId,
+      this.selectedValueKompetitor);
 }
 
 class KpData {

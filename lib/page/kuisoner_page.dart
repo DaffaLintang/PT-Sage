@@ -26,6 +26,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   late List<CustomersKp> customersKp;
   List<List<int?>> _selectedValues = [];
   List<List<int?>> _selectedValues1 = [];
+  List<List<int?>> _selectedValues2 = [];
   String? selectedValue;
   String? selectedValuePb;
   String? selectedValueKp;
@@ -39,7 +40,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   final List<String> itemsCustomerPb = [];
   final List<String> itemsCustomerKp = [];
   int? customerId;
-  int? competitorId;
+  List<List<int?>> competitorIdList = [];
 
   get items => null;
 
@@ -119,7 +120,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   }
 
   void loadCustomersPb() async {
-    // EasyLoading.show();
+    EasyLoading.show();
     try {
       List<CustomersPb> customers =
           await kuisionerController.getPosisiBersaingCs();
@@ -130,12 +131,12 @@ class _KuisonerPageState extends State<KuisonerPage> {
     } catch (e) {
       print(e);
     } finally {
-      // EasyLoading.dismiss();
+      EasyLoading.dismiss();
     }
   }
 
   void loadCustomersKp() async {
-    // EasyLoading.show();
+    EasyLoading.show();
     try {
       List<CustomersKp> customers =
           await kuisionerController.getKepuasanPelangganCs();
@@ -146,7 +147,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
     } catch (e) {
       print(e);
     } finally {
-      // EasyLoading.dismiss();
+      EasyLoading.dismiss();
     }
   }
 
@@ -168,6 +169,11 @@ class _KuisonerPageState extends State<KuisonerPage> {
   void _initializeSelectedValuesPb() {
     if (kuisionerPbList != null) {
       _selectedValues1 = List.generate(
+        kuisionerPbList!.kuisionerList.length,
+        (index) => List<int?>.filled(
+            kuisionerPbList!.kuisionerList[index].subKuisioner.length, null),
+      );
+      _selectedValues2 = List.generate(
         kuisionerPbList!.kuisionerList.length,
         (index) => List<int?>.filled(
             kuisionerPbList!.kuisionerList[index].subKuisioner.length, null),
@@ -218,21 +224,30 @@ class _KuisonerPageState extends State<KuisonerPage> {
   PbData printPbValue() {
     List<int> subKuisionerId = [];
     List<String> selectedValue = [];
-    List<String> catatanValue = [];
+    List<int> kompetitorId = [];
+    List<String> selectedValueKompetitor = [];
 
+    // Populate subKuisionerId with IDs from the first question's subKuisioner list
     for (int z = 0;
         z < kuisionerPbList!.kuisionerList[0].subKuisioner.length;
         z++) {
       subKuisionerId.add(kuisionerPbList!.kuisionerList[0].subKuisioner[z].id);
     }
+
     for (int i = 0; i < _selectedValues1.length; i++) {
       for (int j = 0; j < _selectedValues1[i].length; j++) {
         selectedValue.add(_selectedValues1[i][j].toString());
-        catatanValue.add(kuisionerController.PbCatatanController[i][j].text);
+        selectedValueKompetitor.add(_selectedValues2[i][j].toString());
+        if (competitorIdList.length > i && competitorIdList[i].length > j) {
+          kompetitorId.add(competitorIdList[i][j] ?? 0);
+        } else {
+          kompetitorId.add(0);
+        }
       }
     }
 
-    return PbData(subKuisionerId, selectedValue, catatanValue);
+    return PbData(
+        subKuisionerId, selectedValue, kompetitorId, selectedValueKompetitor);
   }
 
   Map<String, int> processKpJawaban(KpData kpData) {
@@ -248,11 +263,11 @@ class _KuisonerPageState extends State<KuisonerPage> {
     return jawaban;
   }
 
-  Map<String, int> processJawaban(PbData pbData) {
-    Map<String, int> jawaban = {};
+  Map<String, String> processJawaban(PbData pbData) {
+    Map<String, String> jawaban = {};
     for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
       try {
-        int value = int.parse(pbData.selectedValues[i]);
+        String value = pbData.selectedValues[i];
         jawaban[pbData.subKuisionerIds[i].toString()] = value;
       } catch (e) {
         print("Gagal mengubah nilai ke integer: $e");
@@ -261,13 +276,39 @@ class _KuisonerPageState extends State<KuisonerPage> {
     return jawaban;
   }
 
-  Map<String, String> processCatatan(PbData pbData) {
-    Map<String, String> catatan = {};
+  Map<String, int> processJawabanKompetitor(PbData pbData) {
+    Map<String, int> jawaban = {};
     for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
-      catatan[pbData.subKuisionerIds[i].toString()] = pbData.catatanValues[i];
+      try {
+        int value = int.parse(pbData.selectedValueKompetitor[i]);
+        jawaban[pbData.subKuisionerIds[i].toString()] = value;
+      } catch (e) {
+        print("Gagal mengubah nilai ke integer: $e");
+      }
     }
-    return catatan;
+    return jawaban;
   }
+
+  Map<String, String> processJawabanPesaing(PbData pbData) {
+    Map<String, String> jawaban = {};
+    for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
+      try {
+        String value = pbData.kompetitorId[i].toString();
+        jawaban[pbData.subKuisionerIds[i].toString()] = value;
+      } catch (e) {
+        print("Gagal mengubah nilai ke integer: $e");
+      }
+    }
+    return jawaban;
+  }
+
+  // Map<String, String> processCatatan(PbData pbData) {
+  //   Map<String, String> catatan = {};
+  //   for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
+  //     // catatan[pbData.subKuisionerIds[i].toString()] = pbData.catatanValues[i];
+  //   }
+  //   return catatan;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -438,12 +479,11 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                 var subQuestion =
                                                     question.subKuisioner[
                                                         subQuestionIndex];
-                                                // Verify that the index is within bounds
                                                 if (subQuestionIndex >=
                                                     selectedValueKompetitor[
                                                             questionIndex]
                                                         .length) {
-                                                  return Container(); // or handle as appropriate
+                                                  return Container();
                                                 }
                                                 return Container(
                                                   margin: EdgeInsets.symmetric(
@@ -554,11 +594,51 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                                       questionIndex]
                                                                   [
                                                                   subQuestionIndex] = value;
-                                                              competitorId = competitorMap[
-                                                                  selectedValueKompetitor[
+                                                              int?
+                                                                  newCompetitorId =
+                                                                  competitorMap[
+                                                                      value!];
+
+                                                              // Ensure the list for the current questionIndex is initialized and expandable
+                                                              if (competitorIdList
+                                                                      .length <=
+                                                                  questionIndex) {
+                                                                competitorIdList.add(List<
+                                                                        int?>.filled(
+                                                                    subQuestionIndex +
+                                                                        1,
+                                                                    null,
+                                                                    growable:
+                                                                        true));
+                                                              }
+
+                                                              // Ensure the sublist for the current subQuestionIndex is expandable
+                                                              if (competitorIdList[
+                                                                          questionIndex]
+                                                                      .length <=
+                                                                  subQuestionIndex) {
+                                                                competitorIdList[
+                                                                        questionIndex]
+                                                                    .addAll(
+                                                                  List<
+                                                                      int?>.filled(
+                                                                    subQuestionIndex +
+                                                                        1 -
+                                                                        competitorIdList[questionIndex]
+                                                                            .length,
+                                                                    null,
+                                                                    growable:
+                                                                        true,
+                                                                  ),
+                                                                );
+                                                              }
+
+                                                              // Assign the new competitor ID
+                                                              competitorIdList[
                                                                           questionIndex]
                                                                       [
-                                                                      subQuestionIndex]!];
+                                                                      subQuestionIndex] =
+                                                                  newCompetitorId;
                                                             });
                                                           },
                                                         ),
@@ -592,10 +672,10 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                                             children: [
                                                                               Radio<int>(
                                                                                 value: index + 1,
-                                                                                groupValue: _selectedValues1[questionIndex][subQuestionIndex],
+                                                                                groupValue: _selectedValues2[questionIndex][subQuestionIndex],
                                                                                 onChanged: (value) {
                                                                                   setState(() {
-                                                                                    _selectedValues1[questionIndex][subQuestionIndex] = value;
+                                                                                    _selectedValues2[questionIndex][subQuestionIndex] = value;
                                                                                   });
                                                                                 },
                                                                               ),
@@ -633,13 +713,17 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                   onPressed: () {
                                     var result = printPbValue();
                                     var jawaban = processJawaban(result);
-                                    var catatan = processCatatan(result);
+                                    var jawabanKompetitor =
+                                        processJawabanKompetitor(result);
+                                    var jawabanPesaing =
+                                        processJawabanPesaing(result);
+                                    // var catatan = processCatatan(result);
 
-                                    KuisionerController()
-                                        .storePb(customerId, jawaban, catatan);
-                                    print(customerId);
-                                    print(jawaban);
-                                    print(catatan);
+                                    KuisionerController().storePb(
+                                        customerId,
+                                        jawaban,
+                                        jawabanPesaing,
+                                        jawabanKompetitor);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(

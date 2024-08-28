@@ -118,12 +118,10 @@ class KuisionerController extends GetxController {
     }
   }
 
-  void storePb(customerId, jawaban, catatan) {
+  void storePb(customerId, jawaban, pesaing, jawabanPesaing) {
     int? customer = customerId;
     try {
-      if (customer == null ||
-          jawaban.isEmpty ||
-          jawaban.length < catatan.length) {
+      if (customer == null || jawaban.isEmpty) {
         // print(jumlahDp);
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
@@ -132,7 +130,8 @@ class KuisionerController extends GetxController {
         var data = {
           "customer_id": customerId,
           "jawaban": jawaban,
-          "catatan": catatan,
+          "pesaing": pesaing,
+          "jawaban_pesaing": jawabanPesaing,
         };
         KuisionerProvider().storePb(data).then((value) {
           print(value.statusCode);
