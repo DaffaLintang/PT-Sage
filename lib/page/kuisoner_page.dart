@@ -11,6 +11,7 @@ import '../models/warper.dart';
 import 'home_page.dart';
 
 class KuisonerPage extends StatefulWidget {
+  const KuisonerPage({Key? key}) : super(key: key);
   @override
   State<KuisonerPage> createState() => _KuisonerPageState();
 }

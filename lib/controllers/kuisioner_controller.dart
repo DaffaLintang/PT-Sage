@@ -140,7 +140,7 @@ class KuisionerController extends GetxController {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);
-            Get.offAll(() => KuisonerPage());
+            Get.offAll(() => KuisonerPage(key: UniqueKey()));
           } else {
             Get.snackbar('Error', 'Terjadi lesalahan',
                 backgroundColor: Colors.red, colorText: Colors.white);
