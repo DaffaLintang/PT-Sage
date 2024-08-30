@@ -48,9 +48,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   @override
   void initState() {
     super.initState();
-    fetchKuisioner();
     fetchKuisionerPb();
-    loadCustomersKp();
     loadCustomersPb();
     getCompetitors();
   }
@@ -58,36 +56,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void fetchCustomer() async {
-    EasyLoading.show();
-    final poController = PoController();
-    DataWrapper? dataWrapper = await poController.getProductData();
-    if (mounted) {
-      setState(() {
-        dataWrapper?.customers.forEach((customer) {
-          itemsCustomer.add(customer.customersName);
-          customertMap[customer.customersName] = customer.id;
-        });
-      });
-    }
-    EasyLoading.dismiss();
-  }
-
-  void fetchKuisioner() async {
-    EasyLoading.show();
-    KuisionerKpList? fetchedOrders =
-        await kuisionerController.getKepuasanPelangan();
-    if (mounted) {
-      setState(() {
-        kuisionerKpList = fetchedOrders;
-        if (kuisionerKpList != null) {
-          _initializeSelectedValues();
-        }
-      });
-    }
-    EasyLoading.dismiss();
   }
 
   void getCompetitors() async {
@@ -136,22 +104,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
     }
   }
 
-  void loadCustomersKp() async {
-    EasyLoading.show();
-    try {
-      List<CustomersKp> customers =
-          await kuisionerController.getKepuasanPelangganCs();
-      customers.forEach((customer) {
-        itemsCustomerKp.add(customer.customersName);
-        customertMapKp[customer.customersName] = customer.id;
-      });
-    } catch (e) {
-      print(e);
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }
-
   void fetchKuisionerPb() async {
     EasyLoading.show();
     KuisionerPbList? fetchedOrders =
@@ -160,69 +112,11 @@ class _KuisonerPageState extends State<KuisonerPage> {
       setState(() {
         kuisionerPbList = fetchedOrders;
         if (kuisionerPbList != null) {
-          _initializeSelectedValuesPb();
+          // _initializeSelectedValuesPb();
         }
       });
     }
     EasyLoading.dismiss();
-  }
-
-  void _initializeSelectedValuesPb() {
-    if (kuisionerPbList != null) {
-      _selectedValues1 = List.generate(
-        kuisionerPbList!.kuisionerList.length,
-        (index) => List<int?>.filled(
-          kuisionerPbList!.kuisionerList[index].subKuisioner.length,
-          null,
-        ),
-      );
-      _selectedValues2 = List.generate(
-        kuisionerPbList!.kuisionerList.length,
-        (index) => List<int?>.filled(
-          kuisionerPbList!.kuisionerList[index].subKuisioner.length,
-          null,
-        ),
-      );
-      selectedValueKompetitor = List.generate(
-        kuisionerPbList!.kuisionerList.length,
-        (index) => List<String?>.filled(
-          kuisionerPbList!.kuisionerList[index].subKuisioner.length,
-          null,
-        ),
-      );
-    }
-  }
-
-  void _initializeSelectedValues() {
-    if (kuisionerKpList != null) {
-      _selectedValues = List.generate(
-        kuisionerKpList!.kuisionerList.length,
-        (index) => List<int?>.filled(
-          kuisionerKpList!.kuisionerList[index].subKuisioner.length,
-          null,
-        ),
-      );
-    }
-  }
-
-  KpData printKpValues() {
-    List<int> subKuisionerId = [];
-    List<String> selectedValue = [];
-
-    for (int z = 0; z < kuisionerKpList!.kuisionerList.length; z++) {
-      for (int n = 0;
-          n < kuisionerKpList!.kuisionerList[z].subKuisioner.length;
-          n++) {
-        subKuisionerId
-            .add(kuisionerKpList!.kuisionerList[z].subKuisioner[n].id);
-      }
-    }
-    for (int i = 0; i < _selectedValues.length; i++) {
-      for (int j = 0; j < _selectedValues[i].length; j++) {
-        selectedValue.add(_selectedValues[i][j].toString());
-      }
-    }
-    return KpData(subKuisionerId, selectedValue);
   }
 
   PbData printPbValue() {
@@ -483,13 +377,10 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                 var subQuestion =
                                                     question.subKuisioner[
                                                         subQuestionIndex];
-                                                if (questionIndex >=
-                                                        selectedValueKompetitor
-                                                            .length ||
-                                                    subQuestionIndex >=
-                                                        selectedValueKompetitor[
-                                                                questionIndex]
-                                                            .length) {
+                                                if (subQuestionIndex >=
+                                                    selectedValueKompetitor[
+                                                            questionIndex]
+                                                        .length) {
                                                   return Container();
                                                 }
                                                 return Container(
@@ -547,15 +438,12 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                                             int>(
                                                                           value:
                                                                               index + 1,
-                                                                          groupValue: questionIndex < _selectedValues1.length && subQuestionIndex < _selectedValues1[questionIndex].length
-                                                                              ? _selectedValues1[questionIndex][subQuestionIndex]
-                                                                              : null,
+                                                                          groupValue:
+                                                                              _selectedValues1[questionIndex][subQuestionIndex],
                                                                           onChanged:
                                                                               (value) {
                                                                             setState(() {
-                                                                              if (questionIndex < _selectedValues1.length && subQuestionIndex < _selectedValues1[questionIndex].length) {
-                                                                                _selectedValues1[questionIndex][subQuestionIndex] = value;
-                                                                              }
+                                                                              _selectedValues1[questionIndex][subQuestionIndex] = value;
                                                                             });
                                                                           },
                                                                         ),
@@ -754,227 +642,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10.0,
                         ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Kuisioner Kepuasan Pelanggan',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 5),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.black.withOpacity(0.05)),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Pilih Customer',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).hintColor,
-                                    ),
-                                  ),
-                                  items: itemsCustomerKp
-                                      .map((String customerName) =>
-                                          DropdownMenuItem<String>(
-                                            value: customerName,
-                                            child: Text(
-                                              customerName,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: selectedValueKp,
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      selectedValueKp = value;
-                                      customerId =
-                                          customertMapKp[selectedValueKp!];
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2.0,
-                                      color: const Color(0xffBF1619)),
-                                  borderRadius: BorderRadius.circular(12)),
-                              height: 430,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount:
-                                    kuisionerKpList?.kuisionerList.length ?? 0,
-                                itemBuilder: (context, questionIndex) {
-                                  if (kuisionerKpList == null ||
-                                      questionIndex >=
-                                          kuisionerKpList!
-                                              .kuisionerList.length) {
-                                    return Container();
-                                  }
-                                  var question = kuisionerKpList!
-                                      .kuisionerList[questionIndex];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            question.pertanyaan,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  question.subKuisioner.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemBuilder:
-                                                  (context, subQuestionIndex) {
-                                                var subQuestion =
-                                                    question.subKuisioner[
-                                                        subQuestionIndex];
-                                                return Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 5),
-                                                  padding: EdgeInsets.all(5),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Color(
-                                                              0xffBF1619))),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        subQuestion
-                                                            .subPertanyaan,
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Flexible(
-                                                            child: Row(
-                                                              children: List<
-                                                                  Widget>.generate(
-                                                                5,
-                                                                (int index) =>
-                                                                    Expanded(
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        right:
-                                                                            0.0),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Radio<
-                                                                            int>(
-                                                                          value:
-                                                                              index + 1,
-                                                                          groupValue:
-                                                                              _selectedValues[questionIndex][subQuestionIndex],
-                                                                          onChanged:
-                                                                              (value) {
-                                                                            setState(() {
-                                                                              _selectedValues[questionIndex][subQuestionIndex] = value;
-                                                                            });
-                                                                          },
-                                                                        ),
-                                                                        Text(
-                                                                            '${index + 1}'),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton(
-                                  child: Text('Kirim'),
-                                  onPressed: () {
-                                    var result = printKpValues();
-                                    var jawaban = processKpJawaban(result);
-
-                                    // KuisionerController()
-                                    //     .storePb(customerId, jawaban, catatan);
-                                    KuisionerController()
-                                        .storeKp(customerId, jawaban);
-                                    print(jawaban);
-                                    print(customerId);
-                                    print(selectedValueKp);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    primary: Color(0xffBF1619),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            )
-                          ],
-                        ),
+                        child: Column(),
                       ),
               ],
             ),

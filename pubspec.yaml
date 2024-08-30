@@ -52,6 +52,7 @@ dependencies:
   number_text_input_formatter: ^1.0.0+1
   flutter_native_splash: ^2.1.0
   flutter_launcher_icons: ^0.10.0
+  shimmer: ^2.0.0
 
   
 dev_dependencies:

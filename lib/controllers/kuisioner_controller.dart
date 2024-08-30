@@ -10,27 +10,28 @@ import 'package:pt_sage/page/kuisoner_page.dart';
 import '../providers/kuisioner_provider.dart';
 
 class KuisionerController extends GetxController {
-  List<List<TextEditingController>> PbCatatanController = [];
+  // List<List<TextEditingController>> PbCatatanController = [];
 
-  void initializeControllers(int questionCount, int subQuestionCount) {
-    PbCatatanController = List.generate(
-      questionCount,
-      (index) =>
-          List.generate(subQuestionCount, (index) => TextEditingController()),
-    );
-  }
+  // void initializeControllers(int questionCount, int subQuestionCount) {
+  //   PbCatatanController = List.generate(
+  //     questionCount,
+  //     (index) =>
+  //         List.generate(subQuestionCount, (index) => TextEditingController()),
+  //   );
+  // }
 
-  @override
-  void onClose() {
-    for (var subControllers in PbCatatanController) {
-      for (var controller in subControllers) {
-        controller.dispose();
-      }
-    }
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   for (var subControllers in PbCatatanController) {
+  //     for (var controller in subControllers) {
+  //       controller.dispose();
+  //     }
+  //   }
+  //   super.onClose();
+  // }
 
   Future<KuisionerKpList?> getKepuasanPelangan() async {
+    EasyLoading.show();
     try {
       final uri = Uri.parse(KuisionerKepuasanPelangganApi);
       final response = await http.get(uri);
@@ -44,10 +45,13 @@ class KuisionerController extends GetxController {
     } catch (e) {
       print('Error: ${e.toString()}');
       return null;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   Future<KuisionerPbList?> getPosisiBersaing() async {
+    EasyLoading.show();
     try {
       final uri = Uri.parse(KuisionerPosisiBersaingApi);
       final response = await http.get(uri);
@@ -61,10 +65,13 @@ class KuisionerController extends GetxController {
     } catch (e) {
       print('Error: ${e.toString()}');
       return null;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   Future<CompetitorResponse?> fetchCompetitors() async {
+    EasyLoading.show();
     final url = Uri.parse('$PosisiBersaing/getCompetitor');
     try {
       final response = await http.get(url);
@@ -77,6 +84,8 @@ class KuisionerController extends GetxController {
     } catch (e) {
       print('Error: $e');
       return null;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
@@ -102,6 +111,7 @@ class KuisionerController extends GetxController {
   }
 
   Future<SurveyData?> getDataSurveyKp() async {
+    EasyLoading.show();
     try {
       final uri = Uri.parse(IndeksAspek);
       final response = await http.get(uri);
@@ -115,6 +125,8 @@ class KuisionerController extends GetxController {
     } catch (e) {
       print('Error: ${e.toString()}');
       return null;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
