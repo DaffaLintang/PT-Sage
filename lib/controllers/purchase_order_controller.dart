@@ -44,6 +44,8 @@ class PoController extends GetxController {
       final uri = Uri.parse('$PoAPI/kemasan');
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         return KemasanList.fromJson(jsonResponse);
@@ -95,7 +97,6 @@ class PoController extends GetxController {
       default:
         diskonType = "-";
     }
-    print(quantitys);
     try {
       if (customer == null ||
           product == null ||
@@ -127,8 +128,15 @@ class PoController extends GetxController {
           "kemasan": kemasans,
         };
         PoProvider().store(token, data).then((value) {
-          print(value.statusCode);
           if (value.statusCode == 201) {
+            if (jummlahKemasan.isNotEmpty) {
+              var firstElement = jummlahKemasan.first;
+              firstElement.text = '';
+              jummlahKemasan.clear();
+              jummlahKemasan.add(firstElement);
+            }
+            diskonController.text = '';
+            jDpController.text = '';
             Get.offAll(() => listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),

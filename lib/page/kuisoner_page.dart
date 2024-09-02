@@ -27,7 +27,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
   late List<CustomersKp> customersKp;
   List<List<int?>> _selectedValues = [];
   List<List<int?>> _selectedValues1 = [];
-  List<List<int?>> _selectedValues2 = [];
+  // List<List<int?>> _selectedValues2 = [];
   String? selectedValue;
   String? selectedValuePb;
   String? selectedValueKp;
@@ -176,13 +176,13 @@ class _KuisonerPageState extends State<KuisonerPage> {
           null,
         ),
       );
-      _selectedValues2 = List.generate(
-        kuisionerPbList!.kuisionerList.length,
-        (index) => List<int?>.filled(
-          kuisionerPbList!.kuisionerList[index].subKuisioner.length,
-          null,
-        ),
-      );
+      // _selectedValues2 = List.generate(
+      //   kuisionerPbList!.kuisionerList.length,
+      //   (index) => List<int?>.filled(
+      //     kuisionerPbList!.kuisionerList[index].subKuisioner.length,
+      //     null,
+      //   ),
+      // );
       selectedValueKompetitor = List.generate(
         kuisionerPbList!.kuisionerList.length,
         (index) => List<String?>.filled(
@@ -231,7 +231,6 @@ class _KuisonerPageState extends State<KuisonerPage> {
     List<int> kompetitorId = [];
     List<String> selectedValueKompetitor = [];
 
-    // Populate subKuisionerId with IDs from the first question's subKuisioner list
     for (int z = 0;
         z < kuisionerPbList!.kuisionerList[0].subKuisioner.length;
         z++) {
@@ -241,7 +240,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
     for (int i = 0; i < _selectedValues1.length; i++) {
       for (int j = 0; j < _selectedValues1[i].length; j++) {
         selectedValue.add(_selectedValues1[i][j].toString());
-        selectedValueKompetitor.add(_selectedValues2[i][j].toString());
+        // selectedValueKompetitor.add(_selectedValues2[i][j].toString());
         if (competitorIdList.length > i && competitorIdList[i].length > j) {
           kompetitorId.add(competitorIdList[i][j] ?? 0);
         } else {
@@ -280,8 +279,43 @@ class _KuisonerPageState extends State<KuisonerPage> {
     return jawaban;
   }
 
+  Map<String, int> jawabanKompetitor(PbData pbData) {
+    Map<String, int> jawaban = {};
+    List<String> selectedValueKompetitor = [];
+    List<String> selectedValueKompetitorFinal = [];
+    int value;
+    for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
+      try {
+        selectedValueKompetitor.add(pbData.selectedValues[i].toString());
+        switch (selectedValueKompetitor[i]) {
+          case "1":
+            selectedValueKompetitorFinal.add("5");
+            break;
+          case "2":
+            selectedValueKompetitorFinal.add("4");
+            break;
+          case "3":
+            selectedValueKompetitorFinal.add("3");
+            break;
+          case "4":
+            selectedValueKompetitorFinal.add("2");
+            break;
+          case "5":
+            selectedValueKompetitorFinal.add("1");
+            break;
+        }
+        int value = int.parse(selectedValueKompetitorFinal[i]);
+        jawaban[pbData.subKuisionerIds[i].toString()] = value;
+      } catch (e) {
+        print("Gagal mengubah nilai ke integer: $e");
+      }
+    }
+    return jawaban;
+  }
+
   Map<String, int> processJawabanKompetitor(PbData pbData) {
     Map<String, int> jawaban = {};
+    List<String> selectedValueKompetitor = [];
     for (int i = 0; i < pbData.subKuisionerIds.length; i++) {
       try {
         int value = int.parse(pbData.selectedValueKompetitor[i]);
@@ -570,136 +604,212 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      DropdownButtonHideUnderline(
-                                                        child: DropdownButton2<
-                                                            String>(
-                                                          isExpanded: true,
-                                                          hint: Text(
-                                                            'Pilih Kompetitor',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .hintColor,
-                                                            ),
-                                                          ),
-                                                          items: itemCompetitor
-                                                              .map((String
-                                                                  competitor) {
-                                                            return DropdownMenuItem<
-                                                                String>(
-                                                              value: competitor,
-                                                              child: Text(
-                                                                  competitor),
-                                                            );
-                                                          }).toList(),
-                                                          value: selectedValueKompetitor[
-                                                                  questionIndex]
-                                                              [
-                                                              subQuestionIndex],
-                                                          onChanged:
-                                                              (String? value) {
-                                                            setState(() {
-                                                              selectedValueKompetitor[
-                                                                      questionIndex]
-                                                                  [
-                                                                  subQuestionIndex] = value;
-                                                              int?
-                                                                  newCompetitorId =
-                                                                  competitorMap[
-                                                                      value!];
+                                                      // DropdownButtonHideUnderline(
+                                                      //   child: DropdownButton2<
+                                                      //       String>(
+                                                      //     isExpanded: true,
+                                                      //     hint: Text(
+                                                      //       'Pilih Kompetitor',
+                                                      //       style: TextStyle(
+                                                      //         fontSize: 14,
+                                                      //         color: Theme.of(
+                                                      //                 context)
+                                                      //             .hintColor,
+                                                      //       ),
+                                                      //     ),
+                                                      //     items: itemCompetitor
+                                                      //         .map((String
+                                                      //             competitor) {
+                                                      //       return DropdownMenuItem<
+                                                      //           String>(
+                                                      //         value: competitor,
+                                                      //         child: Text(
+                                                      //             competitor),
+                                                      //       );
+                                                      //     }).toList(),
+                                                      //     value: selectedValueKompetitor[
+                                                      //             questionIndex]
+                                                      //         [
+                                                      //         subQuestionIndex],
+                                                      //     onChanged:
+                                                      //         (String? value) {
+                                                      //       setState(() {
+                                                      //         selectedValueKompetitor[
+                                                      //                 questionIndex]
+                                                      //             [
+                                                      //             subQuestionIndex] = value;
+                                                      //         int?
+                                                      //             newCompetitorId =
+                                                      //             competitorMap[
+                                                      //                 value!];
 
-                                                              // Ensure the list for the current questionIndex is initialized and expandable
-                                                              if (competitorIdList
-                                                                      .length <=
-                                                                  questionIndex) {
-                                                                competitorIdList.add(List<
-                                                                        int?>.filled(
+                                                      //         // Ensure the list for the current questionIndex is initialized and expandable
+                                                      //         if (competitorIdList
+                                                      //                 .length <=
+                                                      //             questionIndex) {
+                                                      //           competitorIdList.add(List<
+                                                      //                   int?>.filled(
+                                                      //               subQuestionIndex +
+                                                      //                   1,
+                                                      //               null,
+                                                      //               growable:
+                                                      //                   true));
+                                                      //         }
+
+                                                      //         // Ensure the sublist for the current subQuestionIndex is expandable
+                                                      //         if (competitorIdList[
+                                                      //                     questionIndex]
+                                                      //                 .length <=
+                                                      //             subQuestionIndex) {
+                                                      //           competitorIdList[
+                                                      //                   questionIndex]
+                                                      //               .addAll(
+                                                      //             List<
+                                                      //                 int?>.filled(
+                                                      //               subQuestionIndex +
+                                                      //                   1 -
+                                                      //                   competitorIdList[questionIndex]
+                                                      //                       .length,
+                                                      //               null,
+                                                      //               growable:
+                                                      //                   true,
+                                                      //             ),
+                                                      //           );
+                                                      //         }
+
+                                                      //         // Assign the new competitor ID
+                                                      //         competitorIdList[
+                                                      //                     questionIndex]
+                                                      //                 [
+                                                      //                 subQuestionIndex] =
+                                                      //             newCompetitorId;
+                                                      //       });
+                                                      //     },
+                                                      //   ),
+                                                      // ),
+                                                      Text(
+                                                          "Pilih Kompetitor :  "),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: itemCompetitor
+                                                            .map((String
+                                                                competitor) {
+                                                          int? competitorId =
+                                                              competitorMap[
+                                                                  competitor];
+                                                          return RadioListTile<
+                                                              String>(
+                                                            title: Text(
+                                                                competitor),
+                                                            value: competitor,
+                                                            groupValue: selectedValueKompetitor[
+                                                                    questionIndex]
+                                                                [
+                                                                subQuestionIndex],
+                                                            onChanged: (String?
+                                                                value) {
+                                                              setState(() {
+                                                                selectedValueKompetitor[
+                                                                        questionIndex]
+                                                                    [
+                                                                    subQuestionIndex] = value;
+
+                                                                // Ensure the list for the current questionIndex is initialized and expandable
+                                                                if (competitorIdList
+                                                                        .length <=
+                                                                    questionIndex) {
+                                                                  competitorIdList
+                                                                      .add(List<
+                                                                          int?>.filled(
                                                                     subQuestionIndex +
                                                                         1,
                                                                     null,
                                                                     growable:
-                                                                        true));
-                                                              }
-
-                                                              // Ensure the sublist for the current subQuestionIndex is expandable
-                                                              if (competitorIdList[
-                                                                          questionIndex]
-                                                                      .length <=
-                                                                  subQuestionIndex) {
-                                                                competitorIdList[
-                                                                        questionIndex]
-                                                                    .addAll(
-                                                                  List<
-                                                                      int?>.filled(
-                                                                    subQuestionIndex +
-                                                                        1 -
-                                                                        competitorIdList[questionIndex]
-                                                                            .length,
-                                                                    null,
-                                                                    growable:
                                                                         true,
-                                                                  ),
-                                                                );
-                                                              }
+                                                                  ));
+                                                                }
 
-                                                              // Assign the new competitor ID
-                                                              competitorIdList[
+                                                                // Ensure the sublist for the current subQuestionIndex is expandable
+                                                                if (competitorIdList[
+                                                                            questionIndex]
+                                                                        .length <=
+                                                                    subQuestionIndex) {
+                                                                  competitorIdList[
                                                                           questionIndex]
-                                                                      [
-                                                                      subQuestionIndex] =
-                                                                  newCompetitorId;
-                                                            });
-                                                          },
-                                                        ),
-                                                      ),
-                                                      selectedValueKompetitor[
-                                                                      questionIndex]
-                                                                  [
-                                                                  subQuestionIndex] !=
-                                                              null
-                                                          ? Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Flexible(
-                                                                  child: Row(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: List<
-                                                                        Widget>.generate(
-                                                                      5,
-                                                                      (int index) =>
-                                                                          Expanded(
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.only(right: 0.0),
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              Radio<int>(
-                                                                                value: index + 1,
-                                                                                groupValue: _selectedValues2[questionIndex][subQuestionIndex],
-                                                                                onChanged: (value) {
-                                                                                  setState(() {
-                                                                                    _selectedValues2[questionIndex][subQuestionIndex] = value;
-                                                                                  });
-                                                                                },
-                                                                              ),
-                                                                              Text('${index + 1}'),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ),
+                                                                      .addAll(
+                                                                    List<
+                                                                        int?>.filled(
+                                                                      subQuestionIndex +
+                                                                          1 -
+                                                                          competitorIdList[questionIndex]
+                                                                              .length,
+                                                                      null,
+                                                                      growable:
+                                                                          true,
                                                                     ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            )
-                                                          : SizedBox()
+                                                                  );
+                                                                }
+
+                                                                // Assign the new competitor ID
+                                                                competitorIdList[
+                                                                            questionIndex]
+                                                                        [
+                                                                        subQuestionIndex] =
+                                                                    competitorId;
+                                                              });
+                                                            },
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                      // selectedValueKompetitor[
+                                                      //                 questionIndex]
+                                                      //             [
+                                                      //             subQuestionIndex] !=
+                                                      //         null
+                                                      //     ? Row(
+                                                      //         crossAxisAlignment:
+                                                      //             CrossAxisAlignment
+                                                      //                 .start,
+                                                      //         children: [
+                                                      //           Flexible(
+                                                      //             child: Row(
+                                                      //               crossAxisAlignment:
+                                                      //                   CrossAxisAlignment
+                                                      //                       .start,
+                                                      //               children: List<
+                                                      //                   Widget>.generate(
+                                                      //                 5,
+                                                      //                 (int index) =>
+                                                      //                     Expanded(
+                                                      //                   child:
+                                                      //                       Padding(
+                                                      //                     padding:
+                                                      //                         const EdgeInsets.only(right: 0.0),
+                                                      //                     child:
+                                                      //                         Row(
+                                                      //                       children: [
+                                                      //                         Radio<int>(
+                                                      //                           value: index + 1,
+                                                      //                           groupValue: _selectedValues2[questionIndex][subQuestionIndex],
+                                                      //                           onChanged: (value) {
+                                                      //                             setState(() {
+                                                      //                               _selectedValues2[questionIndex][subQuestionIndex] = value;
+                                                      //                             });
+                                                      //                           },
+                                                      //                         ),
+                                                      //                         Text('${index + 1}'),
+                                                      //                       ],
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ),
+                                                      //               ),
+                                                      //             ),
+                                                      //           ),
+                                                      //         ],
+                                                      //       )
+                                                      //     : SizedBox()
                                                     ],
                                                   ),
                                                 );
@@ -723,17 +833,16 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                   onPressed: () {
                                     var result = printPbValue();
                                     var jawaban = processJawaban(result);
-                                    var jawabanKompetitor =
-                                        processJawabanKompetitor(result);
+                                    var jawabanKompetitors =
+                                        jawabanKompetitor(result);
                                     var jawabanPesaing =
                                         processJawabanPesaing(result);
-                                    // var catatan = processCatatan(result);
 
                                     KuisionerController().storePb(
                                         customerId,
                                         jawaban,
                                         jawabanPesaing,
-                                        jawabanKompetitor);
+                                        jawabanKompetitors);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
