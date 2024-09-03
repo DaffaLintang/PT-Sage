@@ -34,6 +34,16 @@ class _InvoicePageState extends State<InvoicePage> {
     }
   }
 
+  Future<void> _pickImageCamera(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = io.File(pickedFile.path);
+      });
+    }
+  }
+
   io.File? _image1;
   final ImagePicker _picker1 = ImagePicker();
 
@@ -496,22 +506,66 @@ class _InvoicePageState extends State<InvoicePage> {
                                   height: 70,
                                   child: Image.file(_image1!),
                                 ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                primary: Color(0xff9E0507),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    primary: Color(0xff9E0507),
+                                  ),
+                                  onPressed: () =>
+                                      _pickImage1(ImageSource.gallery),
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 10),
+                                      child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 1),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "Choose",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              Text(
+                                                "Photo",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ],
+                                          )))),
+                              SizedBox(
+                                width: 10,
                               ),
-                              onPressed: () => _pickImage1(ImageSource.gallery),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 1),
-                                child: Text(
-                                  "Choose Photo",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ))
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    primary: Color(0xff9E0507),
+                                  ),
+                                  onPressed: () =>
+                                      _pickImage1(ImageSource.camera),
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 10),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Take",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            "Photo",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ))),
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -576,22 +630,66 @@ class _InvoicePageState extends State<InvoicePage> {
                                   height: 70,
                                   child: Image.file(_image!),
                                 ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                primary: Color(0xff9E0507),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    primary: Color(0xff9E0507),
+                                  ),
+                                  onPressed: () =>
+                                      _pickImage(ImageSource.gallery),
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 10),
+                                      child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 1),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "Choose",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              Text(
+                                                "Photo",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ],
+                                          )))),
+                              SizedBox(
+                                width: 10,
                               ),
-                              onPressed: () => _pickImage(ImageSource.gallery),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 1),
-                                child: Text(
-                                  "Choose Photo",
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ))
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    primary: Color(0xff9E0507),
+                                  ),
+                                  onPressed: () =>
+                                      _pickImage(ImageSource.camera),
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 10),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Take",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Text(
+                                            "Photo",
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ))),
+                            ],
+                          ),
                         ],
                       ),
                     ],
