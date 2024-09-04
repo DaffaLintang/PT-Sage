@@ -19,7 +19,7 @@ class PoController extends GetxController {
   static TextEditingController jDpController = TextEditingController(text: '');
   static TextEditingController diskonController = TextEditingController();
   List<TextEditingController> jummlahKemasan = [TextEditingController()];
-  static TextEditingController dateController = TextEditingController();
+
   String? token = SpUtil.getString('token');
 
   Future<PurchaseOrderList?> getPoData() async {

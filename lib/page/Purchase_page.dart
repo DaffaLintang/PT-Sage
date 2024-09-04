@@ -83,20 +83,6 @@ class _PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  Future<void> selectedData() async {
-    DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1945),
-        lastDate: DateTime(2900));
-
-    if (pickedDate != null) {
-      setState(() {
-        PoController.dateController.text = pickedDate.toString().split(" ")[0];
-      });
-    }
-  }
-
   Future<void> fetchKemasan() async {
     var kemasanList = await poController.getKemasan();
     setState(() {

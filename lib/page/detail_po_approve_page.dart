@@ -14,19 +14,49 @@ class DetailPoApprovalPage extends StatefulWidget {
 }
 
 class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
+  DateTime? pickedDate;
   final order = Get.arguments;
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
     symbol: 'Rp',
   );
 
+  // String getRawValue(String formattedValue) {
+  //   String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
+  //   if (formattedValue.contains('.')) {
+  //     plainValue = plainValue.substring(0, plainValue.length - 2);
+  //   }
+
+  //   return plainValue;
+  // }
+
   String getRawValue(String formattedValue) {
+    // Menghapus semua karakter non-numerik
     String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
-    if (formattedValue.contains('.')) {
+
+    // Hanya potong dua karakter terakhir jika formattedValue memiliki titik desimal dan ada desimal yang sah
+    if (formattedValue.contains('.') &&
+        formattedValue.split('.').last.length == 2) {
       plainValue = plainValue.substring(0, plainValue.length - 2);
     }
 
     return plainValue;
+  }
+
+  Future<void> selectedDate() async {
+    pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1945),
+      lastDate: DateTime(2900),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        ApprovedController.dateController.text =
+            DateFormat('yyyy-MM-dd').format(pickedDate!);
+      });
+    }
   }
 
   @override
@@ -211,8 +241,8 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                                 ),
                                 order.diskon == null
                                     ? Text("-")
-                                    : Text(currencyFormatter.format(int.parse(
-                                        getRawValue(order.diskon.toString())))),
+                                    : Text(currencyFormatter
+                                        .format(order.diskon.toInt())),
                                 SizedBox(
                                   height: 15,
                                 )
@@ -325,6 +355,43 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Tanggal Pengiriman",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.rubik().fontFamily)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black.withOpacity(0.05)),
+                        child: TextField(
+                            controller: ApprovedController.dateController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Tanggal Pengiriman',
+                                prefixIcon: Icon(
+                                  Icons.date_range,
+                                  color: Color(0xffBF1619),
+                                )),
+                            onTap: () {
+                              selectedDate();
+                            },
+                            showCursor: true,
+                            readOnly: true),
+                      ),
+                    ],
+                  ),
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -342,7 +409,8 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                             onPressed: () {
                               final approvedController =
                                   Get.put(ApprovedController());
-                              approvedController.approve(order.kodePo);
+                              approvedController.approve(order.kodePo,
+                                  ApprovedController.dateController.text);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -361,7 +429,8 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                             onPressed: () {
                               final approvedController =
                                   Get.put(ApprovedController());
-                              approvedController.rejected(order.kodePo);
+                              approvedController.rejected(order.kodePo,
+                                  ApprovedController.dateController.text);
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

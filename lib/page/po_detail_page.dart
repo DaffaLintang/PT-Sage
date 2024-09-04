@@ -18,10 +18,51 @@ class _PoDetailPageState extends State<PoDetailPage> {
     symbol: 'Rp',
   );
 
+  // String getRawValue(String formattedValue) {
+  //   // Menghapus semua karakter non-numerik
+  //   String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
+
+  //   // Hanya potong dua karakter terakhir jika formattedValue memiliki titik desimal dan ada desimal yang sah
+  //   if (formattedValue.contains('.') &&
+  //       formattedValue.split('.').last.length == 2) {
+  //     plainValue = plainValue.substring(0, plainValue.length - 2);
+  //   }
+
+  //   return plainValue;
+  // }
+
+  // String getRawValue(String formattedValue) {
+  //   // Menghapus semua karakter non-numerik kecuali titik desimal
+  //   String plainValue = formattedValue.replaceAll(RegExp(r'[^\d.]'), '');
+
+  //   // Memeriksa apakah ada titik desimal
+  //   if (plainValue.contains('.')) {
+  //     // Pisahkan nilai sebelum dan sesudah titik desimal
+  //     List<String> parts = plainValue.split('.');
+
+  //     // Mengambil bagian sebelum titik desimal dan memastikan bagian desimal ada dan valid
+  //     String integerPart = parts[0];
+  //     String decimalPart = parts.length > 1 ? parts[1] : '';
+
+  //     // Jika bagian desimal tidak valid (lebih dari dua digit), abaikan bagian desimal
+  //     if (decimalPart.length > 2) {
+  //       decimalPart = '';
+  //     }
+
+  //     // Gabungkan kembali bagian integer dan desimal
+  //     plainValue = integerPart + decimalPart;
+  //   }
+
+  //   return plainValue;
+  // }
+
   String getRawValue(String formattedValue) {
+    // Menghapus semua karakter non-numerik kecuali angka
     String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
+
+    // Jika ada titik desimal, abaikan angka desimal dengan mengambil substring dari awal hingga titik desimal
     if (formattedValue.contains('.')) {
-      plainValue = plainValue.substring(0, plainValue.length - 2);
+      plainValue = plainValue.split('.')[0];
     }
 
     return plainValue;
@@ -209,8 +250,10 @@ class _PoDetailPageState extends State<PoDetailPage> {
                                 ),
                                 order.diskon == null
                                     ? Text("-")
-                                    : Text(currencyFormatter.format(int.parse(
-                                        getRawValue(order.diskon.toString())))),
+                                    : Text(currencyFormatter
+                                        .format(order.diskon.toInt())),
+                                // Text(currencyFormatter.format(int.parse(
+                                //     getRawValue(order.diskon.toString())))),
                                 SizedBox(
                                   height: 15,
                                 )
@@ -319,7 +362,8 @@ class _PoDetailPageState extends State<PoDetailPage> {
                       ),
                       order.tanggalPengiriman == null
                           ? Text("-")
-                          : Text(order.tanggalPengiriman)
+                          : Text(DateFormat('yyyy-MM-dd')
+                              .format(order.tanggalPengiriman))
                     ],
                   ),
                 ),
