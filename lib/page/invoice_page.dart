@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pt_sage/controllers/invoice_controller.dart';
 import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/invoice.dart';
 import 'package:pt_sage/models/supplier.dart';
@@ -23,6 +24,19 @@ class InvoicePage extends StatefulWidget {
 class _InvoicePageState extends State<InvoicePage> {
   io.File? _image;
   final ImagePicker _picker = ImagePicker();
+  late Future<List<Invoice>> _invoicesFuture;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // fetchInvoice();
+    _invoicesFuture = InvoiceController().fetchInvoices();
+  }
+
+  // void fetchInvoice() async {
+  //   Invoice? invoice = await InvoiceController().fetchInvoice();
+  // }
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -746,43 +760,43 @@ class _InvoicePageState extends State<InvoicePage> {
                               onPressed: () async {
                                 final status =
                                     await Permission.storage.request();
-                                if (status.isGranted) {
-                                  final date = DateTime.now();
-                                  final invoice = Invoice(
-                                    info: InvoiceInfo(
-                                        Pembayaran: 'BCA',
-                                        TanggalKirim: date,
-                                        description: 'Sales Invoice'),
-                                    supplier: Supplier(
-                                        Email: 'sagemashlahat.bwi@gmail.com',
-                                        address:
-                                            'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
-                                        name: 'PT SAGE MASHLAHAT INDONESIA',
-                                        noTlp: '+62 812-3063-8671',
-                                        paymentInfo: '5111835111'),
-                                    customer: Customer(
-                                        name: 'Sinaa',
-                                        contact: '+62 838-3073-7764',
-                                        tujuan: 'Merbabu'),
-                                    items: [
-                                      InvoiceItem(
-                                          no: 1,
-                                          produk: 'jagung',
-                                          unit: 1,
-                                          qty: 5,
-                                          tonase: 5000,
-                                          harga: 40000,
-                                          diskon: 0,
-                                          jumlah: 3),
-                                    ],
-                                  );
+                                // if (status.isGranted) {
+                                //   final date = DateTime.now();
+                                //   final invoice = Invoice(
+                                //     info: InvoiceInfo(
+                                //         Pembayaran: 'BCA',
+                                //         TanggalKirim: date,
+                                //         description: 'Sales Invoice'),
+                                //     supplier: Supplier(
+                                //         Email: 'sagemashlahat.bwi@gmail.com',
+                                //         address:
+                                //             'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
+                                //         name: 'PT SAGE MASHLAHAT INDONESIA',
+                                //         noTlp: '+62 812-3063-8671',
+                                //         paymentInfo: '5111835111'),
+                                //     customer: Customer(
+                                //         name: 'Sinaa',
+                                //         contact: '+62 838-3073-7764',
+                                //         tujuan: 'Merbabu'),
+                                //     items: [
+                                //       InvoiceItem(
+                                //           no: 1,
+                                //           produk: 'jagung',
+                                //           unit: 1,
+                                //           qty: 5,
+                                //           tonase: 5000,
+                                //           harga: 40000,
+                                //           diskon: 0,
+                                //           jumlah: 3),
+                                //     ],
+                                //   );
 
-                                  final pdfFile =
-                                      await PdfInvoiceApi.generate(invoice);
-                                  PdfApi.openFile(pdfFile);
-                                } else {
-                                  print('print error');
-                                }
+                                //   final pdfFile =
+                                //       await PdfInvoiceApi.generate(invoice);
+                                //   PdfApi.openFile(pdfFile);
+                                // } else {
+                                //   print('print error');
+                                // }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

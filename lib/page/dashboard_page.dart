@@ -13,6 +13,8 @@ import 'package:pt_sage/page/po_approvel_page.dart';
 import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
 
+import 'list_pengiriman.dart';
+
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
@@ -230,7 +232,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 imageAsset: 'assets/Basket_alt_3.png'),
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => PengirimanBarangPage());
+                                  Get.offAll(() => ListPengiriman());
                                 },
                                 title: 'Pengiriman Barang',
                                 imageAsset: 'assets/package_car.png'),

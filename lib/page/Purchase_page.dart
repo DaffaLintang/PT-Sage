@@ -50,12 +50,12 @@ class _PurchasePageState extends State<PurchasePage> {
     symbol: 'Rp',
   );
 
-  final List<String> itemsTempo = [
-    '7 Hari',
-    '15 Hari',
-    '30 Hari',
-    '60 Hari',
-    '90 Hari',
+  final List<int> itemsTempo = [
+    7,
+    15,
+    30,
+    60,
+    90,
   ];
   String? selectedValueTempo;
 
@@ -667,11 +667,11 @@ class _PurchasePageState extends State<PurchasePage> {
                               ),
                             ),
                             items: itemsTempo
-                                .map((String itemsTempo) =>
+                                .map((int itemsTempo) =>
                                     DropdownMenuItem<String>(
-                                      value: itemsTempo,
+                                      value: itemsTempo.toString(),
                                       child: Text(
-                                        itemsTempo,
+                                        itemsTempo.toString(),
                                         style: const TextStyle(
                                           fontSize: 14,
                                         ),
