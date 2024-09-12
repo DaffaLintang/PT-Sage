@@ -67,7 +67,7 @@ class PengirimanController extends GetxController {
       } else {
         EasyLoading.show();
         var data = {
-          "customer_id": customer,
+          "customer_id": 2,
           "kendaraan": kendaraan,
           "nama_sopir": namaSupir,
           "no_polisi": NoPol,
@@ -75,12 +75,11 @@ class PengirimanController extends GetxController {
           "product_lot": lot,
           "kemasan": Kemasan
         };
-        print(data);
         PengirimanProvider().store(data, endpoint).then((value) {
-          print(value.statusCode);
-          print(value.body);
-          print(endpoint);
           if (value.statusCode == 200) {
+            PengirimanController.kendaraanController.text = '';
+            PengirimanController.noPolController.text = '';
+            PengirimanController.supirController.text = '';
             Get.offAll(() => ListPengiriman());
             Get.snackbar('Success', 'Pengiriman Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),

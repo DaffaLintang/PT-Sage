@@ -7,6 +7,7 @@ import 'package:pt_sage/page/Pengiriman_barang.dart';
 import 'package:pt_sage/page/detail_po_approve_page.dart';
 import 'package:pt_sage/page/invoice_page.dart';
 import 'package:pt_sage/page/po_detail_page.dart';
+import '../controllers/pengiriman.dart';
 import '../controllers/purchase_order_controller.dart';
 import 'home_page.dart';
 
@@ -82,6 +83,9 @@ class _ListPengirimanState extends State<ListPengiriman> {
                           onTap: () {
                             Get.offAll(() => PengirimanBarangPage(),
                                 arguments: order);
+                            PengirimanController.kendaraanController.text = '';
+                            PengirimanController.noPolController.text = '';
+                            PengirimanController.supirController.text = '';
                           },
                         )
                       : SizedBox();

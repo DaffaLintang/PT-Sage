@@ -54,6 +54,7 @@ class _listPoPageState extends State<listPoPage> {
           actions: [
             IconButton(
                 onPressed: () {
+                  PoController.jDpController.text = '';
                   Get.offAll(() => PurchasePage());
                   PoController.hargaController.text = '0';
                   PoController.jumlahConroller.text = '1';

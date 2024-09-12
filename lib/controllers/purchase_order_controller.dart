@@ -18,7 +18,8 @@ class PoController extends GetxController {
   static TextEditingController hargaController = TextEditingController();
   static TextEditingController jDpController = TextEditingController(text: '');
   static TextEditingController diskonController = TextEditingController();
-  List<TextEditingController> jummlahKemasan = [TextEditingController()];
+  RxList<TextEditingController> jummlahKemasan =
+      <TextEditingController>[TextEditingController()].obs;
 
   String? token = SpUtil.getString('token');
 
@@ -44,8 +45,6 @@ class PoController extends GetxController {
       final uri = Uri.parse('$PoAPI/kemasan');
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
-      print(response.statusCode);
-      print(response.body);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         return KemasanList.fromJson(jsonResponse);
@@ -75,7 +74,7 @@ class PoController extends GetxController {
     }
   }
 
-  void store(customers, products, totals, tempos, dps, jumlahDps, diskons,
+  bool store(customers, products, totals, tempos, dps, jumlahDps, diskons,
       diskonTypes, kemasans, quantity) {
     int? customer = customers;
     int? product = products;
@@ -129,21 +128,26 @@ class PoController extends GetxController {
         };
         PoProvider().store(token, data).then((value) {
           if (value.statusCode == 201) {
-            if (jummlahKemasan.isNotEmpty) {
-              var firstElement = jummlahKemasan.first;
-              firstElement.text = '';
-              jummlahKemasan.clear();
-              jummlahKemasan.add(firstElement);
-            }
+            print(jummlahKemasan.isNotEmpty);
+            // if (jummlahKemasan.isNotEmpty) {
+            //   var firstElement = jummlahKemasan.first;
+            //   print('Before clear: ${firstElement.text}');
+            //   firstElement.clear();
+            //   print('After clear: ${firstElement.text}');
+            //   jummlahKemasan.clear();
+            //   jummlahKemasan.add(firstElement);
+            //   jummlahKemasan.refresh();
+            // }
             diskonController.text = '';
             jDpController.text = '';
-            Get.offAll(() => listPoPage());
+            Get.offAll(() => const listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);
           } else {
             Get.snackbar('Error', 'Pembelian Gagal',
                 backgroundColor: Colors.red, colorText: Colors.white);
+            return false;
           }
           EasyLoading.dismiss();
         });
@@ -151,5 +155,6 @@ class PoController extends GetxController {
     } catch (e, stackTrace) {
       print('Exception occurred: $e\n$stackTrace');
     }
+    return true;
   }
 }

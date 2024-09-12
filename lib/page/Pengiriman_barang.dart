@@ -326,8 +326,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 printValue();
                                 PengirimanController().store(
                                     order.kodePo,
-                                    PengirimanController
-                                        .customerController.text,
+                                    order.customersId,
                                     PengirimanController
                                         .kendaraanController.text,
                                     PengirimanController.supirController.text,

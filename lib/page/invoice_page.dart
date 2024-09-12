@@ -8,6 +8,7 @@ import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/invoice.dart';
 import 'package:pt_sage/models/supplier.dart';
 import 'package:pt_sage/page/home_page.dart';
+import 'package:pt_sage/page/list_invoice_page.dart';
 import 'dart:io' as io;
 
 import 'package:pt_sage/providers/pdf_invoice_api.dart';
@@ -24,19 +25,7 @@ class InvoicePage extends StatefulWidget {
 class _InvoicePageState extends State<InvoicePage> {
   io.File? _image;
   final ImagePicker _picker = ImagePicker();
-  late Future<List<Invoice>> _invoicesFuture;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // fetchInvoice();
-    _invoicesFuture = InvoiceController().fetchInvoices();
-  }
-
-  // void fetchInvoice() async {
-  //   Invoice? invoice = await InvoiceController().fetchInvoice();
-  // }
+  final invoice = Get.arguments;
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -86,7 +75,7 @@ class _InvoicePageState extends State<InvoicePage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(() => HomePage());
+              Get.offAll(() => ListInvoicePage());
             },
             icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.transparent,
@@ -109,14 +98,14 @@ class _InvoicePageState extends State<InvoicePage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              "#INVC0001",
+                              invoice.kodeInvoice,
                               style: TextStyle(
                                   fontFamily: GoogleFonts.rubik().fontFamily,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              "Tanggal : 15/06/2024 ",
+                              'Tanggal : ${invoice.delivery.tanggalPengiriman}',
                               style: TextStyle(
                                   fontFamily: GoogleFonts.rubik().fontFamily,
                                   fontSize: 14,
@@ -125,17 +114,17 @@ class _InvoicePageState extends State<InvoicePage> {
                           ],
                         ),
                         Text(
-                          "#KodePengiriman",
+                          invoice.kodePengiriman,
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "#KodePO",
+                          invoice.delivery.kodePo,
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600),
                         ),
                       ],
