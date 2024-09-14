@@ -873,8 +873,6 @@ class _InvoicePageState extends State<InvoicePage> {
                               onPressed: () async {
                                 final status =
                                     await Permission.storage.request();
-                                arguments:
-                                invoice;
                                 if (status.isGranted) {
                                   // final date = DateTime.now();
                                   // final invoice = Invoice(
@@ -907,7 +905,7 @@ class _InvoicePageState extends State<InvoicePage> {
                                   // );
 
                                   final pdfFile =
-                                      await PdfInvoiceApi.generate();
+                                      await PdfInvoiceApi.generate(invoice);
                                   PdfApi.openFile(pdfFile);
                                 } else {
                                   print('print error');

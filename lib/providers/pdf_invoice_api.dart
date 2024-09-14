@@ -25,31 +25,31 @@ Future<pw.MemoryImage> _loadImg(String path) async {
 }
 
 // final logo =
-final invoiceData = Get.arguments;
+// final invoiceData = Get.arguments;
 final NumberFormat currencyFormatter = NumberFormat.currency(
   locale: 'id',
   symbol: 'Rp',
 );
 
 class PdfInvoiceApi {
-  static Future<File> generate() async {
+  static Future<File> generate(invoiceData) async {
     final pdf = Document();
     final font = await _loadFont('assets/fonts/NotoSans-Regular.ttf');
     final img = await _loadImg('assets/Logo(1).png');
 
     pdf.addPage(MultiPage(
       build: (context) => [
-        InvoiceHeader(img),
-        buildHeader(font),
+        InvoiceHeader(invoiceData, img),
+        buildHeader(invoiceData, font),
         SizedBox(height: 2 * PdfPageFormat.cm),
         // buildTitle(invoice, font),
-        buildInvoice(font),
+        buildInvoice(invoiceData, font),
         Divider(),
-        buildTotal(font),
+        buildTotal(invoiceData, font),
         SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildPaymentInfo(font),
         SizedBox(height: 1 * PdfPageFormat.cm),
-        InvoiceFooter(),
+        InvoiceFooter(invoiceData),
       ],
       footer: (context) => buildFooter(font),
     ));
@@ -57,7 +57,7 @@ class PdfInvoiceApi {
     return PdfApi.saveDocument(name: 'invoice.pdf', pdf: pdf);
   }
 
-  static Widget InvoiceFooter() =>
+  static Widget InvoiceFooter(invoiceData) =>
       pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Dibuat oleh,'),
@@ -100,7 +100,7 @@ class PdfInvoiceApi {
         )
       ]));
 
-  static Widget InvoiceHeader(pw.MemoryImage img) => pw.Row(
+  static Widget InvoiceHeader(invoiceData, pw.MemoryImage img) => pw.Row(
         // crossAxisAlignment: pw.CrossAxisAlignment.start,
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
@@ -131,7 +131,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildHeader(pw.Font font) => Column(
+  static Widget buildHeader(invoiceData, pw.Font font) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 1 * PdfPageFormat.cm),
@@ -139,14 +139,14 @@ class PdfInvoiceApi {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildInvoiceInfo(font),
-              buildCustomerAddress(font),
+              buildInvoiceInfo(invoiceData, font),
+              buildCustomerAddress(invoiceData, font),
             ],
           ),
         ],
       );
 
-  static Widget buildCustomerAddress(pw.Font font) {
+  static Widget buildCustomerAddress(invoiceData, pw.Font font) {
     final titles = <String>[
       'Customer:',
       'Contact:',
@@ -181,7 +181,7 @@ class PdfInvoiceApi {
     // );
   }
 
-  static Widget buildInvoiceInfo(pw.Font font) {
+  static Widget buildInvoiceInfo(invoiceData, pw.Font font) {
     final titles = <String>[
       'Tanggal Kirim:',
       'Pembayaran:',
@@ -216,7 +216,7 @@ class PdfInvoiceApi {
   //       ],
   //     );
 
-  static Widget buildInvoice(pw.Font font) {
+  static Widget buildInvoice(invoiceData, pw.Font font) {
     final headers = [
       'No',
       'Produk',
@@ -276,7 +276,7 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildTotal(pw.Font font) {
+  static Widget buildTotal(invoiceData, pw.Font font) {
     // final total = invoice.items
     //     .map((item) => item.harga * item.jumlah)
     //     .reduce((item1, item2) => item1 + item2);
