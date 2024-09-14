@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pt_sage/controllers/invoice_controller.dart';
 import 'package:pt_sage/models/customer.dart';
@@ -26,6 +27,11 @@ class _InvoicePageState extends State<InvoicePage> {
   io.File? _image;
   final ImagePicker _picker = ImagePicker();
   final invoice = Get.arguments;
+
+  final NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    symbol: 'Rp',
+  );
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -105,7 +111,7 @@ class _InvoicePageState extends State<InvoicePage> {
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              'Tanggal : ${invoice.delivery.tanggalPengiriman}',
+                              'Tanggal : ${DateFormat('yyyy-MM-dd').format(invoice.delivery.tanggalPengiriman)}',
                               style: TextStyle(
                                   fontFamily: GoogleFonts.rubik().fontFamily,
                                   fontSize: 14,
@@ -132,7 +138,6 @@ class _InvoicePageState extends State<InvoicePage> {
                 Container(
                   padding: EdgeInsets.all(18),
                   width: double.infinity,
-                  height: 300,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -169,7 +174,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Daffa Lintang"),
+                      Text(invoice.delivery.purchaseOrder.customersName),
                       SizedBox(
                         height: 15,
                       ),
@@ -183,24 +188,24 @@ class _InvoicePageState extends State<InvoicePage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("Jl. Veteran 200 Gorontalo"),
+                      Text(invoice.delivery.purchaseOrder.address),
                       SizedBox(
                         height: 15,
                       ),
-                      Text(
-                        "Jenis Customer",
-                        style: TextStyle(
-                            color: Color(0xff9E0507),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text("Petani"),
-                      SizedBox(
-                        height: 15,
-                      ),
+                      // Text(
+                      //   "Jenis Customer",
+                      //   style: TextStyle(
+                      //       color: Color(0xff9E0507),
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w700),
+                      // ),
+                      // SizedBox(
+                      //   height: 5,
+                      // ),
+                      // Text("Petani"),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
                       Text(
                         "No Hp/WA",
                         style: TextStyle(
@@ -211,7 +216,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text("089123123123"),
+                      Text(invoice.delivery.purchaseOrder.phone),
                     ],
                   ),
                 ),
@@ -285,14 +290,14 @@ class _InvoicePageState extends State<InvoicePage> {
                                 ),
                               ),
                             ),
-                            DataColumn(
-                              label: Text(
-                                "Tonase(kg)",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+                            // DataColumn(
+                            //   label: Text(
+                            //     "Tonase(kg)",
+                            //     style: TextStyle(
+                            //       fontSize: 12,
+                            //     ),
+                            //   ),
+                            // ),
                             DataColumn(
                               label: Text(
                                 "Harga/kg",
@@ -326,51 +331,17 @@ class _InvoicePageState extends State<InvoicePage> {
                                   Container(
                                     width: 80, // Set a specific width if needed
                                     child: Text(
-                                      "Jagung",
+                                      invoice
+                                          .delivery.purchaseOrder.productName,
                                     ),
                                   ),
                                 ),
-                                DataCell(Text("1")),
-                                DataCell(Text("5")),
-                                DataCell(Text("7000")),
-                                DataCell(Text("Rp100.000.000")),
-                                DataCell(Text("-")),
-                                DataCell(Text("-")),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text("2")),
-                                DataCell(
-                                  Container(
-                                    width: 80, // Set a specific width if needed
-                                    child: Text(
-                                      "Jagung",
-                                    ),
-                                  ),
-                                ),
-                                DataCell(Text("1")),
-                                DataCell(Text("5")),
-                                DataCell(Text("7000")),
-                                DataCell(Text("Rp100.000.000")),
-                                DataCell(Text("-")),
-                                DataCell(Text("-")),
-                              ],
-                            ),
-                            DataRow(
-                              cells: [
-                                DataCell(Text("3")),
-                                DataCell(
-                                  Container(
-                                    width: 80, // Set a specific width if needed
-                                    child: Text(
-                                      "Jagung",
-                                    ),
-                                  ),
-                                ),
-                                DataCell(Text("1")),
-                                DataCell(Text("5")),
-                                DataCell(Text("7000")),
+                                DataCell(Text(invoice
+                                    .delivery.purchaseOrder.productId
+                                    .toString())),
+                                DataCell(Text(
+                                    invoice.delivery.purchaseOrder.quantity)),
+                                // DataCell(Text("7000")),
                                 DataCell(Text("Rp100.000.000")),
                                 DataCell(Text("-")),
                                 DataCell(Text("-")),
@@ -398,12 +369,15 @@ class _InvoicePageState extends State<InvoicePage> {
                                       fontWeight: FontWeight.w800),
                                 ),
                                 Text(
-                                  "1/3",
+                                  invoice.delivery.purchaseOrder.paymentTerm,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w800),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 8,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -412,38 +386,188 @@ class _InvoicePageState extends State<InvoicePage> {
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
-                                Text("Rp.100.000",
+                                Text(
+                                    currencyFormatter.format(int.parse(invoice
+                                        .delivery.purchaseOrder.totalPrice)),
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
                               ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text("Bayar",
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //     Text("Rp.100.000",
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //   ],
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text("Sisa Bayar",
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //     Text("Rp.10.100.000",
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //   ],
+                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Dp",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                                Text(invoice.delivery.purchaseOrder.dp,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Bayar",
+                                Text("Total Dp",
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
-                                Text("Rp.100.000",
+                                Text(
+                                    currencyFormatter.format(int.parse(invoice
+                                        .delivery.purchaseOrder.dpAmount)),
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
                               ],
+                            ),
+                            SizedBox(
+                              height: 8,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Sisa Bayar",
+                                Text("Status",
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
-                                Text("Rp.10.100.000",
+                                Text(invoice.delivery.purchaseOrder.status,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w800)),
                               ],
                             ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Pengiriman Status",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                                Text(
+                                    invoice
+                                        .delivery.purchaseOrder.deliveryStatus,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Tipe Diskon",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                                Text(
+                                    invoice.delivery.purchaseOrder.discountType,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            invoice.delivery.purchaseOrder.discountType ==
+                                    "nominal"
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Diskon Total",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800)),
+                                      invoice.delivery.purchaseOrder.discount ==
+                                              null
+                                          ? Text("-")
+                                          : Text(
+                                              currencyFormatter.format(
+                                                  double.tryParse(invoice
+                                                          .delivery
+                                                          .purchaseOrder
+                                                          .discount)
+                                                      ?.toInt()),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w800)),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Diskon Total",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      invoice.delivery.purchaseOrder.discount ==
+                                              null
+                                          ? Text("-")
+                                          : Text(
+                                              invoice.delivery.purchaseOrder
+                                                  .discount
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w800)),
+                                    ],
+                                  ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // children: [
+                            // Text("Diskon Total",
+                            //     style: TextStyle(
+                            //         fontSize: 12,
+                            //         fontWeight: FontWeight.w800)),
+                            //     Text(invoice.delivery.purchaseOrder.discount,
+                            // style: TextStyle(
+                            //     fontSize: 12,
+                            //     fontWeight: FontWeight.w800)),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),
@@ -749,43 +873,45 @@ class _InvoicePageState extends State<InvoicePage> {
                               onPressed: () async {
                                 final status =
                                     await Permission.storage.request();
-                                // if (status.isGranted) {
-                                //   final date = DateTime.now();
-                                //   final invoice = Invoice(
-                                //     info: InvoiceInfo(
-                                //         Pembayaran: 'BCA',
-                                //         TanggalKirim: date,
-                                //         description: 'Sales Invoice'),
-                                //     supplier: Supplier(
-                                //         Email: 'sagemashlahat.bwi@gmail.com',
-                                //         address:
-                                //             'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
-                                //         name: 'PT SAGE MASHLAHAT INDONESIA',
-                                //         noTlp: '+62 812-3063-8671',
-                                //         paymentInfo: '5111835111'),
-                                //     customer: Customer(
-                                //         name: 'Sinaa',
-                                //         contact: '+62 838-3073-7764',
-                                //         tujuan: 'Merbabu'),
-                                //     items: [
-                                //       InvoiceItem(
-                                //           no: 1,
-                                //           produk: 'jagung',
-                                //           unit: 1,
-                                //           qty: 5,
-                                //           tonase: 5000,
-                                //           harga: 40000,
-                                //           diskon: 0,
-                                //           jumlah: 3),
-                                //     ],
-                                //   );
+                                arguments:
+                                invoice;
+                                if (status.isGranted) {
+                                  // final date = DateTime.now();
+                                  // final invoice = Invoice(
+                                  //   info: InvoiceInfo(
+                                  //       Pembayaran: 'BCA',
+                                  //       TanggalKirim: date,
+                                  //       description: 'Sales Invoice'),
+                                  //   supplier: Supplier(
+                                  //       Email: 'sagemashlahat.bwi@gmail.com',
+                                  //       address:
+                                  //           'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
+                                  //       name: 'PT SAGE MASHLAHAT INDONESIA',
+                                  //       noTlp: '+62 812-3063-8671',
+                                  //       paymentInfo: '5111835111'),
+                                  //   customer: Customer(
+                                  //       name: 'Sinaa',
+                                  //       contact: '+62 838-3073-7764',
+                                  //       tujuan: 'Merbabu'),
+                                  //   items: [
+                                  //     InvoiceItem(
+                                  //         no: 1,
+                                  //         produk: 'jagung',
+                                  //         unit: 1,
+                                  //         qty: 5,
+                                  //         tonase: 5000,
+                                  //         harga: 40000,
+                                  //         diskon: 0,
+                                  //         jumlah: 3),
+                                  //   ],
+                                  // );
 
-                                //   final pdfFile =
-                                //       await PdfInvoiceApi.generate(invoice);
-                                //   PdfApi.openFile(pdfFile);
-                                // } else {
-                                //   print('print error');
-                                // }
+                                  final pdfFile =
+                                      await PdfInvoiceApi.generate();
+                                  PdfApi.openFile(pdfFile);
+                                } else {
+                                  print('print error');
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

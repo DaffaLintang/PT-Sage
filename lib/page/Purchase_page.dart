@@ -122,11 +122,11 @@ class _PurchasePageState extends State<PurchasePage> {
     });
   }
 
-  void hitungHarga() {
+  void hitungHarga(hargaProduk) {
     setState(() {
       int jumlah = int.parse(PoController.jumlahConroller.text);
-      String? hargaString = SpUtil.getString("harga");
-      int harga = int.parse(hargaString ?? '0');
+      // String? hargaString = SpUtil.getString("harga");
+      int harga = int.parse(hargaProduk ?? '0');
       totalHarga = (harga * jumlah);
       totalBayar = (harga * jumlah).toString();
       PoController.hargaController.text = currencyFormatter.format(harga);
@@ -150,7 +150,7 @@ class _PurchasePageState extends State<PurchasePage> {
       PoController.jumlahConroller.selection = TextSelection.fromPosition(
           TextPosition(offset: PoController.jumlahConroller.text.length));
     }
-    hitungHarga();
+    hitungHarga(hargaMap[selectedValueProduk!]);
   }
 
   void printValue() {
@@ -348,13 +348,13 @@ class _PurchasePageState extends State<PurchasePage> {
                             onChanged: (String? value) {
                               setState(() {
                                 PoController.jumlahConroller.text = '1';
-                                hitungHarga();
                                 selectedValueProduk = value;
                                 productId = productMap[selectedValueProduk!];
                                 String? productPrice =
                                     hargaMap[selectedValueProduk!];
+                                hitungHarga(productPrice!);
                                 // SpUtil.putInt('produk', productId!);
-                                SpUtil.putString('harga', productPrice!);
+                                // SpUtil.putString('harga', productPrice!);
                               });
                             },
                           ),
