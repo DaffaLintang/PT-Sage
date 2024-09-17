@@ -841,30 +841,30 @@ class _InvoicePageState extends State<InvoicePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Tagihan Selanjutnya",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff000000)),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          // controller: RegisterController.emailController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Rp.10.000.000',
-                          ),
-                        ),
-                      ),
+                      // Text(
+                      //   "Tagihan Selanjutnya",
+                      //   style: TextStyle(
+                      //       fontSize: 20,
+                      //       fontWeight: FontWeight.w600,
+                      //       color: Color(0xff000000)),
+                      // ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      // Container(
+                      //   padding:
+                      //       EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       color: Colors.black.withOpacity(0.05)),
+                      //   child: TextField(
+                      //     // controller: RegisterController.emailController,
+                      //     decoration: InputDecoration(
+                      //       border: InputBorder.none,
+                      //       hintText: 'Rp.10.000.000',
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
@@ -883,15 +883,6 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
-                                // final status =
-                                //     await Permission.storage.request();
-                                // if (status.isGranted) {
-                                //   final pdfFile =
-                                //       await PdfInvoiceApi.generate(invoice);
-                                //   PdfApi.openFile(pdfFile);
-                                // } else {
-                                //   print('print error');
-                                // }
                                 if (_image == null || _image1 == null) {
                                   Get.snackbar('Error', 'Bukti Belum Di Upload',
                                       backgroundColor: Colors.red,
@@ -899,6 +890,15 @@ class _InvoicePageState extends State<InvoicePage> {
                                 } else {
                                   InvoiceController().submitForm(
                                       _image!, _image1!, invoice.kodeInvoice);
+                                  final status =
+                                      await Permission.storage.request();
+                                  if (status.isGranted) {
+                                    final pdfFile =
+                                        await PdfInvoiceApi.generate(invoice);
+                                    PdfApi.openFile(pdfFile);
+                                  } else {
+                                    print('print error');
+                                  }
                                 }
                               },
                               style: ElevatedButton.styleFrom(

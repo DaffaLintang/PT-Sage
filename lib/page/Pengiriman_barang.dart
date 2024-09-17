@@ -26,6 +26,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   List<ProductLot>? productLots;
   List<bool>? isChecked;
   List<int> selectedProductLotIds = [];
+  List<int> selectedJumlahProductLotIds = [];
   final Map<String, int> kemasan = {};
 
   @override
@@ -286,8 +287,12 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                   isChecked![index] = value!;
                                   if (isChecked![index]) {
                                     selectedProductLotIds.add(productLot.id);
+                                    selectedJumlahProductLotIds
+                                        .add(int.parse(productLot.quantity));
                                   } else {
                                     selectedProductLotIds.remove(productLot.id);
+                                    selectedJumlahProductLotIds
+                                        .remove(int.parse(productLot.quantity));
                                   }
                                 });
                               },
@@ -333,7 +338,9 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                     PengirimanController.noPolController.text,
                                     PengirimanController.dateController.text,
                                     selectedProductLotIds,
-                                    kemasan);
+                                    kemasan,
+                                    selectedJumlahProductLotIds,
+                                    order.quantity);
                                 // print(customerId);
                                 // print(PengirimanController
                                 //     .kendaraanController.text);
@@ -344,8 +351,8 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 // print(PengirimanController.dateController.text);
                                 // print(selectedProductLotIds);
                                 // print(order.kemasan);
-                                printValue();
-                                print(kemasan);
+                                // printValue();
+                                // print(kemasan);
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

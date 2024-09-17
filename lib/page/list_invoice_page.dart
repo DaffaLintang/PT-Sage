@@ -81,7 +81,7 @@ class _ListInvoicePageState extends State<ListInvoicePage> {
                           Colors.black,
                           BlendMode.srcATop,
                         ),
-                        image: AssetImage('assets/Basket_alt_3.png'),
+                        image: AssetImage('assets/File_dock.png'),
                       ),
                     ),
                   ),

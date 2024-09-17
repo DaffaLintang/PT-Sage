@@ -43,31 +43,19 @@ class PengirimanController extends GetxController {
     }
   }
 
-  void store(
-    poId,
-    customer,
-    kendaraan,
-    namaSupir,
-    NoPol,
-    tanggal,
-    lot,
-    Kemasan,
-  ) {
+  void store(poId, customer, kendaraan, namaSupir, NoPol, tanggal, lot, Kemasan,
+      jumlahLot, totalQuantity) {
     final endpoint = '$Delivery/store/$poId';
+    num totalLotTersedia = 0;
     try {
-      if (customer == null ||
-          kendaraan == null ||
-          namaSupir == null ||
-          NoPol == null ||
-          tanggal == null ||
-          lot == null ||
-          Kemasan == null) {
+      print(kendaraan);
+      if (kendaraan.isEmpty && namaSupir.isEmpty && NoPol.isEmpty) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
-        EasyLoading.show();
+        // EasyLoading.show();
         var data = {
-          "customer_id": 2,
+          "customer_id": customer,
           "kendaraan": kendaraan,
           "nama_sopir": namaSupir,
           "no_polisi": NoPol,
@@ -75,21 +63,30 @@ class PengirimanController extends GetxController {
           "product_lot": lot,
           "kemasan": Kemasan
         };
-        PengirimanProvider().store(data, endpoint).then((value) {
-          if (value.statusCode == 200) {
-            PengirimanController.kendaraanController.text = '';
-            PengirimanController.noPolController.text = '';
-            PengirimanController.supirController.text = '';
-            Get.offAll(() => ListPengiriman());
-            Get.snackbar('Success', 'Pengiriman Berhasil',
-                backgroundColor: Color.fromARGB(255, 75, 212, 146),
-                colorText: Colors.white);
-          } else {
-            Get.snackbar('Error', 'Pembelian Gagal',
-                backgroundColor: Colors.red, colorText: Colors.white);
-          }
-          EasyLoading.dismiss();
-        });
+        for (int i = 0; i < jumlahLot.length; i++) {
+          totalLotTersedia += jumlahLot[i];
+        }
+        if (totalLotTersedia >= totalQuantity) {
+          PengirimanProvider().store(data, endpoint).then((value) {
+            print(value.statusCode);
+            if (value.statusCode == 200) {
+              PengirimanController.kendaraanController.text = '';
+              PengirimanController.noPolController.text = '';
+              PengirimanController.supirController.text = '';
+              Get.offAll(() => ListPengiriman());
+              Get.snackbar('Success', 'Pengiriman Berhasil',
+                  backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                  colorText: Colors.white);
+            } else {
+              Get.snackbar('Error', 'Pembelian Gagal',
+                  backgroundColor: Colors.red, colorText: Colors.white);
+            }
+            EasyLoading.dismiss();
+          });
+        } else {
+          Get.snackbar('Error', 'Jumlah Lot Kurang',
+              backgroundColor: Colors.red, colorText: Colors.white);
+        }
       }
     } catch (e, stackTrace) {
       print('Exception occurred: $e\n$stackTrace');
