@@ -342,9 +342,21 @@ class _InvoicePageState extends State<InvoicePage> {
                                 DataCell(Text(
                                     invoice.delivery.purchaseOrder.quantity)),
                                 // DataCell(Text("7000")),
-                                DataCell(Text("Rp100.000.000")),
-                                DataCell(Text("-")),
-                                DataCell(Text("-")),
+                                DataCell(Text(currencyFormatter.format(
+                                    double.parse(invoice
+                                        .delivery.purchaseOrder.price)))),
+                                invoice.delivery.purchaseOrder.discountType ==
+                                        "nominal"
+                                    ? DataCell(Text(currencyFormatter.format(
+                                        double.tryParse(invoice.delivery
+                                                .purchaseOrder.discount)
+                                            ?.toInt())))
+                                    : DataCell(Text(invoice
+                                        .delivery.purchaseOrder.discount
+                                        .toString())),
+                                DataCell(Text(currencyFormatter.format(
+                                    double.parse(invoice
+                                        .delivery.purchaseOrder.totalPrice)))),
                               ],
                             ),
                           ],
@@ -508,53 +520,53 @@ class _InvoicePageState extends State<InvoicePage> {
                             SizedBox(
                               height: 8,
                             ),
-                            invoice.delivery.purchaseOrder.discountType ==
-                                    "nominal"
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Diskon Total",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w800)),
-                                      invoice.delivery.purchaseOrder.discount ==
-                                              null
-                                          ? Text("-")
-                                          : Text(
-                                              currencyFormatter.format(
-                                                  double.tryParse(invoice
-                                                          .delivery
-                                                          .purchaseOrder
-                                                          .discount)
-                                                      ?.toInt()),
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w800)),
-                                    ],
-                                  )
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Diskon Total",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w800),
-                                      ),
-                                      invoice.delivery.purchaseOrder.discount ==
-                                              null
-                                          ? Text("-")
-                                          : Text(
-                                              invoice.delivery.purchaseOrder
-                                                  .discount
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w800)),
-                                    ],
-                                  ),
+                            // invoice.delivery.purchaseOrder.discountType ==
+                            //         "nominal"
+                            //     ? Row(
+                            //         mainAxisAlignment:
+                            //             MainAxisAlignment.spaceBetween,
+                            //         children: [
+                            //           Text("Diskon Total",
+                            //               style: TextStyle(
+                            //                   fontSize: 12,
+                            //                   fontWeight: FontWeight.w800)),
+                            //           invoice.delivery.purchaseOrder.discount ==
+                            //                   null
+                            //               ? Text("-")
+                            //               : Text(
+                            //                   currencyFormatter.format(
+                            //                       double.tryParse(invoice
+                            //                               .delivery
+                            //                               .purchaseOrder
+                            //                               .discount)
+                            //                           ?.toInt()),
+                            //                   style: TextStyle(
+                            //                       fontSize: 12,
+                            //                       fontWeight: FontWeight.w800)),
+                            //         ],
+                            //       )
+                            //     : Row(
+                            //         mainAxisAlignment:
+                            //             MainAxisAlignment.spaceBetween,
+                            //         children: [
+                            //           Text(
+                            //             "Diskon Total",
+                            //             style: TextStyle(
+                            //                 fontSize: 12,
+                            //                 fontWeight: FontWeight.w800),
+                            //           ),
+                            //           invoice.delivery.purchaseOrder.discount ==
+                            //                   null
+                            //               ? Text("-")
+                            //               : Text(
+                            //                   invoice.delivery.purchaseOrder
+                            //                       .discount
+                            //                       .toString(),
+                            //                   style: TextStyle(
+                            //                       fontSize: 12,
+                            //                       fontWeight: FontWeight.w800)),
+                            //         ],
+                            //       ),
                             // Row(
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             // children: [
@@ -871,44 +883,22 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
-                                final status =
-                                    await Permission.storage.request();
-                                if (status.isGranted) {
-                                  // final date = DateTime.now();
-                                  // final invoice = Invoice(
-                                  //   info: InvoiceInfo(
-                                  //       Pembayaran: 'BCA',
-                                  //       TanggalKirim: date,
-                                  //       description: 'Sales Invoice'),
-                                  //   supplier: Supplier(
-                                  //       Email: 'sagemashlahat.bwi@gmail.com',
-                                  //       address:
-                                  //           'Jl. Senopati, Tapanrejo Kec. Muncar Kab. Banyuwangi - Jawa Timur',
-                                  //       name: 'PT SAGE MASHLAHAT INDONESIA',
-                                  //       noTlp: '+62 812-3063-8671',
-                                  //       paymentInfo: '5111835111'),
-                                  //   customer: Customer(
-                                  //       name: 'Sinaa',
-                                  //       contact: '+62 838-3073-7764',
-                                  //       tujuan: 'Merbabu'),
-                                  //   items: [
-                                  //     InvoiceItem(
-                                  //         no: 1,
-                                  //         produk: 'jagung',
-                                  //         unit: 1,
-                                  //         qty: 5,
-                                  //         tonase: 5000,
-                                  //         harga: 40000,
-                                  //         diskon: 0,
-                                  //         jumlah: 3),
-                                  //   ],
-                                  // );
-
-                                  final pdfFile =
-                                      await PdfInvoiceApi.generate(invoice);
-                                  PdfApi.openFile(pdfFile);
+                                // final status =
+                                //     await Permission.storage.request();
+                                // if (status.isGranted) {
+                                //   final pdfFile =
+                                //       await PdfInvoiceApi.generate(invoice);
+                                //   PdfApi.openFile(pdfFile);
+                                // } else {
+                                //   print('print error');
+                                // }
+                                if (_image == null || _image1 == null) {
+                                  Get.snackbar('Error', 'Bukti Belum Di Upload',
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
                                 } else {
-                                  print('print error');
+                                  InvoiceController().submitForm(
+                                      _image!, _image1!, invoice.kodeInvoice);
                                 }
                               },
                               style: ElevatedButton.styleFrom(

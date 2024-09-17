@@ -12,5 +12,3 @@ const String KepuasanPelanggan = "http://10.0.2.2:8000/api/kepuasan-pelanggan";
 const String ApprovelPo = "http://10.0.2.2:8000/api/approvel";
 const String Delivery = "http://10.0.2.2:8000/api/delivery";
 const String InvoiceApi = "http://10.0.2.2:8000/api/invoices";
-// const String PengirimanApi = "http://10.0.2.2:8000/api/delivery/store";
-
