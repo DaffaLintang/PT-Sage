@@ -22,6 +22,7 @@ class PoController extends GetxController {
       <TextEditingController>[TextEditingController()].obs;
 
   String? token = SpUtil.getString('token');
+  static int jumlahBulat = 0;
 
   Future<PurchaseOrderList?> getPoData() async {
     try {
@@ -74,6 +75,18 @@ class PoController extends GetxController {
     }
   }
 
+  void hitungJumlahBulat(int? jumlah) {
+    jumlahBulat = 0;
+    if (jumlah! % 5 == 0) {
+      jumlahBulat += jumlah;
+    } else {
+      jumlahBulat += (jumlah / 5).ceil() * 5;
+      // Get.snackbar('Pemberitahuan', 'Jumlah Dibulatkan Menjadi ${jumlahBulat}',
+      //     backgroundColor: Colors.red, colorText: Colors.white);
+      // jumlahConroller.text = jumlahBulat.toString();
+    }
+  }
+
   bool store(customers, products, totals, tempos, dps, jumlahDps, diskons,
       diskonTypes, kemasans, quantity) {
     int? customer = customers;
@@ -96,15 +109,14 @@ class PoController extends GetxController {
       default:
         diskonType = "-";
     }
-    int jumlahBulat = 0;
-    if (jumlah! % 5 == 0) {
-      jumlahBulat += jumlah;
-    } else {
-      jumlahBulat += (jumlah / 5).ceil() * 5;
-      Get.snackbar('Pemberitahuan', 'Jumlah Dibulatkan Menjadi ${jumlahBulat}',
-          backgroundColor: Colors.red, colorText: Colors.white);
-      jumlahConroller.text = jumlahBulat.toString();
-    }
+    // if (jumlah! % 5 == 0) {
+    //   jumlahBulat += jumlah;
+    // } else {
+    //   jumlahBulat += (jumlah / 5).ceil() * 5;
+    //   // Get.snackbar('Pemberitahuan', 'Jumlah Dibulatkan Menjadi ${jumlahBulat}',
+    //   //     backgroundColor: Colors.red, colorText: Colors.white);
+    //   // jumlahConroller.text = jumlahBulat.toString();
+    // }
     try {
       if (customer == null ||
           product == null ||

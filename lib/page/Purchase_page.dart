@@ -150,7 +150,7 @@ class _PurchasePageState extends State<PurchasePage> {
       PoController.jumlahConroller.selection = TextSelection.fromPosition(
           TextPosition(offset: PoController.jumlahConroller.text.length));
     }
-    hitungHarga(hargaMap[selectedValueProduk!]);
+    hitungHarga(hargaMap[selectedValueProduk ?? 0]);
   }
 
   void printValue() {
@@ -935,32 +935,64 @@ class _PurchasePageState extends State<PurchasePage> {
                       child: ElevatedButton(
                         child: Text('Kirim'),
                         onPressed: () {
-                          printValue();
-                          String jumlahDp =
-                              getRawValue(PoController.jDpController.text);
-                          String jumlahDiskon =
-                              PoController.diskonController.text;
-                          bool PoStore = PoController().store(
-                              customerId,
-                              productId,
-                              totalBayar,
-                              selectedValueTempo,
-                              selectedValueDp,
-                              jumlahDp,
-                              getRawValue(jumlahDiskon),
-                              _currentSelection,
-                              formattedValues,
-                              totalValue);
-                          if (PoStore) {
-                            if (poController.jummlahKemasan.isNotEmpty) {
-                              var firstElement =
-                                  poController.jummlahKemasan.first;
-                              firstElement.text = '';
-                              poController.jummlahKemasan.clear();
-                              poController.jummlahKemasan.add(firstElement);
-                            }
-                          }
-                          formattedValues.clear();
+                          PoController().hitungJumlahBulat(
+                              int.tryParse(PoController.jumlahConroller.text));
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Konfirmasi'),
+                                content: Text(
+                                    'Jumlah Akan Dibulatkan Ke ${PoController.jumlahBulat}?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(false); // Pilihan Tidak
+                                    },
+                                    child: Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                      // Setelah menutup dialog, lakukan tindakan di sini
+                                      printValue();
+                                      String jumlahDp = getRawValue(
+                                          PoController.jDpController.text);
+                                      String jumlahDiskon =
+                                          PoController.diskonController.text;
+                                      bool PoStore = PoController().store(
+                                        customerId,
+                                        productId,
+                                        totalBayar,
+                                        selectedValueTempo,
+                                        selectedValueDp,
+                                        jumlahDp,
+                                        getRawValue(jumlahDiskon),
+                                        _currentSelection,
+                                        formattedValues,
+                                        totalValue,
+                                      );
+
+                                      if (PoStore) {
+                                        if (poController
+                                            .jummlahKemasan.isNotEmpty) {
+                                          var firstElement =
+                                              poController.jummlahKemasan.first;
+                                          firstElement.text = '';
+                                          poController.jummlahKemasan.clear();
+                                          poController.jummlahKemasan
+                                              .add(firstElement);
+                                        }
+                                      }
+                                      formattedValues.clear();
+                                    },
+                                    child: Text('Ya'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
