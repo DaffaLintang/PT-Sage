@@ -248,7 +248,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.offAll(() => FeedBackPage());
                                 },
-                                title: 'Feedback',
+                                title: 'Keluhan',
                                 imageAsset: 'assets/Chat_alt_3.png'),
                             Menu(
                                 onTap: () {

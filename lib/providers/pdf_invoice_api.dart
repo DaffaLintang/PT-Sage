@@ -36,6 +36,8 @@ class PdfInvoiceApi {
     final pdf = Document();
     final font = await _loadFont('assets/fonts/NotoSans-Regular.ttf');
     final img = await _loadImg('assets/Logo(1).png');
+    final ttdHilma = await _loadImg('assets/Hilma.jpeg');
+    final ttdNyoto = await _loadImg('assets/nyoto.jpeg');
 
     pdf.addPage(MultiPage(
       build: (context) => [
@@ -49,26 +51,32 @@ class PdfInvoiceApi {
         SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildPaymentInfo(font),
         SizedBox(height: 1 * PdfPageFormat.cm),
-        InvoiceFooter(invoiceData),
+        InvoiceFooter(invoiceData, ttdHilma, ttdNyoto),
       ],
       footer: (context) => buildFooter(font),
     ));
 
-    return PdfApi.saveDocument(name: 'invoice.pdf', pdf: pdf);
+    return PdfApi.saveDocument(
+        name: '${invoiceData.kodeInvoice}.pdf', pdf: pdf);
   }
 
-  static Widget InvoiceFooter(invoiceData) =>
+  static Widget InvoiceFooter(
+          invoiceData, pw.MemoryImage img1, pw.MemoryImage img2) =>
       pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Dibuat oleh,'),
-          pw.SizedBox(height: 50),
+          pw.SizedBox(height: 5),
+          pw.Image(img1, height: 60, width: 60),
+          pw.SizedBox(height: 5),
           pw.Text('HILMA FARDIDA'),
           pw.Container(height: 1, width: 100, color: PdfColors.black)
         ]),
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Diketahui oleh,'),
-          pw.SizedBox(height: 50),
-          pw.Text('HILMA FARDIDA'),
+          pw.SizedBox(height: 5),
+          pw.Image(img2, height: 200, width: 100),
+          pw.SizedBox(height: 5),
+          pw.Text('NYOTO SUTRISNO'),
           pw.Container(height: 1, width: 100, color: PdfColors.black),
           pw.Text('Manajer Pemasaran'),
         ]),

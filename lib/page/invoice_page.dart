@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/controllers/invoice_controller.dart';
 import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/invoice.dart';
@@ -620,34 +621,67 @@ class _InvoicePageState extends State<InvoicePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _image1 == null
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border:
-                                          Border.all(color: Color(0xff9E0507))),
-                                  padding: EdgeInsets.all(8),
+                          invoice.buktiKirim != null
+                              ? Image.network(
+                                  Uri.encodeFull(
+                                      '${MainUrl}/${invoice.buktiKirim}'),
                                   width: 70,
                                   height: 70,
-                                  child: Center(
-                                      child: Text(
-                                    "No Image",
-                                    textAlign: TextAlign.center,
-                                  )),
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return Text('Gagal memuat gambar');
+                                  },
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border:
-                                          Border.all(color: Color(0xff6B8A7A))),
-                                  padding: EdgeInsets.all(8),
-                                  width: 70,
-                                  height: 70,
-                                  child: Image.file(_image1!),
-                                ),
-                          Row(
-                            children: [
-                              ElevatedButton(
+                              : _image1 == null
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Color(0xff9E0507))),
+                                      padding: EdgeInsets.all(8),
+                                      width: 70,
+                                      height: 70,
+                                      child: Center(
+                                          child: Text(
+                                        "No Image",
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Color(0xff6B8A7A))),
+                                      padding: EdgeInsets.all(8),
+                                      width: 70,
+                                      height: 70,
+                                      child: Image.file(_image1!),
+                                    ),
+                          invoice.buktiKirim != null
+                              ? ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     onPrimary: Colors.white,
                                     shape: RoundedRectangleBorder(
@@ -655,8 +689,24 @@ class _InvoicePageState extends State<InvoicePage> {
                                             BorderRadius.circular(10)),
                                     primary: Color(0xff9E0507),
                                   ),
-                                  onPressed: () =>
-                                      _pickImage1(ImageSource.gallery),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Image.network(
+                                                Uri.encodeFull(
+                                                    '${MainUrl}/${invoice.buktiKirim}'),
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  },
                                   child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 5, vertical: 10),
@@ -666,45 +716,79 @@ class _InvoicePageState extends State<InvoicePage> {
                                           child: Column(
                                             children: [
                                               Text(
-                                                "Choose",
+                                                "Lihat",
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                               Text(
-                                                "Photo",
+                                                "Bukti",
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                             ],
-                                          )))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    primary: Color(0xff9E0507),
-                                  ),
-                                  onPressed: () =>
-                                      _pickImage1(ImageSource.camera),
-                                  child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 10),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Take",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            "Photo",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ))),
-                            ],
-                          ),
+                                          ))))
+                              : Row(
+                                  children: [
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          primary: Color(0xff9E0507),
+                                        ),
+                                        onPressed: () =>
+                                            _pickImage1(ImageSource.gallery),
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 10),
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5, vertical: 1),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Choose",
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                    Text(
+                                                      "Photo",
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                  ],
+                                                )))),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          primary: Color(0xff9E0507),
+                                        ),
+                                        onPressed: () =>
+                                            _pickImage1(ImageSource.camera),
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 10),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "Take",
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                                Text(
+                                                  "Photo",
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ],
+                                            ))),
+                                  ],
+                                ),
                         ],
                       ),
                     ],
@@ -744,34 +828,67 @@ class _InvoicePageState extends State<InvoicePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _image == null
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border:
-                                          Border.all(color: Color(0xff9E0507))),
-                                  padding: EdgeInsets.all(8),
+                          invoice.buktiBayar != null
+                              ? Image.network(
+                                  Uri.encodeFull(
+                                      '${MainUrl}/${invoice.buktiBayar}'),
                                   width: 70,
                                   height: 70,
-                                  child: Center(
-                                      child: Text(
-                                    "No Image",
-                                    textAlign: TextAlign.center,
-                                  )),
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return Text('Gagal memuat gambar');
+                                  },
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border:
-                                          Border.all(color: Color(0xff6B8A7A))),
-                                  padding: EdgeInsets.all(8),
-                                  width: 70,
-                                  height: 70,
-                                  child: Image.file(_image!),
-                                ),
-                          Row(
-                            children: [
-                              ElevatedButton(
+                              : _image == null
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Color(0xff9E0507))),
+                                      padding: EdgeInsets.all(8),
+                                      width: 70,
+                                      height: 70,
+                                      child: Center(
+                                          child: Text(
+                                        "No Image",
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Color(0xff6B8A7A))),
+                                      padding: EdgeInsets.all(8),
+                                      width: 70,
+                                      height: 70,
+                                      child: Image.file(_image!),
+                                    ),
+                          invoice.buktiKirim != null
+                              ? ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     onPrimary: Colors.white,
                                     shape: RoundedRectangleBorder(
@@ -779,8 +896,24 @@ class _InvoicePageState extends State<InvoicePage> {
                                             BorderRadius.circular(10)),
                                     primary: Color(0xff9E0507),
                                   ),
-                                  onPressed: () =>
-                                      _pickImage(ImageSource.gallery),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Image.network(
+                                                Uri.encodeFull(
+                                                    '${MainUrl}/${invoice.buktiBayar}'),
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  },
                                   child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 5, vertical: 10),
@@ -790,45 +923,79 @@ class _InvoicePageState extends State<InvoicePage> {
                                           child: Column(
                                             children: [
                                               Text(
-                                                "Choose",
+                                                "Lihat",
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                               Text(
-                                                "Photo",
+                                                "Bukti",
                                                 style: TextStyle(fontSize: 12),
                                               ),
                                             ],
-                                          )))),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    primary: Color(0xff9E0507),
-                                  ),
-                                  onPressed: () =>
-                                      _pickImage(ImageSource.camera),
-                                  child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 10),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "Take",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Text(
-                                            "Photo",
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                        ],
-                                      ))),
-                            ],
-                          ),
+                                          ))))
+                              : Row(
+                                  children: [
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          primary: Color(0xff9E0507),
+                                        ),
+                                        onPressed: () =>
+                                            _pickImage(ImageSource.gallery),
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 10),
+                                            child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5, vertical: 1),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      "Choose",
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                    Text(
+                                                      "Photo",
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                  ],
+                                                )))),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          primary: Color(0xff9E0507),
+                                        ),
+                                        onPressed: () =>
+                                            _pickImage(ImageSource.camera),
+                                        child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 10),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "Take",
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                                Text(
+                                                  "Photo",
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ],
+                                            ))),
+                                  ],
+                                ),
                         ],
                       ),
                     ],
@@ -865,6 +1032,7 @@ class _InvoicePageState extends State<InvoicePage> {
                       //     ),
                       //   ),
                       // ),
+
                       SizedBox(
                         height: 20,
                       ),
@@ -883,6 +1051,8 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
+                                // InvoiceController().submitForm(
+                                //     _image!, _image1!, invoice.kodeInvoice);
                                 if (_image == null || _image1 == null) {
                                   Get.snackbar('Error', 'Bukti Belum Di Upload',
                                       backgroundColor: Colors.red,

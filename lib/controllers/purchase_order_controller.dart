@@ -96,11 +96,20 @@ class PoController extends GetxController {
       default:
         diskonType = "-";
     }
+    int jumlahBulat = 0;
+    if (jumlah! % 5 == 0) {
+      jumlahBulat += jumlah;
+    } else {
+      jumlahBulat += (jumlah / 5).ceil() * 5;
+      Get.snackbar('Pemberitahuan', 'Jumlah Dibulatkan Menjadi ${jumlahBulat}',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      jumlahConroller.text = jumlahBulat.toString();
+    }
     try {
       if (customer == null ||
           product == null ||
           jumlah == null ||
-          jumlah < 1 ||
+          jumlahBulat < 1 ||
           totalHarga == null ||
           tempo == null ||
           tempo.isEmpty ||
@@ -109,15 +118,16 @@ class PoController extends GetxController {
           kemasans!.length < 0) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
-      } else if (quantitys! != jumlah) {
+      } else if (quantitys! != jumlahBulat) {
         Get.snackbar('Error', 'Quantity melebihi/kurang dari jumlah produk',
-            backgroundColor: Colors.red, colorText: Colors.white);
+            backgroundColor: Color.fromARGB(255, 244, 190, 54),
+            colorText: Colors.white);
       } else {
         EasyLoading.show();
         var data = {
           "customers": customer,
           "product": product,
-          "jumlah": jumlah,
+          "jumlah": jumlahBulat,
           "total_harga": totalHarga,
           "tempo": tempo,
           "dp": dp,
@@ -128,22 +138,13 @@ class PoController extends GetxController {
         };
         PoProvider().store(token, data).then((value) {
           if (value.statusCode == 201) {
-            print(jummlahKemasan.isNotEmpty);
-            // if (jummlahKemasan.isNotEmpty) {
-            //   var firstElement = jummlahKemasan.first;
-            //   print('Before clear: ${firstElement.text}');
-            //   firstElement.clear();
-            //   print('After clear: ${firstElement.text}');
-            //   jummlahKemasan.clear();
-            //   jummlahKemasan.add(firstElement);
-            //   jummlahKemasan.refresh();
-            // }
             diskonController.text = '';
             jDpController.text = '';
             Get.offAll(() => const listPoPage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);
+            jumlahBulat = 0;
           } else {
             Get.snackbar('Error', 'Pembelian Gagal',
                 backgroundColor: Colors.red, colorText: Colors.white);

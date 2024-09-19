@@ -40,7 +40,7 @@ class InvoiceController extends GetxController {
       File buktiBayar, File buktiKirim, String InvId) async {
     isLoading(true);
 
-    var url = Uri.parse("${InvoiceApi}/upload-files/${InvId}");
+    var url = Uri.parse("${InvoiceApi}/upload/${InvId}");
     var request = http.MultipartRequest('POST', url);
     var stream1 = http.ByteStream(buktiBayar.openRead());
     var length1 = await buktiBayar.length();
@@ -66,6 +66,7 @@ class InvoiceController extends GetxController {
     try {
       if (buktiBayar != null || buktiKirim != null) {
         var response = await request.send();
+        print(response.statusCode);
         if (response.statusCode == 200) {
           var responseData = await response.stream.bytesToString();
           // var decodedResponse = jsonDecode(responseData);
@@ -74,7 +75,7 @@ class InvoiceController extends GetxController {
               colorText: Colors.white);
         } else {
           // print('Failed: ${response.statusCode}');
-          Get.snackbar('Error', 'Login Gagal',
+          Get.snackbar('Error', 'Uploud Gagal',
               backgroundColor: Colors.red, colorText: Colors.white);
         }
       } else {
