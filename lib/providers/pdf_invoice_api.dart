@@ -254,7 +254,11 @@ class PdfInvoiceApi {
       [
         "1", // Baris pertama
         '${invoiceData.delivery.purchaseOrder.productName}',
-        '${invoiceData.delivery.purchaseOrder.productId.toString()}',
+        invoiceData.delivery.kemasan.isNotEmpty
+            ? invoiceData.delivery.kemasan.map((kemasan) {
+                return 'Berat: ${kemasan.kemasanWeight}kg, Pcs: ${kemasan.pcs}';
+              }).join(', ')
+            : 'No kemasan data available',
         '${invoiceData.delivery.purchaseOrder.quantity}',
         '${invoiceData.delivery.purchaseOrder.quantity} Kg',
         '${currencyFormatter.format(double.parse(invoiceData.delivery.purchaseOrder.price))}',

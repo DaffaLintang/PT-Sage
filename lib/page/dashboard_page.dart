@@ -212,10 +212,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                       imageAsset: 'assets/Done_ring_round.png'),
                                   Menu(
                                       onTap: () {
-                                        Get.offAll(() => ListInvcApprovePage());
+                                        Get.offAll(() => KuisonerPage());
                                       },
-                                      title: 'Invoice Approvel',
-                                      imageAsset: 'assets/Done_ring_round.png'),
+                                      title: 'Kuisioner',
+                                      imageAsset: 'assets/Desk_alt.png'),
                                 ],
                               ),
                         SizedBox(
@@ -261,17 +261,19 @@ class _DashboardPageState extends State<DashboardPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Menu(
-                                onTap: () {
-                                  Get.offAll(() => KuisonerPage());
-                                },
-                                title: 'Kuisioner',
-                                imageAsset: 'assets/Desk_alt.png'),
-                          ],
-                        )
+                        roleText == 'Marketing'
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Menu(
+                                      onTap: () {
+                                        Get.offAll(() => KuisonerPage());
+                                      },
+                                      title: 'Kuisioner',
+                                      imageAsset: 'assets/Desk_alt.png'),
+                                ],
+                              )
+                            : SizedBox()
                       ]),
                     )
                   ],

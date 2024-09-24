@@ -58,6 +58,7 @@ class Delivery {
   final DateTime updatedAt;
   final List<DetailDelivery> detailDelivery;
   final PurchaseOrder purchaseOrder;
+  final List<Kemasan> kemasan;
 
   Delivery({
     required this.kodePengiriman,
@@ -73,6 +74,7 @@ class Delivery {
     required this.updatedAt,
     required this.detailDelivery,
     required this.purchaseOrder,
+    required this.kemasan,
   });
 
   factory Delivery.fromJson(Map<String, dynamic> json) {
@@ -92,6 +94,9 @@ class Delivery {
           .map((e) => DetailDelivery.fromJson(e as Map<String, dynamic>))
           .toList(),
       purchaseOrder: PurchaseOrder.fromJson(json['purchase_order']),
+      kemasan: (json['kemasan'] as List)
+          .map((item) => Kemasan.fromJson(item))
+          .toList(), // Parsing kemasan list
     );
   }
 
@@ -111,6 +116,32 @@ class Delivery {
       'detail_delivery': detailDelivery.map((e) => e.toJson()).toList(),
       'purchase_order': purchaseOrder.toJson(),
     };
+  }
+}
+
+class Kemasan {
+  final int kemasanId;
+  final int kemasanWeight;
+  final int productLotId;
+  final int berat;
+  final int pcs;
+
+  Kemasan({
+    required this.kemasanId,
+    required this.kemasanWeight,
+    required this.productLotId,
+    required this.berat,
+    required this.pcs,
+  });
+
+  factory Kemasan.fromJson(Map<String, dynamic> json) {
+    return Kemasan(
+      kemasanId: json['kemasan_id'],
+      kemasanWeight: json['kemasan_weight'],
+      productLotId: json['product_lot_id'],
+      berat: json['berat'],
+      pcs: json['pcs'],
+    );
   }
 }
 

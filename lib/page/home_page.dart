@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
         children: _pages,
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 5),
         child: GNav(
             gap: 8,
             onTabChange: _onTabTapped,

@@ -954,8 +954,6 @@ class _PurchasePageState extends State<PurchasePage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop(true);
-                                      // Setelah menutup dialog, lakukan tindakan di sini
                                       printValue();
                                       String jumlahDp = getRawValue(
                                           PoController.jDpController.text);
@@ -986,6 +984,38 @@ class _PurchasePageState extends State<PurchasePage> {
                                         }
                                       }
                                       formattedValues.clear();
+                                      // Navigator.of(context).pop(true);
+                                      // // Setelah menutup dialog, lakukan tindakan di sini
+                                      // printValue();
+                                      // String jumlahDp = getRawValue(
+                                      //     PoController.jDpController.text);
+                                      // String jumlahDiskon =
+                                      //     PoController.diskonController.text;
+                                      // bool PoStore = PoController().store(
+                                      //   customerId,
+                                      //   productId,
+                                      //   totalBayar,
+                                      //   selectedValueTempo,
+                                      //   selectedValueDp,
+                                      //   jumlahDp,
+                                      //   getRawValue(jumlahDiskon),
+                                      //   _currentSelection,
+                                      //   formattedValues,
+                                      //   totalValue,
+                                      // );
+
+                                      // if (PoStore) {
+                                      //   if (poController
+                                      //       .jummlahKemasan.isNotEmpty) {
+                                      //     var firstElement =
+                                      //         poController.jummlahKemasan.first;
+                                      //     firstElement.text = '';
+                                      //     poController.jummlahKemasan.clear();
+                                      //     poController.jummlahKemasan
+                                      //         .add(firstElement);
+                                      //   }
+                                      // }
+                                      // formattedValues.clear();
                                     },
                                     child: Text('Ya'),
                                   ),

@@ -291,14 +291,14 @@ class _InvoicePageState extends State<InvoicePage> {
                                 ),
                               ),
                             ),
-                            // DataColumn(
-                            //   label: Text(
-                            //     "Tonase(kg)",
-                            //     style: TextStyle(
-                            //       fontSize: 12,
-                            //     ),
-                            //   ),
-                            // ),
+                            DataColumn(
+                              label: Text(
+                                "Tonase(kg)",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
                             DataColumn(
                               label: Text(
                                 "Harga/kg",
@@ -337,12 +337,36 @@ class _InvoicePageState extends State<InvoicePage> {
                                     ),
                                   ),
                                 ),
-                                DataCell(Text(invoice
-                                    .delivery.purchaseOrder.productId
-                                    .toString())),
+                                DataCell(
+                                  invoice.delivery.kemasan.isNotEmpty
+                                      ? SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: invoice.delivery.kemasan
+                                                .map<Widget>((kemasan) {
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "Berat Kemasan: ${kemasan.kemasanWeight} kg"),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                      'Pcs: ${kemasan.pcs} pcs'),
+                                                  SizedBox(height: 8),
+                                                ],
+                                              );
+                                            }).toList(), // Make sure to use .toList() here
+                                          ),
+                                        )
+                                      : Text("No kemasan data available"),
+                                ),
                                 DataCell(Text(
-                                    invoice.delivery.purchaseOrder.quantity)),
-                                // DataCell(Text("7000")),
+                                  "${invoice.delivery.detailDelivery.fold<int>(0, (int sum, DetailDelivery item) => sum + item.totalPcs).toString()} Sack",
+                                )),
+                                DataCell(Text(
+                                    "${invoice.delivery.purchaseOrder.quantity} Kg")),
                                 DataCell(Text(currencyFormatter.format(
                                     double.parse(invoice
                                         .delivery.purchaseOrder.price)))),
@@ -1051,13 +1075,25 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
-                                // InvoiceController().submitForm(
-                                //     _image!, _image1!, invoice.kodeInvoice);
-                                if (_image == null || _image1 == null) {
+                                if (invoice.buktiKirim != null &&
+                                    invoice.buktiBayar != null) {
+                                  // If both buktiKirim and buktiBayar are not null
+                                  final status =
+                                      await Permission.storage.request();
+                                  if (status.isGranted) {
+                                    final pdfFile =
+                                        await PdfInvoiceApi.generate(invoice);
+                                    PdfApi.openFile(pdfFile);
+                                  } else {
+                                    print('print error');
+                                  }
+                                } else if (_image == null || _image1 == null) {
+                                  // If images are null
                                   Get.snackbar('Error', 'Bukti Belum Di Upload',
                                       backgroundColor: Colors.red,
                                       colorText: Colors.white);
                                 } else {
+                                  // If images are present, submit the form and generate the PDF
                                   InvoiceController().submitForm(
                                       _image!, _image1!, invoice.kodeInvoice);
                                   final status =

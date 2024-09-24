@@ -14,26 +14,27 @@ const String ApprovelPo = "http://10.0.2.2:8000/api/approvel";
 const String Delivery = "http://10.0.2.2:8000/api/delivery";
 const String InvoiceApi = "http://10.0.2.2:8000/api/invoices";
 
-// const String LoginAPI = "https://6a25-103-160-183-15.ngrok-free.app/api/login";
+// const String MainUrl = "https://6e14-103-160-183-15.ngrok-free.app";
+// const String LoginAPI = "https://6e14-103-160-183-15.ngrok-free.app/api/login";
 // const String PoAPI =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/purchase-orders";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/purchase-orders";
 // const String PoCreateAPI =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/purchase-orders/create";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/purchase-orders/create";
 // const String PoStoreAPI =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/purchase-orders/store";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/purchase-orders/store";
 // const String KuisionerKepuasanPelangganApi =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/kepuasan-pelanggan";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/kepuasan-pelanggan";
 // const String KuisionerPosisiBersaingApi =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/posisi-bersaing";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/posisi-bersaing";
 // const String IndeksAspek =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/indeks-aspek";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/indeks-aspek";
 // const String PosisiBersaing =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/posisi-bersaing";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/posisi-bersaing";
 // const String KepuasanPelanggan =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/kepuasan-pelanggan";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/kepuasan-pelanggan";
 // const String ApprovelPo =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/approvel";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/approvel";
 // const String Delivery =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/delivery";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/delivery";
 // const String InvoiceApi =
-//     "https://6a25-103-160-183-15.ngrok-free.app/api/invoices";
+//     "https://6e14-103-160-183-15.ngrok-free.app/api/invoices";
