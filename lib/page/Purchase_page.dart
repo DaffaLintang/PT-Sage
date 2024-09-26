@@ -935,94 +935,91 @@ class _PurchasePageState extends State<PurchasePage> {
                       child: ElevatedButton(
                         child: Text('Kirim'),
                         onPressed: () {
-                          PoController().hitungJumlahBulat(
-                              int.tryParse(PoController.jumlahConroller.text));
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Konfirmasi'),
-                                content: Text(
-                                    'Jumlah Akan Dibulatkan Ke ${PoController.jumlahBulat}?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(false); // Pilihan Tidak
-                                    },
-                                    child: Text('Tidak'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      printValue();
-                                      String jumlahDp = getRawValue(
-                                          PoController.jDpController.text);
-                                      String jumlahDiskon =
-                                          PoController.diskonController.text;
-                                      bool PoStore = PoController().store(
-                                        customerId,
-                                        productId,
-                                        totalBayar,
-                                        selectedValueTempo,
-                                        selectedValueDp,
-                                        jumlahDp,
-                                        getRawValue(jumlahDiskon),
-                                        _currentSelection,
-                                        formattedValues,
-                                        totalValue,
-                                      );
+                          printValue();
+                          String jumlahDp =
+                              getRawValue(PoController.jDpController.text);
+                          String jumlahDiskon =
+                              PoController.diskonController.text;
+                          bool PoStore = PoController().store(
+                              customerId,
+                              productId,
+                              totalBayar,
+                              selectedValueTempo,
+                              selectedValueDp,
+                              jumlahDp,
+                              getRawValue(jumlahDiskon),
+                              _currentSelection,
+                              formattedValues,
+                              totalValue);
+                          if (PoStore) {
+                            if (poController.jummlahKemasan.isNotEmpty) {
+                              var firstElement =
+                                  poController.jummlahKemasan.first;
+                              firstElement.text = '';
+                              poController.jummlahKemasan.clear();
+                              poController.jummlahKemasan.add(firstElement);
+                            }
+                          }
+                          formattedValues.clear();
+                          // PoController().hitungJumlahBulat(
+                          //     int.tryParse(PoController.jumlahConroller.text));
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) {
+                          //     return AlertDialog(
+                          //       title: Text('Konfirmasi'),
+                          //       content: Text(
+                          //           'Jumlah Akan Dibulatkan Ke ${PoController.jumlahBulat}?'),
+                          //       actions: <Widget>[
+                          //         TextButton(
+                          //           onPressed: () {
+                          //             Navigator.of(context)
+                          //                 .pop(false); // Pilihan Tidak
+                          //           },
+                          //           child: Text('Tidak'),
+                          //         ),
+                          //         TextButton(
+                          //           onPressed: () {
 
-                                      if (PoStore) {
-                                        if (poController
-                                            .jummlahKemasan.isNotEmpty) {
-                                          var firstElement =
-                                              poController.jummlahKemasan.first;
-                                          firstElement.text = '';
-                                          poController.jummlahKemasan.clear();
-                                          poController.jummlahKemasan
-                                              .add(firstElement);
-                                        }
-                                      }
-                                      formattedValues.clear();
-                                      // Navigator.of(context).pop(true);
-                                      // // Setelah menutup dialog, lakukan tindakan di sini
-                                      // printValue();
-                                      // String jumlahDp = getRawValue(
-                                      //     PoController.jDpController.text);
-                                      // String jumlahDiskon =
-                                      //     PoController.diskonController.text;
-                                      // bool PoStore = PoController().store(
-                                      //   customerId,
-                                      //   productId,
-                                      //   totalBayar,
-                                      //   selectedValueTempo,
-                                      //   selectedValueDp,
-                                      //   jumlahDp,
-                                      //   getRawValue(jumlahDiskon),
-                                      //   _currentSelection,
-                                      //   formattedValues,
-                                      //   totalValue,
-                                      // );
+                          //             // Navigator.of(context).pop(true);
+                          //             // // Setelah menutup dialog, lakukan tindakan di sini
+                          //             // printValue();
+                          //             // String jumlahDp = getRawValue(
+                          //             //     PoController.jDpController.text);
+                          //             // String jumlahDiskon =
+                          //             //     PoController.diskonController.text;
+                          //             // bool PoStore = PoController().store(
+                          //             //   customerId,
+                          //             //   productId,
+                          //             //   totalBayar,
+                          //             //   selectedValueTempo,
+                          //             //   selectedValueDp,
+                          //             //   jumlahDp,
+                          //             //   getRawValue(jumlahDiskon),
+                          //             //   _currentSelection,
+                          //             //   formattedValues,
+                          //             //   totalValue,
+                          //             // );
 
-                                      // if (PoStore) {
-                                      //   if (poController
-                                      //       .jummlahKemasan.isNotEmpty) {
-                                      //     var firstElement =
-                                      //         poController.jummlahKemasan.first;
-                                      //     firstElement.text = '';
-                                      //     poController.jummlahKemasan.clear();
-                                      //     poController.jummlahKemasan
-                                      //         .add(firstElement);
-                                      //   }
-                                      // }
-                                      // formattedValues.clear();
-                                    },
-                                    child: Text('Ya'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          //             // if (PoStore) {
+                          //             //   if (poController
+                          //             //       .jummlahKemasan.isNotEmpty) {
+                          //             //     var firstElement =
+                          //             //         poController.jummlahKemasan.first;
+                          //             //     firstElement.text = '';
+                          //             //     poController.jummlahKemasan.clear();
+                          //             //     poController.jummlahKemasan
+                          //             //         .add(firstElement);
+                          //             //   }
+                          //             // }
+                          //             // formattedValues.clear();
+                          //           },
+                          //           child: Text('Ya'),
+                          //         ),
+                          //       ],
+                          //     );
+                          //   },
+                          // );
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

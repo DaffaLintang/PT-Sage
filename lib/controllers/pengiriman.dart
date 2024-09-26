@@ -12,6 +12,7 @@ import 'package:pt_sage/models/kemasan.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
 import 'package:pt_sage/providers/pengiriman_provider.dart';
 import 'package:sp_util/sp_util.dart';
+import '../models/kendaraan.dart';
 import '../models/lot.dart';
 
 class PengirimanController extends GetxController {
@@ -43,32 +44,64 @@ class PengirimanController extends GetxController {
     }
   }
 
-  void store(poId, customer, kendaraan, namaSupir, NoPol, tanggal, lot, Kemasan,
-      jumlahLot, totalQuantity) {
+  Future<List<Kendaraan>?> getKendaraan() async {
+    try {
+      final uri = Uri.parse('$Delivery/kendaraan');
+      final response =
+          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+
+      if (response.statusCode == 200) {
+        final jsonResponse =
+            jsonDecode(response.body); // Decode the full response
+
+        List<dynamic> kendaraanList =
+            jsonResponse['data']; // Access the 'data' field
+        return kendaraanList.map((json) => Kendaraan.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+  void store(poId, customer, int? kendaraan, namaSupir, NoPol, tanggal, lot,
+      Kemasan, jumlahLot, totalQuantity) {
     final endpoint = '$Delivery/store/$poId';
     num totalLotTersedia = 0;
     try {
-      print(kendaraan);
-      if (kendaraan.isEmpty && namaSupir.isEmpty && NoPol.isEmpty) {
+      if (namaSupir.isEmpty && NoPol.isEmpty) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
         // EasyLoading.show();
         var data = {
           "customer_id": customer,
-          "kendaraan": kendaraan,
+          "kendaraan_id": kendaraan,
           "nama_sopir": namaSupir,
-          "no_polisi": NoPol,
+          // "no_polisi": NoPol,
           "tanggal_pengiriman": tanggal,
           "product_lot": lot,
           "kemasan": Kemasan
         };
+        print(data);
         for (int i = 0; i < jumlahLot.length; i++) {
           totalLotTersedia += jumlahLot[i];
         }
         if (totalLotTersedia >= totalQuantity) {
           PengirimanProvider().store(data, endpoint).then((value) {
             print(value.statusCode);
+            // print(value.headers);
+            // print(data.runtimeType);
+            print(customer);
+            print(kendaraan);
+            print(namaSupir);
+            print(NoPol);
+            print(tanggal);
+            print(lot);
+            print(Kemasan);
+            print(endpoint);
             if (value.statusCode == 200) {
               PengirimanController.kendaraanController.text = '';
               PengirimanController.noPolController.text = '';

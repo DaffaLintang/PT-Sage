@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:pt_sage/models/kendaraan.dart';
+
 class Invoice {
   final String kodeInvoice;
   final String kodePengiriman;
@@ -49,9 +51,9 @@ class Delivery {
   final int customerId;
   final String kodePo;
   final DateTime tanggalPengiriman;
-  final String kendaraan;
+  final Kendaraan kendaraan;
   final String namaSopir;
-  final String noPolisi;
+  // final String noPolisi;
   final int jumlahDikirim;
   final int jumlahKurang;
   final DateTime createdAt;
@@ -67,7 +69,7 @@ class Delivery {
     required this.tanggalPengiriman,
     required this.kendaraan,
     required this.namaSopir,
-    required this.noPolisi,
+    // required this.noPolisi,
     required this.jumlahDikirim,
     required this.jumlahKurang,
     required this.createdAt,
@@ -83,9 +85,9 @@ class Delivery {
       customerId: json['customer_id'],
       kodePo: json['kode_po'],
       tanggalPengiriman: DateTime.parse(json['tanggal_pengiriman']),
-      kendaraan: json['kendaraan'],
+      kendaraan: Kendaraan.fromJson(json['kendaraan'] as Map<String, dynamic>),
       namaSopir: json['nama_sopir'],
-      noPolisi: json['no_polisi'],
+      // noPolisi: json['no_polisi'],
       jumlahDikirim: json['jumlah_dikirim'],
       jumlahKurang: json['jumlah_kurang'],
       createdAt: DateTime.parse(json['created_at']),
@@ -108,13 +110,49 @@ class Delivery {
       'tanggal_pengiriman': tanggalPengiriman.toIso8601String(),
       'kendaraan': kendaraan,
       'nama_sopir': namaSopir,
-      'no_polisi': noPolisi,
+      // 'no_polisi': noPolisi,
       'jumlah_dikirim': jumlahDikirim,
       'jumlah_kurang': jumlahKurang,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'detail_delivery': detailDelivery.map((e) => e.toJson()).toList(),
       'purchase_order': purchaseOrder.toJson(),
+    };
+  }
+}
+
+class Kendaraan {
+  final int id;
+  final String jenisKendaraan;
+  final String NoPolisi; // Should be a String, not an int
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Kendaraan({
+    required this.id,
+    required this.jenisKendaraan,
+    required this.NoPolisi, // Changed to String
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Kendaraan.fromJson(Map<String, dynamic> json) {
+    return Kendaraan(
+      id: json['id'],
+      jenisKendaraan: json['jenis_kendaraan'],
+      NoPolisi: json['no_polisi'], // Changed to String
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'jenis_kendaraan': jenisKendaraan,
+      'no_polisi': NoPolisi,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }

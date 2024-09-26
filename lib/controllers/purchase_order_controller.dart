@@ -121,7 +121,7 @@ class PoController extends GetxController {
       if (customer == null ||
           product == null ||
           jumlah == null ||
-          jumlahBulat < 1 ||
+          jumlah < 1 ||
           totalHarga == null ||
           tempo == null ||
           tempo.isEmpty ||
@@ -130,7 +130,7 @@ class PoController extends GetxController {
           kemasans!.length < 0) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
-      } else if (quantitys! != jumlahBulat) {
+      } else if (quantitys! != jumlah) {
         Get.snackbar('Error', 'Quantity melebihi/kurang dari jumlah produk',
             backgroundColor: Color.fromARGB(255, 244, 190, 54),
             colorText: Colors.white);

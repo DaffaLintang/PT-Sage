@@ -10,6 +10,8 @@ import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
 
+import '../models/kendaraan.dart';
+
 class PengirimanBarangPage extends StatefulWidget {
   const PengirimanBarangPage({Key? key}) : super(key: key);
 
@@ -20,20 +22,27 @@ class PengirimanBarangPage extends StatefulWidget {
 class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   final List<String> items = [];
   final Map<String, int> customertMap = {};
+  final Map<String, int> kendaraanMap = {};
+  final Map<String, String> noPolMap = {};
   String? selectedValue;
+  String? selectedValue1;
   int? customerId;
+  int? KendaraanId;
   final order = Get.arguments;
   List<ProductLot>? productLots;
   List<bool>? isChecked;
   List<int> selectedProductLotIds = [];
   List<int> selectedJumlahProductLotIds = [];
   final Map<String, int> kemasan = {};
+  final List<String> itemsKendaraan = [];
 
   @override
   void initState() {
     super.initState();
     fetchCustomer();
     fetchProductLot();
+    fetchKendaraan();
+    PengirimanController().getKendaraan();
     PengirimanController.customerController.text = order.customersName;
   }
 
@@ -44,6 +53,19 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
       dataWrapper?.customers.forEach((customer) {
         items.add(customer.customersName);
         customertMap[customer.customersName] = customer.id;
+      });
+    });
+  }
+
+  void fetchKendaraan() async {
+    List<Kendaraan>? kendaraanList =
+        await PengirimanController().getKendaraan();
+    setState(() {
+      kendaraanList?.forEach((kendaraan) {
+        itemsKendaraan.add(kendaraan.jenisKendaraan);
+        print(kendaraan.jenisKendaraan);
+        kendaraanMap[kendaraan.jenisKendaraan] = kendaraan.id;
+        noPolMap[kendaraan.jenisKendaraan] = kendaraan.noPolisi;
       });
     });
   }
@@ -137,12 +159,11 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                     ],
                   ),
                 ),
-
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Kendaraan",
+                      Text("Pilih Kendaraan",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -154,11 +175,37 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          controller: PengirimanController.kendaraanController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Kendaraan',
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Pilih Kendaraan',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: itemsKendaraan
+                                .map((String kendaraan) =>
+                                    DropdownMenuItem<String>(
+                                      value: kendaraan,
+                                      child: Text(
+                                        kendaraan,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValue1,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedValue1 = value;
+                                KendaraanId = kendaraanMap[selectedValue1!];
+                                PengirimanController.noPolController.text =
+                                    noPolMap[selectedValue1] ?? '';
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -168,6 +215,37 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                     ],
                   ),
                 ),
+
+                // Container(
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text("Kendaraan",
+                //           style: TextStyle(
+                //               fontFamily: GoogleFonts.rubik().fontFamily)),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Container(
+                //         padding:
+                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //         decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(12),
+                //             color: Colors.black.withOpacity(0.05)),
+                //         child: TextField(
+                //           controller: PengirimanController.kendaraanController,
+                //           decoration: InputDecoration(
+                //             border: InputBorder.none,
+                //             hintText: 'Kendaraan',
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,6 +293,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
+                          enabled: false,
                           controller: PengirimanController.noPolController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -332,8 +411,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 PengirimanController().store(
                                     order.kodePo,
                                     order.customersId,
-                                    PengirimanController
-                                        .kendaraanController.text,
+                                    KendaraanId,
                                     PengirimanController.supirController.text,
                                     PengirimanController.noPolController.text,
                                     PengirimanController.dateController.text,
