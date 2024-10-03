@@ -9,6 +9,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:pt_sage/apiVar.dart';
 import 'package:http/http.dart' as http;
 import 'package:pt_sage/models/kemasan.dart';
+import 'package:pt_sage/page/dashboard_page.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
 import 'package:pt_sage/providers/pengiriman_provider.dart';
 import 'package:sp_util/sp_util.dart';
@@ -106,7 +107,7 @@ class PengirimanController extends GetxController {
               PengirimanController.kendaraanController.text = '';
               PengirimanController.noPolController.text = '';
               PengirimanController.supirController.text = '';
-              Get.offAll(() => ListPengiriman());
+              Get.offAll(() => DashboardPage());
               Get.snackbar('Success', 'Pengiriman Berhasil',
                   backgroundColor: Color.fromARGB(255, 75, 212, 146),
                   colorText: Colors.white);

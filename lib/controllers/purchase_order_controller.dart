@@ -6,6 +6,7 @@ import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/product.dart';
 import 'package:pt_sage/models/purchase_order.dart';
 import 'package:pt_sage/models/warper.dart';
+import 'package:pt_sage/page/dashboard_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/providers/purchase_order_provide.dart';
 import 'package:sp_util/sp_util.dart';
@@ -18,6 +19,7 @@ class PoController extends GetxController {
   static TextEditingController hargaController = TextEditingController();
   static TextEditingController jDpController = TextEditingController(text: '');
   static TextEditingController diskonController = TextEditingController();
+  static TextEditingController searchController = TextEditingController();
   RxList<TextEditingController> jummlahKemasan =
       <TextEditingController>[TextEditingController()].obs;
 
@@ -152,7 +154,7 @@ class PoController extends GetxController {
           if (value.statusCode == 201) {
             diskonController.text = '';
             jDpController.text = '';
-            Get.offAll(() => const listPoPage());
+            Get.offAll(() => const DashboardPage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);

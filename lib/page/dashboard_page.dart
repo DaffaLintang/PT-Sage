@@ -206,13 +206,13 @@ class _DashboardPageState extends State<DashboardPage> {
                                 children: [
                                   Menu(
                                       onTap: () {
-                                        Get.offAll(() => ListPOApprovel());
+                                        Get.to(() => ListPOApprovel());
                                       },
                                       title: 'Purchase Order Approvel',
                                       imageAsset: 'assets/Done_ring_round.png'),
                                   Menu(
                                       onTap: () {
-                                        Get.offAll(() => KuisonerPage());
+                                        Get.to(() => KuisonerPage());
                                       },
                                       title: 'Kuisioner',
                                       imageAsset: 'assets/Desk_alt.png'),
@@ -226,13 +226,13 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => listPoPage());
+                                  Get.to(() => listPoPage());
                                 },
                                 title: 'Purchase Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => ListPengiriman());
+                                  Get.to(() => ListPengiriman());
                                 },
                                 title: 'Pengiriman Barang',
                                 imageAsset: 'assets/package_car.png'),
@@ -246,13 +246,13 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => FeedBackPage());
+                                  Get.to(() => FeedBackPage());
                                 },
-                                title: 'Keluhan',
+                                title: 'Keluhan Pelanggan',
                                 imageAsset: 'assets/Chat_alt_3.png'),
                             Menu(
                                 onTap: () {
-                                  Get.offAll(() => ListInvoicePage());
+                                  Get.to(() => ListInvoicePage());
                                 },
                                 title: 'Invoice',
                                 imageAsset: 'assets/File_dock.png'),
@@ -267,7 +267,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 children: [
                                   Menu(
                                       onTap: () {
-                                        Get.offAll(() => KuisonerPage());
+                                        Get.to(() => KuisonerPage());
                                       },
                                       title: 'Kuisioner',
                                       imageAsset: 'assets/Desk_alt.png'),

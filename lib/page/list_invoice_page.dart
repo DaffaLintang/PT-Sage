@@ -89,7 +89,7 @@ class _ListInvoicePageState extends State<ListInvoicePage> {
                   subtitle: Text(invoice.kodePengiriman),
                   trailing: Icon(Icons.arrow_forward),
                   onTap: () {
-                    Get.offAll(() => InvoicePage(), arguments: invoice);
+                    Get.to(() => InvoicePage(), arguments: invoice);
                   },
                 );
               },
@@ -98,34 +98,5 @@ class _ListInvoicePageState extends State<ListInvoicePage> {
         },
       ),
     );
-    //futureInvoices == null
-    //  ? Center(child: Text("Tidak ada data"))
-    //: SizedBox()
-    // ListView.builder(
-    //     itemCount: invoices!.length,
-    //     itemBuilder: (context, index) {
-    //       final detailDelivery = invoices![index];
-    //       return ListTile(
-    //         leading: Container(
-    //           height: 50,
-    //           width: 50,
-    //           decoration: BoxDecoration(
-    //               image: DecorationImage(
-    //                   colorFilter: ColorFilter.mode(
-    //                     Colors.black,
-    //                     BlendMode.srcATop,
-    //                   ),
-    //                   image: AssetImage('assets/Basket_alt_3.png'))),
-    //         ),
-    //         // title: Text(detailDelivery.data![index].kodeInvoice!),
-    //         // subtitle: Text(detailDelivery.kodePengiriman!),
-    //         trailing: Icon(Icons.arrow_forward),
-    //         onTap: () {
-    //           Get.offAll(() => InvoicePage(),
-    //               arguments: detailDelivery);
-    //         },
-    //       );
-    //     })
-    // );
   }
 }

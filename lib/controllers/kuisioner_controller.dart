@@ -10,25 +10,8 @@ import 'package:pt_sage/page/kuisoner_page.dart';
 import '../providers/kuisioner_provider.dart';
 
 class KuisionerController extends GetxController {
-  // List<List<TextEditingController>> PbCatatanController = [];
-
-  // void initializeControllers(int questionCount, int subQuestionCount) {
-  //   PbCatatanController = List.generate(
-  //     questionCount,
-  //     (index) =>
-  //         List.generate(subQuestionCount, (index) => TextEditingController()),
-  //   );
-  // }
-
-  // @override
-  // void onClose() {
-  //   for (var subControllers in PbCatatanController) {
-  //     for (var controller in subControllers) {
-  //       controller.dispose();
-  //     }
-  //   }
-  //   super.onClose();
-  // }
+  static TextEditingController customerKp = TextEditingController();
+  static TextEditingController customerPb = TextEditingController();
 
   Future<KuisionerKpList?> getKepuasanPelangan() async {
     EasyLoading.show();

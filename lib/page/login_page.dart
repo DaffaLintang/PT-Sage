@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                            child: Text('Masuk Sekarang'),
+                            child: Text('Login'),
                             onPressed: () {
                               LoginController().auth();
                             },

@@ -247,6 +247,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Center(
+                      child: Text(
+                    "© 2024 PT. SAGE Mashlahat Indonesia \nDesign & Develop by LAB KSI Politeknik Negeri Jember",
+                    textAlign: TextAlign.center,
+                  ))
                 ],
               ),
             ),

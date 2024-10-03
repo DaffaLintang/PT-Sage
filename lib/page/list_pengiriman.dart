@@ -81,7 +81,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                           subtitle: Text(order.statusPengiriman!),
                           trailing: Icon(Icons.arrow_forward),
                           onTap: () {
-                            Get.offAll(() => PengirimanBarangPage(),
+                            Get.to(() => PengirimanBarangPage(),
                                 arguments: order);
                             PengirimanController.kendaraanController.text = '';
                             PengirimanController.noPolController.text = '';

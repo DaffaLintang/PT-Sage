@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
+import 'package:pt_sage/page/dashboard_page.dart';
 import 'package:pt_sage/providers/approved_provider.dart';
 import 'package:sp_util/sp_util.dart';
 
@@ -26,7 +27,7 @@ class ApprovedController extends GetxController {
             backgroundColor: Color.fromARGB(255, 75, 212, 146),
             colorText: Colors.white);
         dateController.text = "";
-        Get.offAll(() => ListPOApprovel());
+        Get.offAll(() => DashboardPage());
       } else {
         Get.snackbar('Error', 'Terjadi kesalahan',
             backgroundColor: Colors.red, colorText: Colors.white);

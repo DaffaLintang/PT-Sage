@@ -429,39 +429,96 @@ class _KuisonerPageState extends State<KuisonerPage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 5),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.black.withOpacity(0.05)),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Pilih Customer',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).hintColor,
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.black.withOpacity(0.05),
+                              ),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      60, // Sesuaikan dengan tinggi yang Anda inginkan
+                                  maxWidth: double
+                                      .infinity, // Agar lebar mengikuti container
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                    isExpanded: true,
+                                    hint: Text(
+                                      'Pilih Customer',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor,
+                                      ),
                                     ),
-                                  ),
-                                  items: itemsCustomerPb
-                                      .map((String customerName) =>
-                                          DropdownMenuItem<String>(
-                                            value: customerName,
-                                            child: Text(
-                                              customerName,
-                                              style: const TextStyle(
-                                                fontSize: 14,
+                                    items: itemsCustomerPb
+                                        .map((String customerName) =>
+                                            DropdownMenuItem<String>(
+                                              value: customerName,
+                                              child: Text(
+                                                customerName,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                ),
                                               ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: selectedValue,
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      selectedValue = value;
-                                      customerId =
-                                          customertMapPb[selectedValue!];
-                                      print(customerId);
-                                    });
-                                  },
+                                            ))
+                                        .toList(),
+                                    value: selectedValue,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectedValue = value;
+                                        customerId =
+                                            customertMapPb[selectedValue!];
+                                        print(customerId);
+                                      });
+                                    },
+                                    buttonHeight:
+                                        40, // Tentukan tinggi tombol dropdown sesuai ukuran yang diinginkan
+                                    buttonWidth: double
+                                        .infinity, // Agar lebar mengikuti container
+                                    itemHeight: 40,
+                                    dropdownMaxHeight: 200,
+                                    searchController:
+                                        KuisionerController.customerPb,
+                                    searchInnerWidget: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        controller:
+                                            KuisionerController.customerPb,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText: 'Cari Customer',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    searchMatchFn: (item, searchValue) {
+                                      return (item.value
+                                          .toString()
+                                          .contains(searchValue));
+                                    },
+                                    onMenuStateChange: (isOpen) {
+                                      if (!isOpen) {
+                                        KuisionerController.customerPb
+                                            .clear(); // Clear search when menu is closed
+                                      }
+                                    },
+                                    searchInnerWidgetHeight:
+                                        100, // Menentukan tinggi dari widget pencarian
+                                  ),
                                 ),
                               ),
                             ),
@@ -879,38 +936,95 @@ class _KuisonerPageState extends State<KuisonerPage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 5),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.black.withOpacity(0.05)),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Pilih Customer',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).hintColor,
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.black.withOpacity(0.05),
+                              ),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      60, // Sesuaikan dengan tinggi yang Anda inginkan
+                                  maxWidth: double
+                                      .infinity, // Agar lebar mengikuti container
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                    isExpanded: true,
+                                    hint: Text(
+                                      'Pilih Customer',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor,
+                                      ),
                                     ),
-                                  ),
-                                  items: itemsCustomerKp
-                                      .map((String customerName) =>
-                                          DropdownMenuItem<String>(
-                                            value: customerName,
-                                            child: Text(
-                                              customerName,
-                                              style: const TextStyle(
-                                                fontSize: 14,
+                                    items: itemsCustomerKp
+                                        .map((String customerName) =>
+                                            DropdownMenuItem<String>(
+                                              value: customerName,
+                                              child: Text(
+                                                customerName,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                ),
                                               ),
-                                            ),
-                                          ))
-                                      .toList(),
-                                  value: selectedValueKp,
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      selectedValueKp = value;
-                                      customerId =
-                                          customertMapKp[selectedValueKp!];
-                                    });
-                                  },
+                                            ))
+                                        .toList(),
+                                    value: selectedValueKp,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectedValueKp = value;
+                                        customerId =
+                                            customertMapKp[selectedValueKp!];
+                                      });
+                                    },
+                                    buttonHeight:
+                                        40, // Tentukan tinggi tombol dropdown sesuai ukuran yang diinginkan
+                                    buttonWidth: double
+                                        .infinity, // Agar lebar mengikuti container
+                                    itemHeight: 40,
+                                    dropdownMaxHeight: 200,
+                                    searchController:
+                                        KuisionerController.customerKp,
+                                    searchInnerWidget: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        controller:
+                                            KuisionerController.customerKp,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText: 'Search for a customer...',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    searchMatchFn: (item, searchValue) {
+                                      return (item.value
+                                          .toString()
+                                          .contains(searchValue));
+                                    },
+                                    onMenuStateChange: (isOpen) {
+                                      if (!isOpen) {
+                                        KuisionerController.customerKp
+                                            .clear(); // Clear search when menu is closed
+                                      }
+                                    },
+                                    searchInnerWidgetHeight:
+                                        100, // Menentukan tinggi dari widget pencarian
+                                  ),
                                 ),
                               ),
                             ),

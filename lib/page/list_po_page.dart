@@ -55,7 +55,7 @@ class _listPoPageState extends State<listPoPage> {
             IconButton(
                 onPressed: () {
                   PoController.jDpController.text = '';
-                  Get.offAll(() => PurchasePage());
+                  Get.to(() => PurchasePage());
                   PoController.hargaController.text = '0';
                   PoController.jumlahConroller.text = '1';
                 },
@@ -87,7 +87,7 @@ class _listPoPageState extends State<listPoPage> {
                     subtitle: Text(order.status),
                     trailing: Icon(Icons.arrow_forward),
                     onTap: () {
-                      Get.offAll(() => PoDetailPage(), arguments: order);
+                      Get.to(() => PoDetailPage(), arguments: order);
                     },
                   );
                 }));

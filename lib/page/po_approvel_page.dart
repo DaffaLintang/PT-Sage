@@ -78,7 +78,7 @@ class _ListPOApprovelState extends State<ListPOApprovel> {
                           subtitle: Text(order.status),
                           trailing: Icon(Icons.arrow_forward),
                           onTap: () {
-                            Get.offAll(() => DetailPoApprovalPage(),
+                            Get.to(() => DetailPoApprovalPage(),
                                 arguments: order);
                           },
                         )

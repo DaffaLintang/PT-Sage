@@ -23,7 +23,10 @@ class LoginController extends GetxController {
         var data = {"username": username, "password": password};
         LoginProvider().auth(data).then((value) {
           print(value.statusCode);
+          print(value.headers);
           if (value.statusCode == 200) {
+            username = '';
+            password = '';
             var token = value.body["token"];
             var data = value.body["user"];
             SpUtil.putInt('id', data["id"]);
@@ -31,6 +34,7 @@ class LoginController extends GetxController {
             SpUtil.putString('username', data["username"]);
             SpUtil.putString('email', data["email"]);
             SpUtil.putInt('roles', data["levels_id"]);
+
             Get.offAll(() => HomePage());
             Get.snackbar('Success', 'Login Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),

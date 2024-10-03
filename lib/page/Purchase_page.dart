@@ -143,8 +143,8 @@ class _PurchasePageState extends State<PurchasePage> {
     return plainValue;
   }
 
-  void handleTextChange() {
-    String value = PoController.jumlahConroller.text;
+  void handleTextChange(String value) {
+    // String value = PoController.jumlahConroller.text;
     if (value.isEmpty || int.tryParse(value) == null || int.parse(value) < 1) {
       PoController.jumlahConroller.text = '1';
       PoController.jumlahConroller.selection = TextSelection.fromPosition(
@@ -266,37 +266,89 @@ class _PurchasePageState extends State<PurchasePage> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'Pilih Customer',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.black.withOpacity(0.05),
+                        ),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight:
+                                60, // Sesuaikan dengan tinggi yang Anda inginkan
+                            maxWidth: double
+                                .infinity, // Agar lebar mengikuti container
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              isExpanded: true,
+                              hint: Text(
+                                'Pilih Customer',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).hintColor,
+                                ),
                               ),
-                            ),
-                            items: items
-                                .map((String customerName) =>
-                                    DropdownMenuItem<String>(
-                                      value: customerName,
-                                      child: Text(
-                                        customerName,
-                                        style: const TextStyle(
-                                          fontSize: 14,
+                              items: items
+                                  .map((String customerName) =>
+                                      DropdownMenuItem<String>(
+                                        value: customerName,
+                                        child: Text(
+                                          customerName,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
-                                    ))
-                                .toList(),
-                            value: selectedValue,
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectedValue = value;
-                                customerId = customertMap[selectedValue!];
-                              });
-                            },
+                                      ))
+                                  .toList(),
+                              value: selectedValue,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedValue = value;
+                                  customerId = customertMap[selectedValue!];
+                                });
+                              },
+                              buttonHeight:
+                                  40, // Tentukan tinggi tombol dropdown sesuai ukuran yang diinginkan
+                              buttonWidth: double
+                                  .infinity, // Agar lebar mengikuti container
+                              itemHeight: 40,
+                              dropdownMaxHeight: 200,
+                              searchController: PoController.searchController,
+                              searchInnerWidget: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 8,
+                                  bottom: 4,
+                                  right: 8,
+                                  left: 8,
+                                ),
+                                child: TextFormField(
+                                  controller: PoController.searchController,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 8,
+                                    ),
+                                    hintText: 'Search for a customer...',
+                                    hintStyle: const TextStyle(fontSize: 12),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              searchMatchFn: (item, searchValue) {
+                                return (item.value
+                                    .toString()
+                                    .contains(searchValue));
+                              },
+                              onMenuStateChange: (isOpen) {
+                                if (!isOpen) {
+                                  PoController.searchController
+                                      .clear(); // Clear search when menu is closed
+                                }
+                              },
+                              searchInnerWidgetHeight:
+                                  120, // Menentukan tinggi dari widget pencarian
+                            ),
                           ),
                         ),
                       ),
@@ -414,14 +466,16 @@ class _PurchasePageState extends State<PurchasePage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
-                          onEditingComplete: handleTextChange,
-                          keyboardType: TextInputType.number,
-                          controller: PoController.jumlahConroller,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Jumlah',
-                          ),
-                        ),
+                            // onEditingComplete: handleTextChange,
+                            keyboardType: TextInputType.number,
+                            controller: PoController.jumlahConroller,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Jumlah',
+                            ),
+                            onChanged: (String value) {
+                              handleTextChange(value);
+                            }),
                       ),
                       SizedBox(
                         height: 20,

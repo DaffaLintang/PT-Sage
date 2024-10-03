@@ -25,7 +25,6 @@ class Customers {
   final String activePeriodTo;
   final String latitude;
   final String longitude;
-  final String statusActive;
   final String statusApprove;
   final int usersId;
   final DateTime createdAt;
@@ -44,7 +43,6 @@ class Customers {
     required this.activePeriodTo,
     required this.latitude,
     required this.longitude,
-    required this.statusActive,
     required this.statusApprove,
     required this.usersId,
     required this.createdAt,
@@ -65,7 +63,6 @@ class Customers {
       activePeriodTo: json['active_period_to'],
       latitude: json['latitude'],
       longitude: json['longitude'],
-      statusActive: json['status_active'],
       statusApprove: json['status_approve'],
       usersId: json['users_id'],
       createdAt: DateTime.parse(json['created_at']),
@@ -87,7 +84,6 @@ class Customers {
       'active_period_to': activePeriodTo,
       'latitude': latitude,
       'longitude': longitude,
-      'status_active': statusActive,
       'status_approve': statusApprove,
       'users_id': usersId,
       'created_at': createdAt.toIso8601String(),
@@ -109,7 +105,6 @@ class CustomersKp {
   final String activePeriodTo;
   final String latitude;
   final String longitude;
-  final String statusActive;
   final String statusApprove;
   final int usersId;
   final DateTime createdAt;
@@ -128,7 +123,6 @@ class CustomersKp {
     required this.activePeriodTo,
     required this.latitude,
     required this.longitude,
-    required this.statusActive,
     required this.statusApprove,
     required this.usersId,
     required this.createdAt,
@@ -149,7 +143,6 @@ class CustomersKp {
       activePeriodTo: json['active_period_to'],
       latitude: json['latitude'],
       longitude: json['longitude'],
-      statusActive: json['status_active'],
       statusApprove: json['status_approve'],
       usersId: json['users_id'],
       createdAt: DateTime.parse(json['created_at']),
@@ -171,7 +164,6 @@ class CustomersKp {
       'active_period_to': activePeriodTo,
       'latitude': latitude,
       'longitude': longitude,
-      'status_active': statusActive,
       'status_approve': statusApprove,
       'users_id': usersId,
       'created_at': createdAt.toIso8601String(),
@@ -193,7 +185,7 @@ class CustomersPb {
   final String activePeriodTo;
   final String latitude;
   final String longitude;
-  final String statusActive;
+
   final String statusApprove;
   final int usersId;
   final DateTime createdAt;
@@ -212,7 +204,6 @@ class CustomersPb {
     required this.activePeriodTo,
     required this.latitude,
     required this.longitude,
-    required this.statusActive,
     required this.statusApprove,
     required this.usersId,
     required this.createdAt,
@@ -233,7 +224,6 @@ class CustomersPb {
       activePeriodTo: json['active_period_to'],
       latitude: json['latitude'],
       longitude: json['longitude'],
-      statusActive: json['status_active'],
       statusApprove: json['status_approve'],
       usersId: json['users_id'],
       createdAt: DateTime.parse(json['created_at']),
@@ -255,7 +245,6 @@ class CustomersPb {
       'active_period_to': activePeriodTo,
       'latitude': latitude,
       'longitude': longitude,
-      'status_active': statusActive,
       'status_approve': statusApprove,
       'users_id': usersId,
       'created_at': createdAt.toIso8601String(),
