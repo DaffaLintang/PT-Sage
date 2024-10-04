@@ -6,6 +6,7 @@ import 'package:pt_sage/providers/approved_provider.dart';
 import 'package:sp_util/sp_util.dart';
 
 import '../page/detail_po_approve_page.dart';
+import '../page/home_page.dart';
 import '../page/po_approvel_page.dart';
 
 class ApprovedController extends GetxController {
@@ -27,7 +28,7 @@ class ApprovedController extends GetxController {
             backgroundColor: Color.fromARGB(255, 75, 212, 146),
             colorText: Colors.white);
         dateController.text = "";
-        Get.offAll(() => DashboardPage());
+        Get.offAll(() => HomePage());
       } else {
         Get.snackbar('Error', 'Terjadi kesalahan',
             backgroundColor: Colors.red, colorText: Colors.white);

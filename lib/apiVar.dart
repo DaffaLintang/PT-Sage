@@ -13,6 +13,7 @@ const String KepuasanPelanggan = "http://10.0.2.2:8000/api/kepuasan-pelanggan";
 const String ApprovelPo = "http://10.0.2.2:8000/api/approvel";
 const String Delivery = "http://10.0.2.2:8000/api/delivery";
 const String InvoiceApi = "http://10.0.2.2:8000/api/invoices";
+const String KeluhanApi = "http://10.0.2.2:8000/api/keluhan-pelanggan";
 
 // const String MainUrl = "https://8563-103-160-183-15.ngrok-free.app";
 // const String LoginAPI = "https://8563-103-160-183-15.ngrok-free.app/api/login";

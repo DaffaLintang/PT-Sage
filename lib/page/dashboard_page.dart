@@ -8,6 +8,7 @@ import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invc_approvel_page.dart';
 import 'package:pt_sage/page/kuisoner_page.dart';
 import 'package:pt_sage/page/list_invoice_page.dart';
+import 'package:pt_sage/page/list_keluhan.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
 import 'package:pt_sage/utils/menu.dart';
@@ -246,7 +247,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           children: [
                             Menu(
                                 onTap: () {
-                                  Get.to(() => FeedBackPage());
+                                  Get.to(() => ListKeluhanPage());
                                 },
                                 title: 'Keluhan Pelanggan',
                                 imageAsset: 'assets/Chat_alt_3.png'),
@@ -261,7 +262,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         SizedBox(
                           height: 20,
                         ),
-                        roleText == 'Marketing'
+                        roleText != 'Marketing'
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

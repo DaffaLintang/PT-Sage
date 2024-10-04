@@ -15,6 +15,7 @@ import 'package:pt_sage/providers/pengiriman_provider.dart';
 import 'package:sp_util/sp_util.dart';
 import '../models/kendaraan.dart';
 import '../models/lot.dart';
+import '../page/home_page.dart';
 
 class PengirimanController extends GetxController {
   static TextEditingController dateController = TextEditingController();
@@ -81,33 +82,21 @@ class PengirimanController extends GetxController {
           "customer_id": customer,
           "kendaraan_id": kendaraan,
           "nama_sopir": namaSupir,
-          // "no_polisi": NoPol,
           "tanggal_pengiriman": tanggal,
           "product_lot": lot,
           "kemasan": Kemasan
         };
-        print(data);
+
         for (int i = 0; i < jumlahLot.length; i++) {
           totalLotTersedia += jumlahLot[i];
         }
         if (totalLotTersedia >= totalQuantity) {
           PengirimanProvider().store(data, endpoint).then((value) {
-            print(value.statusCode);
-            // print(value.headers);
-            // print(data.runtimeType);
-            print(customer);
-            print(kendaraan);
-            print(namaSupir);
-            print(NoPol);
-            print(tanggal);
-            print(lot);
-            print(Kemasan);
-            print(endpoint);
             if (value.statusCode == 200) {
               PengirimanController.kendaraanController.text = '';
               PengirimanController.noPolController.text = '';
               PengirimanController.supirController.text = '';
-              Get.offAll(() => DashboardPage());
+              Get.offAll(() => HomePage());
               Get.snackbar('Success', 'Pengiriman Berhasil',
                   backgroundColor: Color.fromARGB(255, 75, 212, 146),
                   colorText: Colors.white);

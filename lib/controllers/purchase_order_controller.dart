@@ -13,6 +13,7 @@ import 'package:sp_util/sp_util.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/kemasan.dart';
+import '../page/home_page.dart';
 
 class PoController extends GetxController {
   static TextEditingController jumlahConroller = TextEditingController();
@@ -111,14 +112,6 @@ class PoController extends GetxController {
       default:
         diskonType = "-";
     }
-    // if (jumlah! % 5 == 0) {
-    //   jumlahBulat += jumlah;
-    // } else {
-    //   jumlahBulat += (jumlah / 5).ceil() * 5;
-    //   // Get.snackbar('Pemberitahuan', 'Jumlah Dibulatkan Menjadi ${jumlahBulat}',
-    //   //     backgroundColor: Colors.red, colorText: Colors.white);
-    //   // jumlahConroller.text = jumlahBulat.toString();
-    // }
     try {
       if (customer == null ||
           product == null ||
@@ -154,7 +147,7 @@ class PoController extends GetxController {
           if (value.statusCode == 201) {
             diskonController.text = '';
             jDpController.text = '';
-            Get.offAll(() => const DashboardPage());
+            Get.offAll(() => const HomePage());
             Get.snackbar('Success', 'Pembelian Berhasil',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
                 colorText: Colors.white);

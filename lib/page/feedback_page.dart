@@ -2,7 +2,13 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/controllers/keluahanPelanggan_controller.dart';
 import 'package:pt_sage/page/home_page.dart';
+import 'package:pt_sage/page/list_keluhan.dart';
+
+import '../controllers/invoice_controller.dart';
+import '../models/invoice.dart';
+import '../models/keluhanCustomer.dart';
 
 class FeedBackPage extends StatefulWidget {
   const FeedBackPage({Key? key}) : super(key: key);
@@ -12,28 +18,48 @@ class FeedBackPage extends StatefulWidget {
 }
 
 class _FeedBackPageState extends State<FeedBackPage> {
-  var _bottomNavIndex = 0;
-
-  final List<String> items = [
-    'Daffa',
-    'Lintang',
-    'Firzo',
-    'Firdaus',
-  ];
+  final List<String> items = [];
+  final List<String> invoiceItems = [];
   String? selectedValue;
-  final List<String> Invoiceitems = [
-    '#INVC0001 | 12/06/2024',
-    '#INVC0002 | 12/06/2024',
-    '#INVC0003 | 12/06/2024',
-  ];
+  String? selectedValue1;
+  final Map<String, int> customertMap = {};
+  int? customerId;
+
   String? selectedInvoiceValue;
+  @override
+  void initState() {
+    super.initState();
+    fetchCustomer();
+    fetchInvoice();
+  }
+
+  void fetchCustomer() async {
+    List<KeluhanCustomer>? keluhanCustomer =
+        await KeluhanPelangganController().getKeluhanCustomer();
+    setState(() {
+      keluhanCustomer?.forEach((customer) {
+        items.add(customer.customersName);
+        customertMap[customer.customersName] = customer.id;
+      });
+    });
+  }
+
+  void fetchInvoice() async {
+    List<Invoice>? invoices = await InvoiceController().fetchInvoices();
+    setState(() {
+      invoices?.forEach((invoice) {
+        invoiceItems.add(invoice.kodeInvoice);
+        // customertMap[customer.customersName] = customer.id;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Feedback",
+          "Keluhan",
           style: TextStyle(
               color: Color(0xffBF1619),
               fontFamily: GoogleFonts.rubik().fontFamily,
@@ -43,7 +69,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
         centerTitle: true,
         leading: IconButton(
             onPressed: () {
-              Get.offAll(() => HomePage());
+              Get.offAll(() => ListKeluhanPage());
             },
             icon: Image.asset('assets/LineRed.png')),
         backgroundColor: Colors.white,
@@ -59,7 +85,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                 Container(
                     margin: EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      "Detail Feedback",
+                      "Detail Keluhan",
                       style: TextStyle(
                           fontFamily: GoogleFonts.rubik().fontFamily,
                           fontSize: 22,
@@ -75,22 +101,8 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      // Container(
-                      //   padding:
-                      //       EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                      //   decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(12),
-                      //       color: Colors.black.withOpacity(0.05)),
-                      //   child: TextField(
-                      //     // controller: RegisterController.emailController,
-                      //     decoration: InputDecoration(
-                      //       border: InputBorder.none,
-                      //       hintText: 'Nama Customer',
-                      //     ),
-                      //   ),
-                      // ),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(12)),
@@ -105,10 +117,11 @@ class _FeedBackPageState extends State<FeedBackPage> {
                               ),
                             ),
                             items: items
-                                .map((String item) => DropdownMenuItem<String>(
-                                      value: item,
+                                .map((String customerName) =>
+                                    DropdownMenuItem<String>(
+                                      value: customerName,
                                       child: Text(
-                                        item,
+                                        customerName,
                                         style: const TextStyle(
                                           fontSize: 14,
                                         ),
@@ -119,8 +132,51 @@ class _FeedBackPageState extends State<FeedBackPage> {
                             onChanged: (String? value) {
                               setState(() {
                                 selectedValue = value;
+                                customerId = customertMap[selectedValue!];
                               });
                             },
+                            buttonHeight: 40,
+                            buttonWidth: double.infinity,
+                            itemHeight: 40,
+                            dropdownMaxHeight: 200,
+                            searchController:
+                                KeluhanPelangganController.searchController,
+                            searchInnerWidget: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8,
+                                bottom: 4,
+                                right: 8,
+                                left: 8,
+                              ),
+                              child: TextFormField(
+                                controller:
+                                    KeluhanPelangganController.searchController,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 8,
+                                  ),
+                                  hintText: 'Cari Customer',
+                                  hintStyle: const TextStyle(fontSize: 12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            searchMatchFn: (item, searchValue) {
+                              return (item.value
+                                  .toString()
+                                  .contains(searchValue));
+                            },
+                            onMenuStateChange: (isOpen) {
+                              if (!isOpen) {
+                                KeluhanPelangganController.searchController
+                                    .clear();
+                              }
+                            },
+                            searchInnerWidgetHeight: 120,
                           ),
                         ),
                       ),
@@ -140,22 +196,8 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      // Container(
-                      //   padding:
-                      //       EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                      //   decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(12),
-                      //       color: Colors.black.withOpacity(0.05)),
-                      //   child: TextField(
-                      //     // controller: RegisterController.emailController,
-                      //     decoration: InputDecoration(
-                      //       border: InputBorder.none,
-                      //       hintText: 'Kode Invoice',
-                      //     ),
-                      //   ),
-                      // ),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 5),
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(12)),
@@ -169,22 +211,67 @@ class _FeedBackPageState extends State<FeedBackPage> {
                                 color: Theme.of(context).hintColor,
                               ),
                             ),
-                            items: Invoiceitems.map((String Invoiceitem) =>
-                                DropdownMenuItem<String>(
-                                  value: Invoiceitem,
-                                  child: Text(
-                                    Invoiceitem,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                )).toList(),
-                            value: selectedInvoiceValue,
+                            items: invoiceItems
+                                .map((String kodeInvoice) =>
+                                    DropdownMenuItem<String>(
+                                      value: kodeInvoice,
+                                      child: Text(
+                                        kodeInvoice,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                            value: selectedValue1,
                             onChanged: (String? value) {
                               setState(() {
-                                selectedInvoiceValue = value;
+                                selectedValue1 = value;
                               });
                             },
+                            buttonHeight: 40,
+                            buttonWidth: double.infinity,
+                            itemHeight: 40,
+                            dropdownMaxHeight: 200,
+                            searchController: KeluhanPelangganController
+                                .searchInvoiceController,
+                            searchInnerWidget: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 8,
+                                bottom: 4,
+                                right: 8,
+                                left: 8,
+                              ),
+                              child: TextFormField(
+                                controller: KeluhanPelangganController
+                                    .searchInvoiceController,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 8,
+                                  ),
+                                  hintText: 'Cari Invoice',
+                                  hintStyle: const TextStyle(fontSize: 12),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            searchMatchFn: (item, searchValue) {
+                              return (item.value
+                                  .toString()
+                                  .contains(searchValue));
+                            },
+                            onMenuStateChange: (isOpen) {
+                              if (!isOpen) {
+                                KeluhanPelangganController
+                                    .searchInvoiceController
+                                    .clear();
+                              }
+                            },
+                            searchInnerWidgetHeight: 120,
                           ),
                         ),
                       ),
@@ -198,7 +285,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Deskripsi",
+                      Text("Keluhan",
                           style: TextStyle(
                               fontFamily: GoogleFonts.rubik().fontFamily)),
                       SizedBox(
@@ -211,10 +298,12 @@ class _FeedBackPageState extends State<FeedBackPage> {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.black.withOpacity(0.05)),
                           child: TextField(
+                            controller:
+                                KeluhanPelangganController.keluhanController,
                             minLines: 1,
                             maxLines: 99,
                             decoration: InputDecoration(
-                              labelText: 'Deskripsi',
+                              labelText: 'Keluhan',
                             ),
                           )
                           // TextField(
@@ -242,7 +331,13 @@ class _FeedBackPageState extends State<FeedBackPage> {
                             height: 50,
                             child: ElevatedButton(
                               child: Text('Kirim'),
-                              onPressed: () {},
+                              onPressed: () {
+                                KeluhanPelangganController().storeKeluhan(
+                                    customerId,
+                                    selectedValue1,
+                                    KeluhanPelangganController
+                                        .keluhanController.text);
+                              },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),

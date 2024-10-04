@@ -20,16 +20,7 @@ class _ListInvoicePageState extends State<ListInvoicePage> {
   void initState() {
     super.initState();
     futureInvoices = InvoiceController().fetchInvoices();
-    print(futureInvoices);
   }
-
-  // void fetchInvoices() async {
-  //   List? fetchedInvoice = await InvoiceController().fetchInvoices();
-  //   setState(() {
-  //     // print(fetchedInvoice.);
-  //     futureInvoices = InvoiceController().fetchInvoices();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
