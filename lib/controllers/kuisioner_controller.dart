@@ -129,8 +129,6 @@ class KuisionerController extends GetxController {
           "jawaban_pesaing": jawabanPesaing,
         };
         KuisionerProvider().storePb(data).then((value) {
-          print(value.statusCode);
-          print(data);
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),

@@ -403,7 +403,7 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                           height: 50,
                           child: ElevatedButton(
                             child: Text(
-                              'Approved',
+                              'Approv',
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
@@ -425,7 +425,7 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                           width: 120,
                           height: 50,
                           child: ElevatedButton(
-                            child: Text('Rejected'),
+                            child: Text('Reject'),
                             onPressed: () {
                               final approvedController =
                                   Get.put(ApprovedController());

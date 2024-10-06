@@ -14,6 +14,8 @@ import 'package:pt_sage/page/po_approvel_page.dart';
 import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
 
+import 'list_keluhan_approvel.dart';
+import 'list_penanganan-pelanggan_page.dart';
 import 'list_pengiriman.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -197,86 +199,155 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Container(
-                      child: Column(children: [
-                        roleText == 'Marketing'
-                            ? SizedBox()
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Menu(
-                                      onTap: () {
-                                        Get.to(() => ListPOApprovel());
-                                      },
-                                      title: 'Purchase Order Approvel',
-                                      imageAsset: 'assets/Done_ring_round.png'),
-                                  Menu(
-                                      onTap: () {
-                                        Get.to(() => KuisonerPage());
-                                      },
-                                      title: 'Kuisioner',
-                                      imageAsset: 'assets/Desk_alt.png'),
-                                ],
-                              ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Menu(
-                                onTap: () {
-                                  Get.to(() => listPoPage());
-                                },
-                                title: 'Purchase Order',
-                                imageAsset: 'assets/Basket_alt_3.png'),
-                            Menu(
-                                onTap: () {
-                                  Get.to(() => ListPengiriman());
-                                },
-                                title: 'Pengiriman Barang',
-                                imageAsset: 'assets/package_car.png'),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Menu(
-                                onTap: () {
-                                  Get.to(() => ListKeluhanPage());
-                                },
-                                title: 'Keluhan Pelanggan',
-                                imageAsset: 'assets/Chat_alt_3.png'),
-                            Menu(
-                                onTap: () {
-                                  Get.to(() => ListInvoicePage());
-                                },
-                                title: 'Invoice',
-                                imageAsset: 'assets/File_dock.png'),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        roleText != 'Marketing'
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Menu(
-                                      onTap: () {
-                                        Get.to(() => KuisonerPage());
-                                      },
-                                      title: 'Kuisioner',
-                                      imageAsset: 'assets/Desk_alt.png'),
-                                ],
-                              )
-                            : SizedBox()
-                      ]),
-                    )
+                    // Container(
+                    //   child: Column(children: [
+                    //     roleText == 'Marketing'
+                    //         ? SizedBox()
+                    //         : Row(
+                    //             mainAxisAlignment:
+                    //                 MainAxisAlignment.spaceBetween,
+                    //             children: [
+                    //               Menu(
+                    //                   onTap: () {
+                    //                     Get.to(() => ListPOApprovel());
+                    //                   },
+                    //                   title: 'Purchase Order Approvel',
+                    //                   imageAsset: 'assets/Done_ring_round.png'),
+                    //               Menu(
+                    //                   onTap: () {
+                    //                     Get.to(() => KuisonerPage());
+                    //                   },
+                    //                   title: 'Kuisioner',
+                    //                   imageAsset: 'assets/Desk_alt.png'),
+                    //             ],
+                    //           ),
+                    //     SizedBox(
+                    //       height: 15,
+                    //     ),
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         Menu(
+                    //             onTap: () {
+                    //               Get.to(() => listPoPage());
+                    //             },
+                    //             title: 'Purchase Order',
+                    //             imageAsset: 'assets/Basket_alt_3.png'),
+                    //         Menu(
+                    //             onTap: () {
+                    //               Get.to(() => ListPengiriman());
+                    //             },
+                    //             title: 'Pengiriman Barang',
+                    //             imageAsset: 'assets/package_car.png'),
+                    //       ],
+                    //     ),
+                    //     SizedBox(
+                    //       height: 20,
+                    //     ),
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         Menu(
+                    //             onTap: () {
+                    //               Get.to(() => ListKeluhanPage());
+                    //             },
+                    //             title: 'Keluhan Pelanggan',
+                    //             imageAsset: 'assets/Chat_alt_3.png'),
+                    //         Menu(
+                    //             onTap: () {
+                    //               Get.to(() => ListInvoicePage());
+                    //             },
+                    //             title: 'Invoice',
+                    //             imageAsset: 'assets/File_dock.png'),
+                    //       ],
+                    //     ),
+                    //     SizedBox(
+                    //       height: 20,
+                    //     ),
+                    //     // roleText != 'Marketing'
+                    //     //     ? Row(
+                    //     //         mainAxisAlignment: MainAxisAlignment.center,
+                    //     //         children: [
+                    //     //           Menu(
+                    //     //               onTap: () {
+                    //     //                 Get.to(() => KuisonerPage());
+                    //     //               },
+                    //     //               title: 'Kuisioner',
+                    //     //               imageAsset: 'assets/Desk_alt.png'),
+                    //     //         ],
+                    //     //       )
+                    //     //     : SizedBox()
+                    //   ]),
+                    // )
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.2,
+                      children: [
+                        if (roleText != 'Marketing') ...[
+                          Menu(
+                              onTap: () {
+                                Get.to(() => ListPOApprovel());
+                              },
+                              title: 'Purchase Order Approvel',
+                              imageAsset: 'assets/Done_ring_round.png'),
+                          Menu(
+                              onTap: () {
+                                Get.to(() => ListKeluhanApproval());
+                              },
+                              title: 'Keluhan Approvel',
+                              imageAsset: 'assets/Done_ring_round.png'),
+                        ],
+                        Menu(
+                            onTap: () {
+                              Get.to(() => listPoPage());
+                            },
+                            title: 'Purchase Order',
+                            imageAsset: 'assets/Basket_alt_3.png'),
+                        Menu(
+                            onTap: () {
+                              Get.to(() => ListPengiriman());
+                            },
+                            title: 'Pengiriman Barang',
+                            imageAsset: 'assets/package_car.png'),
+                        Menu(
+                            onTap: () {
+                              Get.to(() => ListKeluhanPage());
+                            },
+                            title: 'Keluhan Pelanggan',
+                            imageAsset: 'assets/Chat_alt_3.png'),
+                        Menu(
+                            onTap: () {
+                              Get.to(() => ListInvoicePage());
+                            },
+                            title: 'Invoice',
+                            imageAsset: 'assets/File_dock.png'),
+                        if (roleText != 'Marketing') ...[
+                          // Menu(
+                          //     onTap: () {
+                          //       Get.to(() => ListPOApprovel());
+                          //     },
+                          //     title: 'Purchase Order Approvel',
+                          //     imageAsset: 'assets/Done_ring_round.png'),
+                          Menu(
+                              onTap: () {
+                                Get.to(() => KuisonerPage());
+                              },
+                              title: 'Kuisioner',
+                              imageAsset: 'assets/Desk_alt.png'),
+                          Menu(
+                              onTap: () {
+                                Get.to(() =>
+                                    ListPenanggananKeluhanPelangganPage());
+                              },
+                              title: 'Penangganan Keluhan',
+                              imageAsset: 'assets/comment-question.png'),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               )),

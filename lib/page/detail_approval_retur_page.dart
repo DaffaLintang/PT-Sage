@@ -3,24 +3,25 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pt_sage/controllers/approved_controller.dart';
+import 'package:pt_sage/controllers/keluahanPelanggan_controller.dart';
 import 'package:pt_sage/page/list_keluhan.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
 
-class DetailKeluhanPage extends StatefulWidget {
-  const DetailKeluhanPage({Key? key}) : super(key: key);
+class DetailReturApprovalPage extends StatefulWidget {
+  const DetailReturApprovalPage({Key? key}) : super(key: key);
 
   @override
-  State<DetailKeluhanPage> createState() => _DetailKeluhanPageState();
+  State<DetailReturApprovalPage> createState() => _DetailReturApprovalPage();
 }
 
-class _DetailKeluhanPageState extends State<DetailKeluhanPage> {
+class _DetailReturApprovalPage extends State<DetailReturApprovalPage> {
   DateTime? pickedDate;
   final keluhan = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(keluhan.createdAt);
+    DateTime dateTime = keluhan.createdAt;
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -128,6 +129,50 @@ class _DetailKeluhanPageState extends State<DetailKeluhanPage> {
                     ],
                   ),
                 ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: SizedBox(
+                          width: 120,
+                          height: 50,
+                          child: ElevatedButton(
+                            child: Text(
+                              'Approv',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              KeluhanPelangganController()
+                                  .approveRetur(keluhan.id);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              primary: Color(0xff008000),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: SizedBox(
+                          width: 120,
+                          height: 50,
+                          child: ElevatedButton(
+                            child: Text('Reject'),
+                            onPressed: () {
+                              KeluhanPelangganController().reject(keluhan.id);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              primary: Color(0xffBF1619),
+                            ),
+                          )),
+                    ),
+                  ],
+                )
               ],
             ),
           )

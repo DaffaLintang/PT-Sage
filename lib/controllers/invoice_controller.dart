@@ -66,9 +66,6 @@ class InvoiceController extends GetxController {
     try {
       if (buktiBayar != null || buktiKirim != null) {
         var response = await request.send();
-        print(response.statusCode);
-        print(response.headers);
-        print(url);
 
         if (response.statusCode == 200) {
           var responseData = await response.stream.bytesToString();
