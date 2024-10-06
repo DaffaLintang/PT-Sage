@@ -23,6 +23,7 @@ class PoController extends GetxController {
   static TextEditingController searchController = TextEditingController();
   RxList<TextEditingController> jummlahKemasan =
       <TextEditingController>[TextEditingController()].obs;
+  final isLoading = false.obs;
 
   String? token = SpUtil.getString('token');
   static int jumlahBulat = 0;
@@ -46,13 +47,16 @@ class PoController extends GetxController {
 
   Future<KemasanList?> getKemasan() async {
     try {
+      isLoading.value = true;
       final uri = Uri.parse('$PoAPI/kemasan');
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        isLoading.value = false;
         return KemasanList.fromJson(jsonResponse);
       } else {
+        isLoading.value = false;
         throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
