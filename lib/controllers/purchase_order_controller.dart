@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -24,6 +25,7 @@ class PoController extends GetxController {
   RxList<TextEditingController> jummlahKemasan =
       <TextEditingController>[TextEditingController()].obs;
   final isLoading = false.obs;
+  final isLoading2 = false.obs;
 
   String? token = SpUtil.getString('token');
   static int jumlahBulat = 0;
@@ -67,20 +69,129 @@ class PoController extends GetxController {
 
   Future<DataWrapper?> getProductData() async {
     try {
+      isLoading2.value = true;
       final uri = Uri.parse(PoCreateAPI);
-      final response =
-          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        return DataWrapper.fromJson(jsonResponse);
-      } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+
+      // Menggunakan http.Client untuk streaming data
+      var client = http.Client();
+      var request = http.Request('GET', uri)
+        ..headers['Authorization'] = 'Bearer $token';
+
+      var streamedResponse = await client.send(request);
+
+      // Menggunakan ByteStream untuk membaca respons secara bertahap
+      var byteStream = streamedResponse.stream;
+      var jsonDecoder = Utf8Decoder().bind(byteStream).transform(json.decoder);
+
+      // Memvalidasi respons JSON
+      await for (var chunk in jsonDecoder) {
+        try {
+          // Validasi JSON chunk
+          if (isValidJson(chunk)) {
+            // JSON valid, lanjutkan parsing
+            Map<String, dynamic> jsonResponse = chunk as Map<String, dynamic>;
+            isLoading2.value = false;
+            return DataWrapper.fromJson(jsonResponse);
+          } else {
+            // JSON tidak valid
+            print('Invalid JSON format in the chunk.');
+            isLoading2.value = false;
+            return null;
+          }
+        } catch (e) {
+          // Tangani kesalahan jika terjadi pada bagian tertentu dari respons
+          print('Error parsing JSON chunk: $e');
+          isLoading2.value = false;
+          return null;
+        }
       }
     } catch (e) {
+      isLoading2.value = false;
       print('Error: ${e.toString()}');
       return null;
     }
   }
+
+// Fungsi untuk memvalidasi JSON
+  bool isValidJson(Object? json) {
+    try {
+      // Coba mengonversi chunk menjadi JSON
+      if (json is Map<String, dynamic>) {
+        return true; // JSON valid jika bisa di-decode menjadi Map<String, dynamic>
+      }
+    } catch (e) {
+      print('Invalid JSON: $e');
+    }
+    return false; // JSON tidak valid jika terjadi kesalahan saat parsing
+  }
+
+// Fungsi untuk memvalidasi JSON
+
+  // Future<DataWrapper?> getProductData() async {
+  //   try {
+  //     isLoading2.value = true;
+  //     final uri = Uri.parse(PoCreateAPI);
+
+  //     // Menambahkan timeout agar request tidak menunggu terlalu lama
+  //     final response = await http.get(
+  //       uri,
+  //       headers: {'Authorization': 'Bearer $token'},
+  //     ).timeout(const Duration(seconds: 15));
+
+  //     // Cek apakah status respons adalah 200 (sukses)
+  //     if (response.statusCode == 200) {
+  //       // Parsing JSON dengan memisahkan dari logika HTTP
+  //       return _parseJson(response.body);
+  //     } else {
+  //       // Jika status kode tidak 200, tampilkan error
+  //       isLoading2.value = false;
+  //       print('Failed to load data: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } on TimeoutException {
+  //     // Menangani error jika request timeout
+  //     isLoading2.value = false;
+  //     print('Request timed out');
+  //     return null;
+  //   } catch (e) {
+  //     // Tangani error lainnya, seperti masalah jaringan
+  //     isLoading2.value = false;
+  //     print('Error: ${e.toString()}');
+  //     return null;
+  //   }
+  // }
+
+  // String fixIncompleteJson(String jsonString) {
+  //   // Cek apakah JSON ditutup dengan benar
+  //   if (!jsonString.trim().endsWith(']')) {
+  //     print('JSON response is incomplete.');
+  //     return jsonString + ']'; // Tambahkan penutup array jika tidak ada
+  //   }
+  //   return jsonString;
+  // }
+
+  // DataWrapper? _parseJson(String responseBody) {
+  //   try {
+  //     // Memperbaiki JSON jika tidak lengkap
+  //     String fixedResponseBody = fixIncompleteJson(responseBody);
+
+  //     // Cek apakah panjang responseBody cukup
+  //     if (fixedResponseBody.isEmpty) {
+  //       print('Response body is empty');
+  //       return null;
+  //     }
+
+  //     // Parsing JSON yang telah diperbaiki
+  //     final Map<String, dynamic> jsonResponse = jsonDecode(fixedResponseBody);
+  //     isLoading2.value = false;
+  //     return DataWrapper.fromJson(jsonResponse);
+  //   } catch (e) {
+  //     // Tangani jika terjadi error parsing
+  //     isLoading2.value = false;
+  //     print('Error parsing JSON: $e\nResponse: $responseBody');
+  //     return null;
+  //   }
+  // }
 
   void hitungJumlahBulat(int? jumlah) {
     jumlahBulat = 0;
@@ -117,6 +228,7 @@ class PoController extends GetxController {
         diskonType = "-";
     }
     try {
+      print(jumlah);
       if (customer == null ||
           product == null ||
           jumlah == null ||
@@ -138,7 +250,7 @@ class PoController extends GetxController {
         var data = {
           "customers": customer,
           "product": product,
-          "jumlah": jumlahBulat,
+          "jumlah": jumlah,
           "total_harga": totalHarga,
           "tempo": tempo,
           "dp": dp,
@@ -161,6 +273,7 @@ class PoController extends GetxController {
                 backgroundColor: Colors.red, colorText: Colors.white);
             return false;
           }
+          print(data);
           EasyLoading.dismiss();
         });
       }

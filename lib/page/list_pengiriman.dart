@@ -63,7 +63,8 @@ class _ListPengirimanState extends State<ListPengiriman> {
                 itemBuilder: (context, index) {
                   final order = orders!.orders[index];
                   return order.status == 'approved' &&
-                          order.statusPengiriman == 'belum di kirim'
+                              order.statusPengiriman == 'belum di kirim' ||
+                          order.statusPengiriman == 'setengah di kirim'
                       ? ListTile(
                           leading: Container(
                             height: 50,

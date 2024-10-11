@@ -13,6 +13,7 @@ import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 import '../controllers/purchase_order_controller.dart';
 
@@ -125,13 +126,38 @@ class _PurchasePageState extends State<PurchasePage> {
 
   void hitungHarga(hargaProduk) {
     setState(() {
-      int jumlah = int.parse(PoController.jumlahConroller.text);
-      // String? hargaString = SpUtil.getString("harga");
-      int harga = int.parse(hargaProduk ?? '0');
+      // Pastikan input 'jumlah' adalah angka yang valid
+      int jumlah = 0;
+      String jumlahText = PoController.jumlahConroller.text;
+
+      if (jumlahText.isNotEmpty) {
+        try {
+          jumlah = int.parse(jumlahText);
+        } catch (e) {
+          print('Error parsing jumlah: $e');
+          // Default jumlah to 0 if parsing fails
+          jumlah = 0;
+        }
+      }
+
+      // Pastikan hargaProduk adalah angka yang valid
+      int harga = 0;
+      if (hargaProduk != null && hargaProduk is String) {
+        try {
+          harga = int.parse(hargaProduk);
+        } catch (e) {
+          print('Error parsing hargaProduk: $e');
+          // Default harga to 0 if parsing fails
+          harga = 0;
+        }
+      }
+
+      // Hitung total harga dan total bayar
       totalHarga = (harga * jumlah);
       totalBayar = (harga * jumlah).toString();
+
+      // Update hargaController dengan format mata uang
       PoController.hargaController.text = currencyFormatter.format(harga);
-      // SpUtil.putInt('total', total);
     });
   }
 
@@ -145,17 +171,27 @@ class _PurchasePageState extends State<PurchasePage> {
   }
 
   void handleTextChange(String value) {
-    // String value = PoController.jumlahConroller.text;
-    if (value.isEmpty || int.tryParse(value) == null || int.parse(value) < 1) {
-      PoController.jumlahConroller.text = '1';
-      PoController.jumlahConroller.selection = TextSelection.fromPosition(
-          TextPosition(offset: PoController.jumlahConroller.text.length));
+    // Hanya update nilai saat validasi khusus, misalnya ketika disubmit
+    if (value.isNotEmpty) {
+      final parsedValue = int.tryParse(value);
+      if (parsedValue == null || parsedValue < 1) {
+        PoController.jumlahConroller.text = '1';
+      }
     }
+
+    // Tetapkan posisi kursor di akhir
+    PoController.jumlahConroller.selection = TextSelection.fromPosition(
+        TextPosition(offset: PoController.jumlahConroller.text.length));
+
+    // Panggil hitungHarga dengan produk yang dipilih
     hitungHarga(hargaMap[selectedValueProduk ?? 0]);
   }
 
   void printValue() {
-    for (int i = 0; i < selectedKemasanValues.length; i++) {
+    int minLength =
+        min(selectedKemasanValues.length, poController.jummlahKemasan.length);
+
+    for (int i = 0; i < minLength; i++) {
       var id = selectedKemasanValues[i];
       var quantity = int.tryParse(poController.jummlahKemasan[i].text) ?? 0;
       formattedValues.add({"id": int.parse(id ?? "0"), "quantity": quantity});
@@ -238,7 +274,7 @@ class _PurchasePageState extends State<PurchasePage> {
           elevation: 5,
         ),
         body: Obx(() {
-          if (controller.isLoading.value) {
+          if (controller.isLoading.value || controller.isLoading2.value) {
             return Center(child: CircularProgressIndicator()); // Show loading
           } else {
             return ListView(
@@ -631,8 +667,8 @@ class _PurchasePageState extends State<PurchasePage> {
                                                                 index];
                                                       }
                                                     }
-                                                    totalValue +=
-                                                        jumlah * itemWeight;
+                                                    totalValue += jumlah;
+                                                    print(jumlah);
                                                   }
                                                 });
                                               },
@@ -687,8 +723,7 @@ class _PurchasePageState extends State<PurchasePage> {
                                                                 index];
                                                       }
                                                     }
-                                                    totalValue +=
-                                                        jumlah * itemWeight;
+                                                    totalValue += jumlah;
                                                   }
                                                 });
                                               },
@@ -727,7 +762,7 @@ class _PurchasePageState extends State<PurchasePage> {
                                                   itemsKemasanWeights[index];
                                             }
                                           }
-                                          totalValue += jumlah * itemWeight;
+                                          totalValue += jumlah;
                                         }
                                       });
                                     },
@@ -1071,65 +1106,6 @@ class _PurchasePageState extends State<PurchasePage> {
                                   }
                                 }
                                 formattedValues.clear();
-                                // PoController().hitungJumlahBulat(
-                                //     int.tryParse(PoController.jumlahConroller.text));
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (BuildContext context) {
-                                //     return AlertDialog(
-                                //       title: Text('Konfirmasi'),
-                                //       content: Text(
-                                //           'Jumlah Akan Dibulatkan Ke ${PoController.jumlahBulat}?'),
-                                //       actions: <Widget>[
-                                //         TextButton(
-                                //           onPressed: () {
-                                //             Navigator.of(context)
-                                //                 .pop(false); // Pilihan Tidak
-                                //           },
-                                //           child: Text('Tidak'),
-                                //         ),
-                                //         TextButton(
-                                //           onPressed: () {
-
-                                //             // Navigator.of(context).pop(true);
-                                //             // // Setelah menutup dialog, lakukan tindakan di sini
-                                //             // printValue();
-                                //             // String jumlahDp = getRawValue(
-                                //             //     PoController.jDpController.text);
-                                //             // String jumlahDiskon =
-                                //             //     PoController.diskonController.text;
-                                //             // bool PoStore = PoController().store(
-                                //             //   customerId,
-                                //             //   productId,
-                                //             //   totalBayar,
-                                //             //   selectedValueTempo,
-                                //             //   selectedValueDp,
-                                //             //   jumlahDp,
-                                //             //   getRawValue(jumlahDiskon),
-                                //             //   _currentSelection,
-                                //             //   formattedValues,
-                                //             //   totalValue,
-                                //             // );
-
-                                //             // if (PoStore) {
-                                //             //   if (poController
-                                //             //       .jummlahKemasan.isNotEmpty) {
-                                //             //     var firstElement =
-                                //             //         poController.jummlahKemasan.first;
-                                //             //     firstElement.text = '';
-                                //             //     poController.jummlahKemasan.clear();
-                                //             //     poController.jummlahKemasan
-                                //             //         .add(firstElement);
-                                //             //   }
-                                //             // }
-                                //             // formattedValues.clear();
-                                //           },
-                                //           child: Text('Ya'),
-                                //         ),
-                                //       ],
-                                //     );
-                                //   },
-                                // );
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

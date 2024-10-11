@@ -51,22 +51,27 @@ class Customers {
 
   factory Customers.fromJson(Map<String, dynamic> json) {
     return Customers(
-      id: json['id'],
-      customersName: json['customers_name'],
-      phone: json['phone'],
-      provinceCode: json['province_code'],
-      regencyCode: json['regency_code'],
-      districtCode: json['district_code'],
-      address: json['address'],
-      noMoU: json['noMoU'],
-      activePeriodFrom: json['active_period_from'],
-      activePeriodTo: json['active_period_to'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-      statusApprove: json['status_approve'],
-      usersId: json['users_id'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      id: json['id'] ?? 0, // Misalnya default 0 jika null
+      customersName: json['customers_name'] ??
+          '', // Defaultkan menjadi string kosong jika null
+      phone: json['phone'] ?? '', // Defaultkan menjadi string kosong jika null
+      provinceCode: json['province_code'] ?? '',
+      regencyCode: json['regency_code'] ?? '',
+      districtCode: json['district_code'] ?? '',
+      address: json['address'] ?? '',
+      noMoU: json['noMoU'] ?? '',
+      activePeriodFrom: json['active_period_from'] ?? '',
+      activePeriodTo: json['active_period_to'] ?? '',
+      latitude: json['latitude'] ?? '',
+      longitude: json['longitude'] ?? '',
+      statusApprove: json['status_approve'] ?? '',
+      usersId: json['users_id'] ?? 0, // Defaultkan menjadi 0 jika null
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
     );
   }
 

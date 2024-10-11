@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,27 +36,37 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   List<int> selectedJumlahProductLotIds = [];
   final Map<String, int> kemasan = {};
   final List<String> itemsKendaraan = [];
+  List<int> pcsKirim = [];
+  bool isInitialized = false;
 
+  @override
   @override
   void initState() {
     super.initState();
-    fetchCustomer();
-    fetchProductLot();
-    fetchKendaraan();
-    PengirimanController().getKendaraan();
-    PengirimanController.customerController.text = order.customersName;
+
+    // Run initialization only if it's not already done
+    if (!isInitialized) {
+      // fetchCustomer();
+      fetchProductLot();
+      fetchKendaraan();
+      PengirimanController().getKendaraan();
+      PengirimanController.customerController.text = order.customersName;
+
+      // Set the flag to true after initialization
+      isInitialized = true;
+    }
   }
 
-  void fetchCustomer() async {
-    final poController = PoController();
-    DataWrapper? dataWrapper = await poController.getProductData();
-    setState(() {
-      dataWrapper?.customers.forEach((customer) {
-        items.add(customer.customersName);
-        customertMap[customer.customersName] = customer.id;
-      });
-    });
-  }
+  // void fetchCustomer() async {
+  //   final poController = PoController();
+  //   DataWrapper? dataWrapper = await poController.getProductData();
+  //   setState(() {
+  //     dataWrapper?.customers.forEach((customer) {
+  //       items.add(customer.customersName);
+  //       customertMap[customer.customersName] = customer.id;
+  //     });
+  //   });
+  // }
 
   void fetchKendaraan() async {
     List<Kendaraan>? kendaraanList =
@@ -83,7 +94,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   void printValue() {
     for (int i = 0; i < order.kemasan.length; i++) {
       var id = order.kemasan[i].kemasanId;
-      var quantity = order.kemasan[i].quantity ?? 0;
+      var quantity = pcsKirim[i];
       kemasan.addAll({"${id}": quantity});
     }
   }
@@ -365,10 +376,43 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 setState(() {
                                   isChecked![index] = value!;
                                   if (isChecked![index]) {
+                                    pcsKirim.clear();
                                     selectedProductLotIds.add(productLot.id);
                                     selectedJumlahProductLotIds
                                         .add(int.parse(productLot.quantity));
+                                    for (int z = 0;
+                                        z < order.kemasan.length;
+                                        z++) {
+                                      int jlmPcs =
+                                          ((int.parse(productLot.quantity) /
+                                                      order.kemasan.length) /
+                                                  order.kemasan[z].berat)
+                                              .toInt();
+                                      if (jlmPcs * order.kemasan[z].berat <=
+                                          order.kemasan[z].quantity) {
+                                        pcsKirim.add(
+                                            ((int.parse(productLot.quantity) /
+                                                        order.kemasan.length) /
+                                                    order.kemasan[z].berat)
+                                                .toInt());
+                                      } else {
+                                        num totalBerat =
+                                            jlmPcs * order.kemasan[z].berat;
+                                        num selisih = totalBerat -
+                                            order.kemasan[z].quantity;
+                                        num jumlahAsli = totalBerat - selisih;
+                                        print(
+                                            jumlahAsli * order.kemasan.length);
+                                        pcsKirim.add(((jumlahAsli *
+                                                    order.kemasan.length /
+                                                    order.kemasan.length) /
+                                                order.kemasan[z].berat)
+                                            .toInt());
+                                      }
+                                    }
+                                    print(pcsKirim);
                                   } else {
+                                    pcsKirim.clear();
                                     selectedProductLotIds.remove(productLot.id);
                                     selectedJumlahProductLotIds
                                         .remove(int.parse(productLot.quantity));
@@ -389,10 +433,10 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                     return ListTile(
                         title:
                             Text('Kemasan: ${order.kemasan[index].berat} Kg'),
-                        subtitle:
-                            Text('Quantity: ${order.kemasan[index].quantity}'),
+                        subtitle: Text(
+                            'Pcs: ${pcsKirim.length > 0 ? pcsKirim[index] : 0}'),
                         trailing: Text(
-                            "Jumlah: ${order.kemasan[index].berat * order.kemasan[index].quantity} Kg"));
+                            "Jumlah: ${order.kemasan[index].quantity} Kg"));
                   },
                 ),
                 Container(
@@ -429,8 +473,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 // print(PengirimanController.dateController.text);
                                 // print(selectedProductLotIds);
                                 // print(order.kemasan);
-                                // printValue();
-                                // print(kemasan);
+                                print(kemasan);
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

@@ -24,6 +24,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    LoginController.passwordController.text = "";
+    LoginController.usernameController.text = "";
+  }
+
   Widget build(BuildContext context) {
     // double getCircleDiameter(BuildContext context) =>
     //     MediaQuery.of(context).size.width * 8 / 2;

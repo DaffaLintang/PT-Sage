@@ -403,7 +403,7 @@ class _DetailPoApprovalPageState extends State<DetailPoApprovalPage> {
                           height: 50,
                           child: ElevatedButton(
                             child: Text(
-                              'Approv',
+                              'Approve',
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () {
