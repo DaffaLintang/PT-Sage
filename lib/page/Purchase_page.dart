@@ -221,7 +221,7 @@ class _PurchasePageState extends State<PurchasePage> {
   }
 
   void hitungDiskonPersen(String diskon) {
-    int? total = totalHarga;
+    int? total = totalHarga ?? 0;
 
     if (diskon.isEmpty) {
       return;
@@ -232,7 +232,7 @@ class _PurchasePageState extends State<PurchasePage> {
       try {
         setState(() {
           int totalDiskon = int.parse(diskon);
-          double totalDiskonPersen = total! * (totalDiskon / 100);
+          double totalDiskonPersen = total * (totalDiskon / 100);
           double hasil = total - totalDiskonPersen;
           String formattedValue = hasil.toStringAsFixed(0);
           totalBayar = formattedValue;
@@ -870,9 +870,9 @@ class _PurchasePageState extends State<PurchasePage> {
                               onPressed: (int newIndex) {
                                 setState(() {
                                   _currentSelection = newIndex;
-                                  // totalBayar = int.parse(getRawValue(
-                                  //         PoController.hargaController.text))
-                                  //     .toString();
+                                  totalBayar = int.parse(getRawValue(
+                                          PoController.hargaController.text))
+                                      .toString();
                                   PoController.diskonController.clear();
                                   hitungDiskonPersen("0");
                                 });

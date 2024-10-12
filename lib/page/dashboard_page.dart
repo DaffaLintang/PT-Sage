@@ -15,6 +15,7 @@ import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
 
 import 'list_keluhan_approvel.dart';
+import 'list_payment_page.dart';
 import 'list_penanganan-pelanggan_page.dart';
 import 'list_pengiriman.dart';
 
@@ -345,6 +346,12 @@ class _DashboardPageState extends State<DashboardPage> {
                               },
                               title: 'Penangganan Keluhan',
                               imageAsset: 'assets/comment-question.png'),
+                          Menu(
+                              onTap: () {
+                                Get.to(() => ListPaymentPage());
+                              },
+                              title: 'Pembayaran',
+                              imageAsset: 'assets/money.png'),
                         ],
                       ],
                     ),

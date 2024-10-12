@@ -15,12 +15,16 @@ import '../page/home_page.dart';
 import '../providers/keluhan_provider.dart';
 
 class KeluhanPelangganController extends GetxController {
+  static TextEditingController keluhanControllerRetur = TextEditingController();
+  static TextEditingController keluhanControllerNonRetur =
+      TextEditingController();
   static TextEditingController keluhanController = TextEditingController();
   static TextEditingController searchController = TextEditingController();
   static TextEditingController searchInvoiceController =
       TextEditingController();
   String? token = SpUtil.getString('token');
   final isLoading = false.obs;
+  final isLoading2 = false.obs;
 
   Future<List<KeluhanCustomer>?> getKeluhanCustomer() async {
     try {
@@ -106,7 +110,7 @@ class KeluhanPelangganController extends GetxController {
       KeluhanProvider().updateRetur(token, id).then((value) {
         // print(value.statusCode);
         if (value.statusCode == 200) {
-          // KeluhanPelangganController.keluhanController.text = '';
+          // KeluhanPelangganController.keluhanControllerRetur.text = '';
           Get.offAll(() => HomePage());
           Get.snackbar('Success', 'Retur Berhasil',
               backgroundColor: Color.fromARGB(255, 75, 212, 146),
@@ -143,43 +147,59 @@ class KeluhanPelangganController extends GetxController {
     }
   }
 
-  void approveRetur(id) {
+  void approveRetur(id, keterangan) {
     try {
-      KeluhanProvider().updateApproveRetur(token, id).then((value) {
-        // print(value.statusCode);
-        if (value.statusCode == 200) {
-          // KeluhanPelangganController.keluhanController.text = '';
-          Get.offAll(() => HomePage());
-          Get.snackbar('Success', 'Retur Berhasil Diapprove',
-              backgroundColor: Color.fromARGB(255, 75, 212, 146),
-              colorText: Colors.white);
-        } else {
-          Get.snackbar('Error', 'Retur Gagal Diapprove',
-              backgroundColor: Colors.red, colorText: Colors.white);
-        }
-        EasyLoading.dismiss();
-      });
+      if (keterangan.isEmpty) {
+        Get.snackbar('Error', 'Keterangan Harus Diisi',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        var data = {
+          "note": keterangan,
+        };
+        KeluhanProvider().updateApproveRetur(token, id, data).then((value) {
+          // print(value.statusCode);
+          if (value.statusCode == 200) {
+            // KeluhanPelangganController.keluhanController.text = '';
+            Get.offAll(() => HomePage());
+            Get.snackbar('Success', 'Retur Berhasil Diapprove',
+                backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                colorText: Colors.white);
+          } else {
+            Get.snackbar('Error', 'Retur Gagal Diapprove',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+          EasyLoading.dismiss();
+        });
+      }
     } catch (e, stackTrace) {
       print('Exception occurred: $e\n$stackTrace');
     }
   }
 
-  void approveNonRetur(id) {
+  void approveNonRetur(id, keterangan) {
     try {
-      KeluhanProvider().updateApproveNonRetur(token, id).then((value) {
-        // print(value.statusCode);
-        if (value.statusCode == 200) {
-          // KeluhanPelangganController.keluhanController.text = '';
-          Get.offAll(() => HomePage());
-          Get.snackbar('Success', 'Non Retur Berhasil Diapprove',
-              backgroundColor: Color.fromARGB(255, 75, 212, 146),
-              colorText: Colors.white);
-        } else {
-          Get.snackbar('Error', 'Non Retur Gagal Diapprove',
-              backgroundColor: Colors.red, colorText: Colors.white);
-        }
-        EasyLoading.dismiss();
-      });
+      if (keterangan.isEmpty) {
+        Get.snackbar('Error', 'Keterangan Harus Diisi',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        var data = {
+          "note": keterangan,
+        };
+        KeluhanProvider().updateApproveNonRetur(token, id, data).then((value) {
+          // print(value.statusCode);
+          if (value.statusCode == 200) {
+            // KeluhanPelangganController.keluhanController.text = '';
+            Get.offAll(() => HomePage());
+            Get.snackbar('Success', 'Non Retur Berhasil Diapprove',
+                backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                colorText: Colors.white);
+          } else {
+            Get.snackbar('Error', 'Non Retur Gagal Diapprove',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+          EasyLoading.dismiss();
+        });
+      }
     } catch (e, stackTrace) {
       print('Exception occurred: $e\n$stackTrace');
     }
@@ -299,7 +319,7 @@ class KeluhanPelangganController extends GetxController {
 
   Future<DetailKeluhan?> getAdminDetailKeluhan(id) async {
     try {
-      isLoading.value = true; // Start loading
+      isLoading.value = true;
       final uri = Uri.parse("${AdminKeluhanApi}/retur/${id}");
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
@@ -316,6 +336,32 @@ class KeluhanPelangganController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false; // Stop loading on exception
+      print('Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<DetailKeluhan?> getAdminDetailKeluhans(id) async {
+    try {
+      isLoading2.value = true;
+      final uri = Uri.parse("${AdminKeluhanApi}/retur/${id}");
+      final response =
+          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        Map<String, dynamic> data = jsonResponse['data'];
+        isLoading2.value = false;
+        // isLoading.value = false; // Stop loading
+        return DetailKeluhan.fromJson(data); // Return fetched data
+      } else {
+        isLoading2.value = false;
+        // isLoading.value = false; // Stop loading on failure
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      isLoading2.value = false;
+      // isLoading.value = false; // Stop loading on exception
       print('Error: ${e.toString()}');
       return null;
     }

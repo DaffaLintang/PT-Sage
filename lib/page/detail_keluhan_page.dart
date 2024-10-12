@@ -115,6 +115,20 @@ class _DetailKeluhanPageState extends State<DetailKeluhanPage> {
                         height: 15,
                       ),
                       Text(
+                        "Note",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(keluhan.note),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
                         "Tanggal",
                         style: TextStyle(
                             color: Color(0xff9E0507),

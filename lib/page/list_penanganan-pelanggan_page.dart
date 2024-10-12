@@ -85,7 +85,8 @@ class _ListPenanggananKeluhanPelangganPageState
                                 Colors.black,
                                 BlendMode.srcATop,
                               ),
-                              image: AssetImage('assets/Chat_alt_3.png'))),
+                              image:
+                                  AssetImage('assets/comment-question.png'))),
                     ),
                     title: Text(keluhan.kodeInvoice!),
                     subtitle: Text(keluhan.customer!.customersName!),

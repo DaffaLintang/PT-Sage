@@ -35,26 +35,26 @@ class KeluhanProvider extends GetConnect {
     );
   }
 
-  Future<http.Response> updateApproveRetur(String? token, id) {
+  Future<http.Response> updateApproveRetur(
+      String? token, id, Map<String, dynamic> data) {
     final uri = Uri.parse("${AdminKeluhanApi}/approval-retur-update/${id}");
-    return http.post(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
-      },
-    );
+    return http.post(uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(data));
   }
 
-  Future<http.Response> updateApproveNonRetur(String? token, id) {
+  Future<http.Response> updateApproveNonRetur(
+      String? token, id, Map<String, dynamic> data) {
     final uri = Uri.parse("${AdminKeluhanApi}/approval-non-retur-update/${id}");
-    return http.post(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
-      },
-    );
+    return http.post(uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(data));
   }
 
   Future<http.Response> reject(String? token, id) {

@@ -17,7 +17,7 @@
 // const String AdminKeluhanApi =
 //     "http://10.0.2.2:8000/api/admin-keluhan-pelanggan";
 
-const String MainUrl = "https://b13a-103-160-183-15.ngrok-free.app";
+const String MainUrl = "https://2940-103-160-183-15.ngrok-free.app";
 const String LoginAPI = "${MainUrl}/api/login";
 const String PoAPI = "${MainUrl}/api/purchase-orders";
 const String PoCreateAPI = "${MainUrl}/api/purchase-orders/create";
@@ -33,3 +33,4 @@ const String Delivery = "${MainUrl}/api/delivery";
 const String InvoiceApi = "${MainUrl}/api/invoices";
 const String KeluhanApi = "${MainUrl}/api/keluhan-pelanggan";
 const String AdminKeluhanApi = "${MainUrl}/api/admin-keluhan-pelanggan";
+const String PaymentApi = "${MainUrl}/api/payment";

@@ -149,6 +149,7 @@ class KeluhanData {
   String? typeNonRetur;
   String? createdAt;
   String? updatedAt;
+  String? note;
   Customer? customer;
   InvoiceKeluhan? invoice;
   User? user;
@@ -163,6 +164,7 @@ class KeluhanData {
     this.typeNonRetur,
     this.createdAt,
     this.updatedAt,
+    this.note,
     this.customer,
     this.invoice,
     this.user,
@@ -179,6 +181,7 @@ class KeluhanData {
       typeNonRetur: json['type_non_retur'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
+      note: json['note'],
       customer:
           json['customer'] != null ? Customer.fromJson(json['customer']) : null,
       invoice: json['invoice'] != null
@@ -199,6 +202,7 @@ class KeluhanData {
       'type_non_retur': typeNonRetur,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'note': note,
       'customer': customer?.toJson(),
       'invoice': invoice?.toJson(),
       'user': user?.toJson(),

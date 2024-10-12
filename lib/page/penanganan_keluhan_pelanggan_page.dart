@@ -92,13 +92,6 @@ class _DetailPenanggananKeluhanState extends State<DetailPenanggananKeluhan> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   '#${detailKeluhan.}',
-                    //   style: TextStyle(
-                    //       fontFamily: GoogleFonts.rubik().fontFamily,
-                    //       fontSize: 20,
-                    //       fontWeight: FontWeight.w600),
-                    // ),
                     SizedBox(
                       height: 20,
                     ),
