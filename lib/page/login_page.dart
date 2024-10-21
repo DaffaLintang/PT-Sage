@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/page/Purchase_page.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:stroke_text/stroke_text.dart';
+import 'package:http/http.dart' as http;
 
 import '../controllers/login_controller.dart';
 
@@ -185,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 50,
                           child: ElevatedButton(
                             child: Text('Login'),
-                            onPressed: () {
+                            onPressed: () async {
                               LoginController().auth();
                             },
                             style: ElevatedButton.styleFrom(
