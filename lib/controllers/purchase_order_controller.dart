@@ -228,7 +228,6 @@ class PoController extends GetxController {
         diskonType = "-";
     }
     try {
-      print(jumlah);
       if (customer == null ||
           product == null ||
           jumlah == null ||

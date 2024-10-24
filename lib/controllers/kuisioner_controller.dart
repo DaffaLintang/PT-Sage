@@ -7,17 +7,24 @@ import 'package:pt_sage/models/customer.dart';
 import 'package:pt_sage/models/kuisioner.dart';
 import 'package:http/http.dart' as http;
 import 'package:pt_sage/page/kuisoner_page.dart';
+import 'package:sp_util/sp_util.dart';
 import '../providers/kuisioner_provider.dart';
 
 class KuisionerController extends GetxController {
   static TextEditingController customerKp = TextEditingController();
   static TextEditingController customerPb = TextEditingController();
+  String? token = SpUtil.getString('token');
 
   Future<KuisionerKpList?> getKepuasanPelangan() async {
     EasyLoading.show();
     try {
       final uri = Uri.parse(KuisionerKepuasanPelangganApi);
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -37,7 +44,8 @@ class KuisionerController extends GetxController {
     EasyLoading.show();
     try {
       final uri = Uri.parse(KuisionerPosisiBersaingApi);
-      final response = await http.get(uri);
+      final response =
+          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -57,7 +65,8 @@ class KuisionerController extends GetxController {
     EasyLoading.show();
     final url = Uri.parse('$PosisiBersaing/getCompetitor');
     try {
-      final response = await http.get(url);
+      final response =
+          await http.get(url, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         return CompetitorResponse.fromJson(jsonResponse);
@@ -73,7 +82,8 @@ class KuisionerController extends GetxController {
   }
 
   Future<List<CustomersPb>> getPosisiBersaingCs() async {
-    final response = await http.get(Uri.parse("$PosisiBersaing/getCS"));
+    final response = await http.get(Uri.parse("$PosisiBersaing/getCS"),
+        headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body)['customers'];
       return jsonResponse.map((data) => CustomersPb.fromJson(data)).toList();
@@ -83,7 +93,8 @@ class KuisionerController extends GetxController {
   }
 
   Future<List<CustomersKp>> getKepuasanPelangganCs() async {
-    final response = await http.get(Uri.parse("$KepuasanPelanggan/getCS"));
+    final response = await http.get(Uri.parse("$KepuasanPelanggan/getCS"),
+        headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body)['customers'];
@@ -97,7 +108,8 @@ class KuisionerController extends GetxController {
     EasyLoading.show();
     try {
       final uri = Uri.parse(IndeksAspek);
-      final response = await http.get(uri);
+      final response =
+          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -128,7 +140,7 @@ class KuisionerController extends GetxController {
           "pesaing": pesaing,
           "jawaban_pesaing": jawabanPesaing,
         };
-        KuisionerProvider().storePb(data).then((value) {
+        KuisionerProvider().storePb(data, token).then((value) {
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',
                 backgroundColor: Color.fromARGB(255, 75, 212, 146),
@@ -159,7 +171,7 @@ class KuisionerController extends GetxController {
           "customer_id": customerId,
           "jawaban": jawaban,
         };
-        KuisionerProvider().storePb(data).then((value) {
+        KuisionerProvider().storePb(data, token).then((value) {
           print(value.statusCode);
           print(data);
 

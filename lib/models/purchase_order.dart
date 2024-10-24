@@ -49,7 +49,7 @@ class PurchaseOrder {
       usersId: json['users_id'],
       customersId: json['customers_id'],
       customersName: json['customers_name'],
-      productId: json['product_id'],
+      productId: json['product_id'] ?? 0,
       productName: json['product_name'],
       quantity: int.parse(json['quantity']),
       totalPrice: int.parse(json['total_price']),

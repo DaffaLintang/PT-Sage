@@ -73,15 +73,6 @@ class PengirimanController extends GetxController {
     final endpoint = '$Delivery/store/$poId';
     num totalLotTersedia = 0;
     try {
-      // var data = {
-      //   "customer_id": customer,
-      //   "kendaraan_id": kendaraan,
-      //   "nama_sopir": namaSupir,
-      //   "tanggal_pengiriman": tanggal,
-      //   "product_lot": lot,
-      //   "kemasan": Kemasan
-      // };
-      // print(data);
       if (namaSupir.isEmpty && NoPol.isEmpty) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
@@ -95,13 +86,12 @@ class PengirimanController extends GetxController {
           "product_lot": lot,
           "kemasan": Kemasan
         };
-        print(data);
+
         for (int i = 0; i < jumlahLot.length; i++) {
           totalLotTersedia += jumlahLot[i];
         }
         // if (totalLotTersedia >= totalQuantity) {
-        PengirimanProvider().store(data, endpoint).then((value) {
-          print(value.statusCode);
+        PengirimanProvider().store(data, endpoint, token).then((value) {
           if (value.statusCode == 200) {
             PengirimanController.kendaraanController.text = '';
             PengirimanController.noPolController.text = '';
@@ -117,10 +107,6 @@ class PengirimanController extends GetxController {
 
           EasyLoading.dismiss();
         });
-        // } else {
-        //   Get.snackbar('Error', 'Jumlah Lot Kurang',
-        //       backgroundColor: Colors.red, colorText: Colors.white);
-        // }
       }
     } catch (e, stackTrace) {
       print('Exception occurred: $e\n$stackTrace');

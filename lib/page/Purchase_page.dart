@@ -144,7 +144,9 @@ class _PurchasePageState extends State<PurchasePage> {
       int harga = 0;
       if (hargaProduk != null && hargaProduk is String) {
         try {
-          harga = int.parse(hargaProduk);
+          String rawHarga = getRawValue(hargaProduk);
+          print(rawHarga);
+          harga = int.parse(rawHarga);
         } catch (e) {
           print('Error parsing hargaProduk: $e');
           // Default harga to 0 if parsing fails
@@ -159,6 +161,15 @@ class _PurchasePageState extends State<PurchasePage> {
       // Update hargaController dengan format mata uang
       PoController.hargaController.text = currencyFormatter.format(harga);
     });
+  }
+
+  String formatCurrency(String value) {
+    // Konversi string angka mentah menjadi format Rp, dengan pemisah ribuan
+    final formatter =
+        NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
+    int numericValue =
+        int.parse(value); // Pastikan untuk menangani parsing yang aman
+    return formatter.format(numericValue);
   }
 
   String getRawValue(String formattedValue) {
@@ -184,7 +195,8 @@ class _PurchasePageState extends State<PurchasePage> {
         TextPosition(offset: PoController.jumlahConroller.text.length));
 
     // Panggil hitungHarga dengan produk yang dipilih
-    hitungHarga(hargaMap[selectedValueProduk ?? 0]);
+    // hitungHarga(hargaMap[selectedValueProduk ?? 0]);
+    hitungHarga(PoController.hargaController.text);
   }
 
   void printValue() {
@@ -486,12 +498,27 @@ class _PurchasePageState extends State<PurchasePage> {
                                   borderRadius: BorderRadius.circular(12),
                                   color: Colors.black.withOpacity(0.05)),
                               child: TextField(
-                                enabled: false,
                                 controller: PoController.hargaController,
+                                inputFormatters: <TextInputFormatter>[
+                                  CurrencyTextInputFormatter(
+                                    locale: 'id',
+                                    decimalDigits: 0,
+                                    symbol: 'Rp',
+                                  ),
+                                ],
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Total Bayar',
                                 ),
+                                onEditingComplete: () {
+                                  // Format setelah selesai mengedit
+                                  // String rawValue = getRawValue(
+                                  //     PoController.hargaController.text);
+                                  // PoController.hargaController.text =
+                                  //     formatCurrency(rawValue);
+                                  hitungHarga(
+                                      PoController.hargaController.text);
+                                },
                               ),
                             ),
                             SizedBox(

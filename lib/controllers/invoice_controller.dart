@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:pdf/widgets.dart';
 import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/invoice.dart';
 import 'package:sp_util/sp_util.dart';
@@ -37,11 +33,17 @@ class InvoiceController extends GetxController {
   }
 
   Future<void> submitForm(
-      File buktiBayar, File buktiKirim, String InvId) async {
+    File buktiBayar,
+    File buktiKirim,
+    String InvId,
+  ) async {
     isLoading(true);
 
     var url = Uri.parse("${InvoiceApi}/upload/${InvId}");
     var request = http.MultipartRequest('POST', url);
+
+    request.headers['Authorization'] = 'Bearer $token';
+
     var stream1 = http.ByteStream(buktiBayar.openRead());
     var length1 = await buktiBayar.length();
     var multipartFile1 = http.MultipartFile(
@@ -66,8 +68,6 @@ class InvoiceController extends GetxController {
     try {
       if (buktiBayar != null || buktiKirim != null) {
         var response = await request.send();
-        print(response.headers);
-        print(response.statusCode);
         if (response.statusCode == 200) {
           var responseData = await response.stream.bytesToString();
           // var decodedResponse = jsonDecode(responseData);
@@ -76,7 +76,7 @@ class InvoiceController extends GetxController {
               colorText: Colors.white);
         } else {
           // print('Failed: ${response.statusCode}');
-          Get.snackbar('Error', 'Uploud Gagal',
+          Get.snackbar('Error', 'Upload Gagal',
               backgroundColor: Colors.red, colorText: Colors.white);
         }
       } else {
