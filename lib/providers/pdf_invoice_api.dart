@@ -10,8 +10,14 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:pt_sage/providers/pdf_api.dart';
+import 'package:sp_util/sp_util.dart';
+import 'package:http/http.dart' as http;
 
+import '../apiVar.dart';
 import '../utils.dart';
+
+String? ttd = SpUtil.getString('ttd');
+String? fullName = SpUtil.getString('fullname');
 
 Future<pw.Font> _loadFont(String path) async {
   final fontData = await rootBundle.load(path);
@@ -21,6 +27,27 @@ Future<pw.Font> _loadFont(String path) async {
 Future<pw.MemoryImage> _loadImg(String path) async {
   final ByteData data = await rootBundle.load(path);
   final Uint8List bytes = data.buffer.asUint8List();
+  return pw.MemoryImage(bytes);
+}
+
+Future<pw.MemoryImage> _loadNetworkImg(String path) async {
+  Uint8List bytes;
+
+  // Check if path is a URL
+  if (path.startsWith('http')) {
+    // Fetch the image from the URL
+    final response = await http.get(Uri.parse(path));
+    if (response.statusCode == 200) {
+      bytes = response.bodyBytes;
+    } else {
+      throw Exception('Failed to load image from URL');
+    }
+  } else {
+    // Load the image as a local asset
+    final ByteData data = await rootBundle.load(path);
+    bytes = data.buffer.asUint8List();
+  }
+
   return pw.MemoryImage(bytes);
 }
 
@@ -36,7 +63,8 @@ class PdfInvoiceApi {
     final pdf = Document();
     final font = await _loadFont('assets/fonts/NotoSans-Regular.ttf');
     final img = await _loadImg('assets/Logo(1).png');
-    final ttdHilma = await _loadImg('assets/Hilma.jpeg');
+    // final ttdPembuat = await _loadImg('${MainUrl}/${ttd}');
+    final ttdPembuat = await _loadNetworkImg('${MainUrl}/${ttd}');
     final ttdNyoto = await _loadImg('assets/nyoto.jpeg');
 
     pdf.addPage(MultiPage(
@@ -51,7 +79,7 @@ class PdfInvoiceApi {
         SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildPaymentInfo(font),
         SizedBox(height: 1 * PdfPageFormat.cm),
-        InvoiceFooter(invoiceData, ttdHilma, ttdNyoto),
+        InvoiceFooter(invoiceData, ttdPembuat, ttdNyoto),
       ],
       footer: (context) => buildFooter(font),
     ));
@@ -68,7 +96,7 @@ class PdfInvoiceApi {
           pw.SizedBox(height: 5),
           pw.Image(img1, height: 60, width: 60),
           pw.SizedBox(height: 5),
-          pw.Text('HILMA FARDIDA'),
+          pw.Text(fullName!),
           pw.Container(height: 1, width: 100, color: PdfColors.black)
         ]),
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [

@@ -55,10 +55,10 @@ class PurchaseOrder {
       totalPrice: int.parse(json['total_price']),
       paymentTerm: json['payment_term'],
       dp: json['dp'],
-      dpAmount: int.parse(json['dp_amount']),
+      dpAmount: int.parse(json['dp_amount'] ?? "0"),
       status: json['status'],
       diskon: json['diskon'] != null ? double.tryParse(json['diskon']) : null,
-      diskonType: json['diskon_type'],
+      diskonType: json['diskon_type'] ?? "-",
       statusPengiriman: json['status_pengiriman'],
       tanggalPengiriman: json['tanggal_pengiriman'] != null
           ? DateTime.parse(json['tanggal_pengiriman'])

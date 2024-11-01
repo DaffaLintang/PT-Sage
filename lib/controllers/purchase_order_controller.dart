@@ -33,12 +33,20 @@ class PoController extends GetxController {
   Future<PurchaseOrderList?> getPoData() async {
     try {
       final uri = Uri.parse(PoAPI);
-      final response =
-          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
+        final jsonResponse = jsonDecode(response.body);
         return PurchaseOrderList.fromJson(jsonResponse);
       } else {
+        print('Error: Unexpected response format');
         throw Exception('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
