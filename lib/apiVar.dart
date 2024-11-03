@@ -1,18 +1,33 @@
-const String MainUrl = "https://224d-103-160-183-15.ngrok-free.app";
-const String LoginAPI = "${MainUrl}/api/login";
-const String PoAPI = "${MainUrl}/api/purchase-orders";
-const String PoCreateAPI = "${MainUrl}/api/purchase-orders/create";
-const String PoStoreAPI = "${MainUrl}/api/purchase-orders/store";
-const String KuisionerKepuasanPelangganApi =
-    "${MainUrl}/api/kepuasan-pelanggan";
-const String KuisionerPosisiBersaingApi = "${MainUrl}/api/posisi-bersaing";
-const String IndeksAspek = "${MainUrl}/api/indeks-aspek";
-const String PosisiBersaing = "${MainUrl}/api/posisi-bersaing";
-const String KepuasanPelanggan = "${MainUrl}/api/kepuasan-pelanggan";
-const String ApprovelPo = "${MainUrl}/api/approvel";
-const String Delivery = "${MainUrl}/api/delivery";
-const String InvoiceApi = "${MainUrl}/api/invoices";
-const String KeluhanApi = "${MainUrl}/api/keluhan-pelanggan";
-const String AdminKeluhanApi = "${MainUrl}/api/admin-keluhan-pelanggan";
-const String PaymentApi = "${MainUrl}/api/payment";
-const String MenuApi = "${MainUrl}/api/menus";
+import 'package:sp_util/sp_util.dart';
+
+final String MainUrl = "https://c51c-103-160-183-15.ngrok-free.app";
+
+final int? roles = SpUtil.getInt('roles');
+final String LoginAPI = "${MainUrl}/api/login";
+final String PoAPI = roles == 1
+    ? "${MainUrl}/api/purchase-orders"
+    : "${MainUrl}/api/purchase-order";
+final String PoCreateAPI = "${PoAPI}/create";
+final String PoStoreAPI = "${PoAPI}/store";
+final String KuisionerPosisiBersaingApi = roles == 1
+    ? "${MainUrl}/api/posisi-bersaing"
+    : "${MainUrl}/api/kuisioner-posisi-bersaing";
+final String IndeksAspek = "${MainUrl}/api/indeks-aspek";
+final String KepuasanPelanggan = roles == 1
+    ? "${MainUrl}/api/kepuasan-pelanggan"
+    : "${MainUrl}/api/kuisioner-kepuasan-pelanggan";
+final String ApprovelPo =
+    roles == 1 ? "${MainUrl}/api/approvel" : "${PoAPI}/approvel";
+final String Delivery =
+    roles == 1 ? "${MainUrl}/api/delivery" : "${MainUrl}/api/data-delivery";
+final String InvoiceApi =
+    roles == 1 ? "${MainUrl}/api/invoices" : "${MainUrl}/api/data-invoice";
+final String KeluhanApi = roles == 1
+    ? "${MainUrl}/api/keluhan-pelanggan"
+    : "${MainUrl}/api/data-keluhan-pelanggan";
+final String AdminKeluhanApi = roles == 1
+    ? "${MainUrl}/api/admin-keluhan-pelanggan"
+    : "${MainUrl}/api/data-penanganan-keluhan-pelanggan";
+final String PaymentApi =
+    roles == 1 ? "${MainUrl}/api/payment" : "${MainUrl}/api/data-payment";
+final String MenuApi = "${MainUrl}/api/menus";

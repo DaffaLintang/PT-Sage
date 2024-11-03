@@ -77,7 +77,6 @@ class _PurchasePageState extends State<PurchasePage> {
     fetchProduct();
     fetchCustomer();
     poController = Get.put(PoController());
-    fetchKemasan();
     try {
       poController = Get.find<PoController>();
     } catch (e) {
@@ -85,8 +84,8 @@ class _PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  Future<void> fetchKemasan() async {
-    var kemasanList = await poController.getKemasan();
+  Future<void> fetchKemasan(id) async {
+    var kemasanList = await poController.getKemasan(id);
     setState(() {
       itemsKemasanIds =
           kemasanList?.kemasan.map((kemasan) => kemasan.id).toList() ?? [];
@@ -469,6 +468,7 @@ class _PurchasePageState extends State<PurchasePage> {
                                       hitungHarga(productPrice!);
                                       // SpUtil.putInt('produk', productId!);
                                       // SpUtil.putString('harga', productPrice!);
+                                      fetchKemasan(productId);
                                     });
                                   },
                                 ),
@@ -562,107 +562,253 @@ class _PurchasePageState extends State<PurchasePage> {
                           ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Pilih Kemasan",
-                              style: TextStyle(
-                                  fontFamily: GoogleFonts.rubik().fontFamily)),
-                          GestureDetector(
-                              child: Icon(
-                                Icons.add_box_outlined,
-                                color: Color(0xffBF1619),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  poController.jummlahKemasan
-                                      .add(TextEditingController());
-                                  selectedKemasanValues.add(null);
-                                });
-                              })
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Obx(() {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: poController.jummlahKemasan.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, i) {
-                            if (i >= selectedKemasanValues.length) {
-                              return Container(); // Pastikan indeks berada dalam batas
-                            }
+                      selectedValueProduk == null
+                          ? SizedBox()
+                          : Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Pilih Kemasan",
+                                        style: TextStyle(
+                                            fontFamily: GoogleFonts.rubik()
+                                                .fontFamily)),
+                                    GestureDetector(
+                                        child: Icon(
+                                          Icons.add_box_outlined,
+                                          color: Color(0xffBF1619),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            poController.jummlahKemasan
+                                                .add(TextEditingController());
+                                            selectedKemasanValues.add(null);
+                                          });
+                                        })
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Obx(() {
+                                  return ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        poController.jummlahKemasan.length,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, i) {
+                                      if (i >= selectedKemasanValues.length) {
+                                        return Container(); // Pastikan indeks berada dalam batas
+                                      }
 
-                            int weight = 0;
-                            if (selectedKemasanValues[i] != null) {
-                              int? selectedId =
-                                  int.tryParse(selectedKemasanValues[i]!);
-                              int index = itemsKemasanIds.indexOf(selectedId!);
-                              if (index != -1) {
-                                weight = itemsKemasanWeights[index];
-                              }
-                            }
+                                      int weight = 0;
+                                      if (selectedKemasanValues[i] != null) {
+                                        int? selectedId = int.tryParse(
+                                            selectedKemasanValues[i]!);
+                                        int index = itemsKemasanIds
+                                            .indexOf(selectedId!);
+                                        if (index != -1) {
+                                          weight = itemsKemasanWeights[index];
+                                        }
+                                      }
 
-                            return Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 5),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            color:
-                                                Colors.black.withOpacity(0.05),
-                                          ),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton<String>(
-                                              isExpanded: true,
-                                              hint: Text(
-                                                'Pilih Kemasan',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Theme.of(context)
-                                                      .hintColor,
-                                                ),
-                                              ),
-                                              items: List.generate(
-                                                  itemsKemasanIds.length,
-                                                  (index) {
-                                                return DropdownMenuItem<String>(
-                                                  value: itemsKemasanIds[index]
-                                                      .toString(), // Simpan ID sebagai nilai
-                                                  child: Text(
-                                                    '${itemsKemasanWeights[index]} Kg', // Tampilkan weight
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
+                                      return Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 16,
+                                                            vertical: 5),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      color: Colors.black
+                                                          .withOpacity(0.05),
+                                                    ),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          String>(
+                                                        isExpanded: true,
+                                                        hint: Text(
+                                                          'Pilih Kemasan',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .hintColor,
+                                                          ),
+                                                        ),
+                                                        items: List.generate(
+                                                            itemsKemasanIds
+                                                                .length,
+                                                            (index) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: itemsKemasanIds[
+                                                                    index]
+                                                                .toString(), // Simpan ID sebagai nilai
+                                                            child: Text(
+                                                              '${itemsKemasanWeights[index]} Kg', // Tampilkan weight
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                          );
+                                                        }),
+                                                        value:
+                                                            selectedKemasanValues[
+                                                                i],
+                                                        onChanged:
+                                                            (String? value) {
+                                                          setState(() {
+                                                            selectedKemasanValues[
+                                                                i] = value;
+
+                                                            // Update weight setelah pemilihan baru
+                                                            int? selectedId =
+                                                                int.tryParse(
+                                                                    value!);
+                                                            int index =
+                                                                itemsKemasanIds
+                                                                    .indexOf(
+                                                                        selectedId!);
+                                                            if (index != -1) {
+                                                              weight =
+                                                                  itemsKemasanWeights[
+                                                                      index];
+                                                            }
+
+                                                            // Hitung dan update total
+                                                            totalValue = 0;
+                                                            for (int j = 0;
+                                                                j <
+                                                                    poController
+                                                                        .jummlahKemasan
+                                                                        .length;
+                                                                j++) {
+                                                              int jumlah = int.tryParse(
+                                                                      poController
+                                                                          .jummlahKemasan[
+                                                                              j]
+                                                                          .text) ??
+                                                                  0;
+                                                              int itemWeight =
+                                                                  0;
+                                                              if (selectedKemasanValues[
+                                                                      j] !=
+                                                                  null) {
+                                                                int?
+                                                                    selectedId =
+                                                                    int.tryParse(
+                                                                        selectedKemasanValues[
+                                                                            j]!);
+                                                                int index =
+                                                                    itemsKemasanIds
+                                                                        .indexOf(
+                                                                            selectedId!);
+                                                                if (index !=
+                                                                    -1) {
+                                                                  itemWeight =
+                                                                      itemsKemasanWeights[
+                                                                          index];
+                                                                }
+                                                              }
+                                                              totalValue +=
+                                                                  jumlah;
+                                                            }
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
                                                   ),
-                                                );
-                                              }),
-                                              value: selectedKemasanValues[i],
-                                              onChanged: (String? value) {
+                                                ),
+                                                SizedBox(width: 8),
+                                                i != 0
+                                                    ? IconButton(
+                                                        icon:
+                                                            Icon(Icons.delete),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            poController
+                                                                .jummlahKemasan[
+                                                                    i]
+                                                                .clear();
+                                                            poController
+                                                                .jummlahKemasan[
+                                                                    i]
+                                                                .dispose();
+                                                            poController
+                                                                .jummlahKemasan
+                                                                .removeAt(i);
+                                                            selectedKemasanValues
+                                                                .removeAt(i);
+
+                                                            // Recalculate total after deletion
+                                                            totalValue = 0;
+                                                            for (int j = 0;
+                                                                j <
+                                                                    poController
+                                                                        .jummlahKemasan
+                                                                        .length;
+                                                                j++) {
+                                                              int jumlah = int.tryParse(
+                                                                      poController
+                                                                          .jummlahKemasan[
+                                                                              j]
+                                                                          .text) ??
+                                                                  0;
+                                                              int itemWeight =
+                                                                  0;
+                                                              if (selectedKemasanValues[
+                                                                      j] !=
+                                                                  null) {
+                                                                int?
+                                                                    selectedId =
+                                                                    int.tryParse(
+                                                                        selectedKemasanValues[
+                                                                            j]!);
+                                                                int index =
+                                                                    itemsKemasanIds
+                                                                        .indexOf(
+                                                                            selectedId!);
+                                                                if (index !=
+                                                                    -1) {
+                                                                  itemWeight =
+                                                                      itemsKemasanWeights[
+                                                                          index];
+                                                                }
+                                                              }
+                                                              totalValue +=
+                                                                  jumlah;
+                                                            }
+                                                          });
+                                                        },
+                                                      )
+                                                    : SizedBox(),
+                                              ],
+                                            ),
+                                            SizedBox(height: 5),
+                                            TextField(
+                                              controller: poController
+                                                  .jummlahKemasan[i],
+                                              maxLines: null,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: InputDecoration(
+                                                  labelText: 'Jumlah kemasan'),
+                                              onChanged: (value) {
                                                 setState(() {
-                                                  selectedKemasanValues[i] =
-                                                      value;
-
-                                                  // Update weight setelah pemilihan baru
-                                                  int? selectedId =
-                                                      int.tryParse(value!);
-                                                  int index = itemsKemasanIds
-                                                      .indexOf(selectedId!);
-                                                  if (index != -1) {
-                                                    weight =
-                                                        itemsKemasanWeights[
-                                                            index];
-                                                  }
-
-                                                  // Hitung dan update total
+                                                  // Recalculate total when the text changes
                                                   totalValue = 0;
                                                   for (int j = 0;
                                                       j <
@@ -695,112 +841,19 @@ class _PurchasePageState extends State<PurchasePage> {
                                                       }
                                                     }
                                                     totalValue += jumlah;
-                                                    print(jumlah);
                                                   }
                                                 });
                                               },
                                             ),
-                                          ),
+                                            SizedBox(height: 20),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      i != 0
-                                          ? IconButton(
-                                              icon: Icon(Icons.delete),
-                                              onPressed: () {
-                                                setState(() {
-                                                  poController.jummlahKemasan[i]
-                                                      .clear();
-                                                  poController.jummlahKemasan[i]
-                                                      .dispose();
-                                                  poController.jummlahKemasan
-                                                      .removeAt(i);
-                                                  selectedKemasanValues
-                                                      .removeAt(i);
-
-                                                  // Recalculate total after deletion
-                                                  totalValue = 0;
-                                                  for (int j = 0;
-                                                      j <
-                                                          poController
-                                                              .jummlahKemasan
-                                                              .length;
-                                                      j++) {
-                                                    int jumlah = int.tryParse(
-                                                            poController
-                                                                .jummlahKemasan[
-                                                                    j]
-                                                                .text) ??
-                                                        0;
-                                                    int itemWeight = 0;
-                                                    if (selectedKemasanValues[
-                                                            j] !=
-                                                        null) {
-                                                      int? selectedId =
-                                                          int.tryParse(
-                                                              selectedKemasanValues[
-                                                                  j]!);
-                                                      int index =
-                                                          itemsKemasanIds
-                                                              .indexOf(
-                                                                  selectedId!);
-                                                      if (index != -1) {
-                                                        itemWeight =
-                                                            itemsKemasanWeights[
-                                                                index];
-                                                      }
-                                                    }
-                                                    totalValue += jumlah;
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          : SizedBox(),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                  TextField(
-                                    controller: poController.jummlahKemasan[i],
-                                    maxLines: null,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                        labelText: 'Jumlah kemasan'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        // Recalculate total when the text changes
-                                        totalValue = 0;
-                                        for (int j = 0;
-                                            j <
-                                                poController
-                                                    .jummlahKemasan.length;
-                                            j++) {
-                                          int jumlah = int.tryParse(poController
-                                                  .jummlahKemasan[j].text) ??
-                                              0;
-                                          int itemWeight = 0;
-                                          if (selectedKemasanValues[j] !=
-                                              null) {
-                                            int? selectedId = int.tryParse(
-                                                selectedKemasanValues[j]!);
-                                            int index = itemsKemasanIds
-                                                .indexOf(selectedId!);
-                                            if (index != -1) {
-                                              itemWeight =
-                                                  itemsKemasanWeights[index];
-                                            }
-                                          }
-                                          totalValue += jumlah;
-                                        }
-                                      });
+                                      );
                                     },
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      }),
+                                  );
+                                }),
+                              ],
+                            ),
                       SizedBox(
                         height: 20,
                       ),
@@ -1121,7 +1174,9 @@ class _PurchasePageState extends State<PurchasePage> {
                                     getRawValue(jumlahDiskon),
                                     _currentSelection,
                                     formattedValues,
-                                    totalValue);
+                                    totalValue,
+                                    int.parse(getRawValue(
+                                        PoController.hargaController.text)));
                                 if (PoStore) {
                                   if (poController.jummlahKemasan.isNotEmpty) {
                                     var firstElement =

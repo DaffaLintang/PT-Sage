@@ -30,25 +30,29 @@ Future<pw.MemoryImage> _loadImg(String path) async {
   return pw.MemoryImage(bytes);
 }
 
-Future<pw.MemoryImage> _loadNetworkImg(String path) async {
-  Uint8List bytes;
+Future<pw.MemoryImage?> _loadNetworkImg(String path) async {
+  try {
+    Uint8List bytes;
 
-  // Check if path is a URL
-  if (path.startsWith('http')) {
-    // Fetch the image from the URL
-    final response = await http.get(Uri.parse(path));
-    if (response.statusCode == 200) {
-      bytes = response.bodyBytes;
+    // Memeriksa apakah path adalah URL
+    if (path.startsWith('http')) {
+      // Mengambil gambar dari URL
+      final response = await http.get(Uri.parse(path));
+      if (response.statusCode == 200) {
+        bytes = response.bodyBytes;
+      } else {
+        throw Exception('Gagal memuat gambar dari URL');
+      }
     } else {
-      throw Exception('Failed to load image from URL');
+      // Memuat gambar sebagai aset lokal
+      final ByteData data = await rootBundle.load(path);
+      bytes = data.buffer.asUint8List();
     }
-  } else {
-    // Load the image as a local asset
-    final ByteData data = await rootBundle.load(path);
-    bytes = data.buffer.asUint8List();
+    return pw.MemoryImage(bytes);
+  } catch (e) {
+    print('Kesalahan saat memuat gambar: $e');
+    return null; // Mengembalikan null jika memuat gagal
   }
-
-  return pw.MemoryImage(bytes);
 }
 
 // final logo =
@@ -64,8 +68,10 @@ class PdfInvoiceApi {
     final font = await _loadFont('assets/fonts/NotoSans-Regular.ttf');
     final img = await _loadImg('assets/Logo(1).png');
     // final ttdPembuat = await _loadImg('${MainUrl}/${ttd}');
-    final ttdPembuat = await _loadNetworkImg('${MainUrl}/${ttd}');
-    final ttdNyoto = await _loadImg('assets/nyoto.jpeg');
+    final ttdPembuat = (ttd != null && ttd!.isNotEmpty)
+        ? await _loadNetworkImg('${MainUrl}/${ttd}')
+        : null;
+    final ttdDirektur = await _loadImg('assets/nyoto.jpeg');
 
     pdf.addPage(MultiPage(
       build: (context) => [
@@ -79,7 +85,7 @@ class PdfInvoiceApi {
         SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildPaymentInfo(font),
         SizedBox(height: 1 * PdfPageFormat.cm),
-        InvoiceFooter(invoiceData, ttdPembuat, ttdNyoto),
+        InvoiceFooter(invoiceData, ttdPembuat, ttdDirektur),
       ],
       footer: (context) => buildFooter(font),
     ));
@@ -89,12 +95,14 @@ class PdfInvoiceApi {
   }
 
   static Widget InvoiceFooter(
-          invoiceData, pw.MemoryImage img1, pw.MemoryImage img2) =>
+          invoiceData, pw.MemoryImage? img1, pw.MemoryImage img2) =>
       pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Dibuat oleh,'),
           pw.SizedBox(height: 5),
-          pw.Image(img1, height: 60, width: 60),
+          img1 != null
+              ? pw.Image(img1, height: 60, width: 60)
+              : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
           pw.Text(fullName!),
           pw.Container(height: 1, width: 100, color: PdfColors.black)

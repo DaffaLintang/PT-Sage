@@ -5,13 +5,17 @@ import 'package:pt_sage/controllers/invoice_controller.dart';
 import 'package:pt_sage/controllers/keluahanPelanggan_controller.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invoice_page.dart';
+import 'package:sp_util/sp_util.dart';
 import '../models/invoice.dart';
 import '../models/keluhanCustomer.dart';
 import 'detail_keluhan_page.dart';
 import 'home_page.dart';
 
 class ListKeluhanPage extends StatefulWidget {
-  const ListKeluhanPage({Key? key}) : super(key: key);
+  final List<int> menuIds;
+  ListKeluhanPage({Key? key})
+      : menuIds = SpUtil.getStringList('menus')?.map(int.parse).toList() ?? [],
+        super(key: key);
 
   @override
   State<ListKeluhanPage> createState() => _ListKeluhanPageState();
@@ -55,15 +59,17 @@ class _ListKeluhanPageState extends State<ListKeluhanPage> {
           backgroundColor: Colors.white,
           elevation: 5,
           actions: [
-            IconButton(
-                onPressed: () {
-                  Get.to(() => FeedBackPage());
-                  KeluhanPelangganController.keluhanController.text = '';
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Color(0xffBF1619),
-                )),
+            widget.menuIds.contains(28)
+                ? IconButton(
+                    onPressed: () {
+                      Get.to(() => FeedBackPage());
+                      KeluhanPelangganController.keluhanController.text = '';
+                    },
+                    icon: Icon(
+                      Icons.add,
+                      color: Color(0xffBF1619),
+                    ))
+                : SizedBox()
           ],
         ),
         body: keluhanData == null

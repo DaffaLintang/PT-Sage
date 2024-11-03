@@ -15,7 +15,7 @@ class KuisionerProvider extends GetConnect {
   }
 
   Future<http.Response> storeKp(var data, token) {
-    final uri = Uri.parse("${KuisionerPosisiBersaingApi}/store");
+    final uri = Uri.parse("${KepuasanPelanggan}/store");
     return http.post(uri,
         headers: {
           'Authorization': 'Bearer $token',

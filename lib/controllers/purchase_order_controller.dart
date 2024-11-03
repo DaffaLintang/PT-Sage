@@ -33,6 +33,7 @@ class PoController extends GetxController {
   Future<PurchaseOrderList?> getPoData() async {
     try {
       final uri = Uri.parse(PoAPI);
+      print(PoAPI);
       final response = await http.get(
         uri,
         headers: {
@@ -55,10 +56,10 @@ class PoController extends GetxController {
     }
   }
 
-  Future<KemasanList?> getKemasan() async {
+  Future<KemasanList?> getKemasan(id) async {
     try {
-      isLoading.value = true;
-      final uri = Uri.parse('$PoAPI/kemasan');
+      // isLoading.value = true;
+      final uri = Uri.parse('$PoAPI/kemasan/$id');
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
@@ -133,74 +134,6 @@ class PoController extends GetxController {
     return false; // JSON tidak valid jika terjadi kesalahan saat parsing
   }
 
-// Fungsi untuk memvalidasi JSON
-
-  // Future<DataWrapper?> getProductData() async {
-  //   try {
-  //     isLoading2.value = true;
-  //     final uri = Uri.parse(PoCreateAPI);
-
-  //     // Menambahkan timeout agar request tidak menunggu terlalu lama
-  //     final response = await http.get(
-  //       uri,
-  //       headers: {'Authorization': 'Bearer $token'},
-  //     ).timeout(const Duration(seconds: 15));
-
-  //     // Cek apakah status respons adalah 200 (sukses)
-  //     if (response.statusCode == 200) {
-  //       // Parsing JSON dengan memisahkan dari logika HTTP
-  //       return _parseJson(response.body);
-  //     } else {
-  //       // Jika status kode tidak 200, tampilkan error
-  //       isLoading2.value = false;
-  //       print('Failed to load data: ${response.statusCode}');
-  //       return null;
-  //     }
-  //   } on TimeoutException {
-  //     // Menangani error jika request timeout
-  //     isLoading2.value = false;
-  //     print('Request timed out');
-  //     return null;
-  //   } catch (e) {
-  //     // Tangani error lainnya, seperti masalah jaringan
-  //     isLoading2.value = false;
-  //     print('Error: ${e.toString()}');
-  //     return null;
-  //   }
-  // }
-
-  // String fixIncompleteJson(String jsonString) {
-  //   // Cek apakah JSON ditutup dengan benar
-  //   if (!jsonString.trim().endsWith(']')) {
-  //     print('JSON response is incomplete.');
-  //     return jsonString + ']'; // Tambahkan penutup array jika tidak ada
-  //   }
-  //   return jsonString;
-  // }
-
-  // DataWrapper? _parseJson(String responseBody) {
-  //   try {
-  //     // Memperbaiki JSON jika tidak lengkap
-  //     String fixedResponseBody = fixIncompleteJson(responseBody);
-
-  //     // Cek apakah panjang responseBody cukup
-  //     if (fixedResponseBody.isEmpty) {
-  //       print('Response body is empty');
-  //       return null;
-  //     }
-
-  //     // Parsing JSON yang telah diperbaiki
-  //     final Map<String, dynamic> jsonResponse = jsonDecode(fixedResponseBody);
-  //     isLoading2.value = false;
-  //     return DataWrapper.fromJson(jsonResponse);
-  //   } catch (e) {
-  //     // Tangani jika terjadi error parsing
-  //     isLoading2.value = false;
-  //     print('Error parsing JSON: $e\nResponse: $responseBody');
-  //     return null;
-  //   }
-  // }
-
   void hitungJumlahBulat(int? jumlah) {
     jumlahBulat = 0;
     if (jumlah! % 5 == 0) {
@@ -214,7 +147,7 @@ class PoController extends GetxController {
   }
 
   bool store(customers, products, totals, tempos, dps, jumlahDps, diskons,
-      diskonTypes, kemasans, quantity) {
+      diskonTypes, kemasans, quantity, hargas) {
     int? customer = customers;
     int? product = products;
     int? jumlah = int.tryParse(jumlahConroller.text);
@@ -225,6 +158,7 @@ class PoController extends GetxController {
     String? diskon = diskons;
     String? diskonType;
     int? quantitys = quantity;
+    int? harga = hargas;
     switch (diskonTypes) {
       case 0:
         diskonType = "persen";
@@ -257,6 +191,7 @@ class PoController extends GetxController {
         var data = {
           "customers": customer,
           "product": product,
+          "harga": harga,
           "jumlah": jumlah,
           "total_harga": totalHarga,
           "tempo": tempo,

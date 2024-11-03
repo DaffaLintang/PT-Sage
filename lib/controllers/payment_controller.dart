@@ -61,11 +61,10 @@ class PaymentController extends GetxController {
             Get.snackbar('Error', 'Pembayaran Melebihi Total Harga',
                 backgroundColor: Colors.red, colorText: Colors.white);
           } else {
-            Get.snackbar('Error', 'Pembelian Gagal',
+            print(value.statusCode);
+            Get.snackbar('Error', 'Pembayaran Gagal',
                 backgroundColor: Colors.red, colorText: Colors.white);
-            return false;
           }
-          print(data);
           EasyLoading.dismiss();
         });
       }

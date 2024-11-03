@@ -31,6 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
   String? username;
   int? roles;
   List<int>? menuIds;
+
   final MenuController controller = Get.put(MenuController());
 
   String getRole(int i) {
@@ -57,7 +58,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void checkIfIdExists() async {
     menuIds = await MenuController().getMenu();
-    setState(() {}); // Memperbarui tampilan setelah data menuIds diperoleh
+    setState(() {});
+    SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   @override
@@ -72,7 +74,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(menuIds);
     double screenWidth = MediaQuery.of(context).size.width;
     String roleText = roles != null ? getRole(roles!) : "Role not set";
     return Scaffold(body: Obx(() {
@@ -254,7 +255,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pengiriman Barang',
                                 imageAsset: 'assets/package_car.png'),
                           ],
-                          if (menuIds!.contains(29)) ...[
+                          if (menuIds!.contains(29) ||
+                              menuIds!.contains(28)) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListKeluhanPage());
@@ -274,7 +276,8 @@ class _DashboardPageState extends State<DashboardPage> {
                               menuIds!.contains(24)) ...[
                             Menu(
                                 onTap: () {
-                                  Get.to(() => KuisonerPage());
+                                  Get.to(() => KuisonerPage(),
+                                      arguments: menuIds);
                                 },
                                 title: 'Kuisioner',
                                 imageAsset: 'assets/Desk_alt.png'),

@@ -18,7 +18,7 @@ class KuisionerController extends GetxController {
   Future<KuisionerKpList?> getKepuasanPelangan() async {
     EasyLoading.show();
     try {
-      final uri = Uri.parse(KuisionerKepuasanPelangganApi);
+      final uri = Uri.parse(KepuasanPelanggan);
       final response = await http.get(
         uri,
         headers: {
@@ -63,7 +63,7 @@ class KuisionerController extends GetxController {
 
   Future<CompetitorResponse?> fetchCompetitors() async {
     EasyLoading.show();
-    final url = Uri.parse('$PosisiBersaing/getCompetitor');
+    final url = Uri.parse('$KuisionerPosisiBersaingApi/getCompetitor');
     try {
       final response =
           await http.get(url, headers: {'Authorization': 'Bearer $token'});
@@ -82,7 +82,8 @@ class KuisionerController extends GetxController {
   }
 
   Future<List<CustomersPb>> getPosisiBersaingCs() async {
-    final response = await http.get(Uri.parse("$PosisiBersaing/getCS"),
+    final response = await http.get(
+        Uri.parse("$KuisionerPosisiBersaingApi/getCS"),
         headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body)['customers'];
@@ -158,11 +159,11 @@ class KuisionerController extends GetxController {
     }
   }
 
-  void storeKp(customerId, jawaban) {
+  void storeKp(customerId, jawaban, length) {
     int? customer = customerId;
 
     try {
-      if (customer == null || jawaban.isEmpty || jawaban.length < 26) {
+      if (customer == null || jawaban.isEmpty || jawaban.length != length) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
@@ -171,9 +172,9 @@ class KuisionerController extends GetxController {
           "customer_id": customerId,
           "jawaban": jawaban,
         };
-        KuisionerProvider().storePb(data, token).then((value) {
+        KuisionerProvider().storeKp(data, token).then((value) {
           print(value.statusCode);
-          print(data);
+          print(value.body);
 
           if (value.statusCode == 200) {
             Get.snackbar('Success', 'Jawaban Berhasil Dismpan',

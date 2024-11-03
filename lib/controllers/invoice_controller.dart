@@ -75,7 +75,7 @@ class InvoiceController extends GetxController {
               backgroundColor: Color.fromARGB(255, 75, 212, 146),
               colorText: Colors.white);
         } else {
-          // print('Failed: ${response.statusCode}');
+          print('Failed: ${response.statusCode}');
           Get.snackbar('Error', 'Upload Gagal',
               backgroundColor: Colors.red, colorText: Colors.white);
         }
