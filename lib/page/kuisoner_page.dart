@@ -50,21 +50,23 @@ class _KuisonerPageState extends State<KuisonerPage> {
   final MenuController controller = Get.put(MenuController());
   // final menuIds = Get.arguments;
   List<String>? storedMenuIds = SpUtil.getStringList('menus');
+  int? roles = SpUtil.getInt('roles');
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.menuIds.contains(23) && widget.menuIds.contains(24)) {
+    if (widget.menuIds.contains(23) && widget.menuIds.contains(24) ||
+        roles == 1) {
       fetchKuisioner();
       loadCustomersKp();
       fetchKuisionerPb();
       loadCustomersPb();
       getCompetitors();
-    } else if (widget.menuIds.contains(23)) {
+    } else if (widget.menuIds.contains(23) || roles == 1) {
       fetchKuisioner();
       loadCustomersKp();
-    } else if (widget.menuIds.contains(24)) {
+    } else if (widget.menuIds.contains(24) || roles == 1) {
       fetchKuisionerPb();
       loadCustomersPb();
       getCompetitors();
@@ -428,6 +430,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
       {'id': 23, 'label': 'Kepuasan Pelanggan'},
       {'id': 24, 'label': 'Posisi Bersaing'},
     ];
+
     final filteredOptions = menuOptions
         .where((option) => widget.menuIds.contains(option['id']))
         .toList();
@@ -464,35 +467,74 @@ class _KuisonerPageState extends State<KuisonerPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(height: 20),
-                      ToggleButtons(
-                        children: filteredOptions.map((option) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text(
-                              option['label']!,
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
+                      roles == 1
+                          ? ToggleButtons(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Text(
+                                    'Kepuasan Pelanggan',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Text(
+                                    'Posisi Bersaing',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                              isSelected: List.generate(
+                                  2, (index) => index == _currentSelection),
+                              onPressed: (int newIndex) {
+                                setState(() {
+                                  _currentSelection = newIndex;
+                                });
+                              },
+                              selectedColor: Colors.white,
+                              fillColor: Color(0xffBF1619),
+                              borderColor: Color(0xffBF1619),
+                              borderRadius: BorderRadius.circular(12),
+                              borderWidth: 1,
+                            )
+                          : ToggleButtons(
+                              children: filteredOptions.map((option) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  child: Text(
+                                    option['label']!,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                );
+                              }).toList(),
+                              isSelected: isSelected,
+                              onPressed: (int newIndex) {
+                                setState(() {
+                                  _currentSelection = newIndex;
+                                });
+                              },
+                              selectedColor: Colors.white,
+                              fillColor: Color(0xffBF1619),
+                              borderColor: Color(0xffBF1619),
+                              borderRadius: BorderRadius.circular(12),
+                              borderWidth: 1,
                             ),
-                          );
-                        }).toList(),
-                        isSelected: isSelected,
-                        onPressed: (int newIndex) {
-                          setState(() {
-                            _currentSelection = newIndex;
-                            print(newIndex);
-                          });
-                        },
-                        selectedColor: Colors.white,
-                        fillColor: Color(0xffBF1619),
-                        borderColor: Color(0xffBF1619),
-                        borderRadius: BorderRadius.circular(12),
-                        borderWidth: 1,
-                      ),
                       SizedBox(
                         height: 20,
                       ),
-                      widget.menuIds.contains(23) && widget.menuIds.contains(24)
+                      widget.menuIds.contains(23) &&
+                                  widget.menuIds.contains(24) ||
+                              roles == 1
                           ? _currentSelection == 1
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -1172,7 +1214,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     ],
                                   ),
                                 )
-                          : widget.menuIds.contains(23)
+                          : widget.menuIds.contains(23) || roles == 1
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0,
@@ -1475,7 +1517,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     ],
                                   ),
                                 )
-                              : widget.menuIds.contains(24)
+                              : widget.menuIds.contains(24) || roles == 1
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0,

@@ -142,32 +142,36 @@ class _DashboardPageState extends State<DashboardPage> {
                               )
                             ]),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                              height: 110,
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Selamat Datang',
-                                    style: GoogleFonts.rubik(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    '$username',
-                                    style: GoogleFonts.rubik(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white),
-                                  ),
-                                ],
+                            Center(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                height: 110,
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Selamat Datang',
+                                      style: GoogleFonts.rubik(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      '$username',
+                                      style: GoogleFonts.rubik(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Container(
@@ -222,7 +226,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         mainAxisSpacing: 10,
                         childAspectRatio: 1.2,
                         children: [
-                          if (menuIds!.contains(14)) ...[
+                          if (menuIds!.contains(14) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListPOApprovel());
@@ -231,7 +235,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
                           if (menuIds!.contains(15) ||
-                              menuIds!.contains(16)) ...[
+                              menuIds!.contains(16) ||
+                              roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListKeluhanApproval());
@@ -239,7 +244,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Keluhan Approvel',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          if (menuIds!.contains(26)) ...[
+                          if (menuIds!.contains(26) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => listPoPage());
@@ -247,7 +252,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Purchase Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
                           ],
-                          if (menuIds!.contains(19)) ...[
+                          if (menuIds!.contains(19) ||
+                              menuIds!.contains(18) ||
+                              roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListPengiriman());
@@ -256,7 +263,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 imageAsset: 'assets/package_car.png'),
                           ],
                           if (menuIds!.contains(29) ||
-                              menuIds!.contains(28)) ...[
+                              menuIds!.contains(28) ||
+                              roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListKeluhanPage());
@@ -264,7 +272,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Keluhan Pelanggan',
                                 imageAsset: 'assets/Chat_alt_3.png'),
                           ],
-                          if (menuIds!.contains(21)) ...[
+                          if (menuIds!.contains(21) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListInvoicePage());
@@ -273,7 +281,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 imageAsset: 'assets/File_dock.png'),
                           ],
                           if (menuIds!.contains(23) ||
-                              menuIds!.contains(24)) ...[
+                              menuIds!.contains(24) ||
+                              roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => KuisonerPage(),
@@ -282,7 +291,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Kuisioner',
                                 imageAsset: 'assets/Desk_alt.png'),
                           ],
-                          if (menuIds!.contains(22)) ...[
+                          if (menuIds!.contains(22) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() =>
@@ -291,7 +300,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Penangganan Keluhan',
                                 imageAsset: 'assets/comment-question.png'),
                           ],
-                          if (menuIds!.contains(20)) ...[
+                          if (menuIds!.contains(20) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListPaymentPage());

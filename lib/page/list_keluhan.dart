@@ -23,11 +23,13 @@ class ListKeluhanPage extends StatefulWidget {
 
 class _ListKeluhanPageState extends State<ListKeluhanPage> {
   List<KeluhanData>? keluhanData;
+  int? roles;
 
   @override
   void initState() {
     super.initState();
     fetchKeluhan();
+    roles = SpUtil.getInt('roles');
   }
 
   void fetchKeluhan() async {
@@ -59,7 +61,7 @@ class _ListKeluhanPageState extends State<ListKeluhanPage> {
           backgroundColor: Colors.white,
           elevation: 5,
           actions: [
-            widget.menuIds.contains(28)
+            widget.menuIds.contains(28) || roles == 1
                 ? IconButton(
                     onPressed: () {
                       Get.to(() => FeedBackPage());

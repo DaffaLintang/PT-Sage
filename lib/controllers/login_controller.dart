@@ -22,6 +22,7 @@ class LoginController extends GetxController {
         EasyLoading.show();
         var data = {"username": username, "password": password};
         LoginProvider().auth(data).then((value) {
+          print(value.statusCode);
           if (value.statusCode == 200) {
             username = '';
             password = '';

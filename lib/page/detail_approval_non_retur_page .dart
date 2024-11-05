@@ -9,6 +9,7 @@ import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
 
 import '../models/keluhanCustomer.dart';
+import 'list_keluhan_approvel.dart';
 
 class DetailNonReturApprovalPage extends StatefulWidget {
   const DetailNonReturApprovalPage({Key? key}) : super(key: key);
@@ -57,7 +58,7 @@ class _DetailNonReturApprovalPage extends State<DetailNonReturApprovalPage> {
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
-                Get.offAll(() => ListKeluhanPage());
+                Get.offAll(() => ListKeluhanApproval());
               },
               icon: Image.asset('assets/LineRed.png')),
           backgroundColor: Colors.white,

@@ -10,6 +10,8 @@ class Invoice {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Delivery delivery;
+  final String? fullnamePemasaran;
+  final String? ttd;
 
   Invoice({
     required this.kodeInvoice,
@@ -19,6 +21,8 @@ class Invoice {
     required this.createdAt,
     required this.updatedAt,
     required this.delivery,
+    required this.fullnamePemasaran,
+    required this.ttd,
   });
 
   factory Invoice.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,8 @@ class Invoice {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       delivery: Delivery.fromJson(json['delivery']),
+      fullnamePemasaran: json['fullname'],
+      ttd: json['ttd'],
     );
   }
 

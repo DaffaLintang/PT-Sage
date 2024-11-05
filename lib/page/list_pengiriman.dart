@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/purchase_order.dart';
 import 'package:pt_sage/page/Pengiriman_barang.dart';
-import 'package:pt_sage/page/detail_po_approve_page.dart';
-import 'package:pt_sage/page/invoice_page.dart';
-import 'package:pt_sage/page/po_detail_page.dart';
+import 'package:sp_util/sp_util.dart';
 import '../controllers/pengiriman.dart';
 import '../controllers/purchase_order_controller.dart';
 import 'home_page.dart';
 
 class ListPengiriman extends StatefulWidget {
-  const ListPengiriman({Key? key}) : super(key: key);
+  final List<int> menuIds;
+  ListPengiriman({Key? key})
+      : menuIds = SpUtil.getStringList('menus')?.map(int.parse).toList() ?? [],
+        super(key: key);
 
   @override
   State<ListPengiriman> createState() => _ListPengirimanState();
@@ -62,34 +63,102 @@ class _ListPengirimanState extends State<ListPengiriman> {
                 itemCount: orders!.orders.length,
                 itemBuilder: (context, index) {
                   final order = orders!.orders[index];
-                  return order.status == 'approved' &&
-                              order.statusPengiriman == 'belum di kirim' ||
-                          order.statusPengiriman == 'setengah di kirim'
-                      ? ListTile(
-                          leading: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    colorFilter: ColorFilter.mode(
-                                      Colors.black,
-                                      BlendMode.srcATop,
-                                    ),
-                                    image:
-                                        AssetImage('assets/package_car.png'))),
-                          ),
-                          title: Text(order.kodePo),
-                          subtitle: Text(order.statusPengiriman!),
-                          trailing: Icon(Icons.arrow_forward),
-                          onTap: () {
-                            Get.to(() => PengirimanBarangPage(),
-                                arguments: order);
-                            PengirimanController.kendaraanController.text = '';
-                            PengirimanController.noPolController.text = '';
-                            PengirimanController.supirController.text = '';
-                          },
-                        )
-                      : SizedBox();
+                  return widget.menuIds.contains(18) &&
+                              widget.menuIds.contains(19) ||
+                          roles == 1
+                      ? order.status == 'approved' &&
+                                  order.statusPengiriman == 'belum di kirim' ||
+                              order.statusPengiriman == 'setengah di kirim'
+                          ? ListTile(
+                              leading: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.black,
+                                          BlendMode.srcATop,
+                                        ),
+                                        image: AssetImage(
+                                            'assets/package_car.png'))),
+                              ),
+                              title: Text(order.kodePo),
+                              subtitle: Text(order.statusPengiriman!),
+                              trailing: Icon(Icons.arrow_forward),
+                              onTap: () {
+                                Get.to(() => PengirimanBarangPage(),
+                                    arguments: order);
+                                PengirimanController.kendaraanController.text =
+                                    '';
+                                PengirimanController.noPolController.text = '';
+                                PengirimanController.supirController.text = '';
+                              },
+                            )
+                          : SizedBox()
+                      : widget.menuIds.contains(18) || roles == 1
+                          ? order.status == 'approved' &&
+                                  order.statusPengiriman == 'belum di kirim'
+                              ? ListTile(
+                                  leading: Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            colorFilter: ColorFilter.mode(
+                                              Colors.black,
+                                              BlendMode.srcATop,
+                                            ),
+                                            image: AssetImage(
+                                                'assets/package_car.png'))),
+                                  ),
+                                  title: Text(order.kodePo),
+                                  subtitle: Text(order.statusPengiriman!),
+                                  trailing: Icon(Icons.arrow_forward),
+                                  onTap: () {
+                                    Get.to(() => PengirimanBarangPage(),
+                                        arguments: order);
+                                    PengirimanController
+                                        .kendaraanController.text = '';
+                                    PengirimanController.noPolController.text =
+                                        '';
+                                    PengirimanController.supirController.text =
+                                        '';
+                                  },
+                                )
+                              : SizedBox()
+                          : widget.menuIds.contains(19) || roles == 1
+                              ? order.status == 'approved' &&
+                                      order.statusPengiriman ==
+                                          'setengah di kirim'
+                                  ? ListTile(
+                                      leading: Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                colorFilter: ColorFilter.mode(
+                                                  Colors.black,
+                                                  BlendMode.srcATop,
+                                                ),
+                                                image: AssetImage(
+                                                    'assets/package_car.png'))),
+                                      ),
+                                      title: Text(order.kodePo),
+                                      subtitle: Text(order.statusPengiriman!),
+                                      trailing: Icon(Icons.arrow_forward),
+                                      onTap: () {
+                                        Get.to(() => PengirimanBarangPage(),
+                                            arguments: order);
+                                        PengirimanController
+                                            .kendaraanController.text = '';
+                                        PengirimanController
+                                            .noPolController.text = '';
+                                        PengirimanController
+                                            .supirController.text = '';
+                                      },
+                                    )
+                                  : SizedBox()
+                              : SizedBox();
                 }));
   }
 }

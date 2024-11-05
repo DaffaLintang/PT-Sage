@@ -92,10 +92,15 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   }
 
   void printValue() {
-    for (int i = 0; i < order.kemasan.length; i++) {
-      var id = order.kemasan[i].kemasanId;
-      var quantity = pcsKirim[i];
-      kemasan.addAll({"${id}": quantity});
+    if (pcsKirim.isEmpty) {
+      Get.snackbar('Error', 'Silahkan Pilih Jumlah Lot',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    } else {
+      for (int i = 0; i < order.kemasan.length; i++) {
+        var id = order.kemasan[i].kemasanId;
+        var quantity = pcsKirim[i];
+        kemasan.addAll({"${id}": quantity});
+      }
     }
   }
 
@@ -451,18 +456,26 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                             child: ElevatedButton(
                               child: Text('Kirim'),
                               onPressed: () {
-                                printValue();
-                                PengirimanController().store(
-                                    order.kodePo,
-                                    order.customersId,
-                                    KendaraanId,
-                                    PengirimanController.supirController.text,
-                                    PengirimanController.noPolController.text,
-                                    PengirimanController.dateController.text,
-                                    selectedProductLotIds,
-                                    kemasan,
-                                    selectedJumlahProductLotIds,
-                                    order.quantity);
+                                if (pcsKirim.length == 1 &&
+                                    pcsKirim.contains(0)) {
+                                  Get.snackbar('Error', 'Jumlah Lot Kurang',
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white);
+                                } else {
+                                  printValue();
+                                  // if (pcsKirim[index] == 0)
+                                  PengirimanController().store(
+                                      order.kodePo,
+                                      order.customersId,
+                                      KendaraanId,
+                                      PengirimanController.supirController.text,
+                                      PengirimanController.noPolController.text,
+                                      PengirimanController.dateController.text,
+                                      selectedProductLotIds,
+                                      kemasan,
+                                      selectedJumlahProductLotIds,
+                                      order.quantity);
+                                }
                                 // print(customerId);
                                 // print(PengirimanController
                                 //     .kendaraanController.text);
@@ -473,7 +486,6 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 // print(PengirimanController.dateController.text);
                                 // print(selectedProductLotIds);
                                 // print(order.kemasan);
-                                print(kemasan);
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

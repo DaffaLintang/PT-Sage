@@ -69,6 +69,7 @@ class _InvoicePageState extends State<InvoicePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(invoice.fullnamePemasaran);
     return Scaffold(
       appBar: AppBar(
         title: Text(

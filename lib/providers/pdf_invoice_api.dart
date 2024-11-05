@@ -17,7 +17,7 @@ import '../apiVar.dart';
 import '../utils.dart';
 
 String? ttd = SpUtil.getString('ttd');
-String? fullName = SpUtil.getString('fullname');
+String? fullNamePembuat = SpUtil.getString('fullname');
 
 Future<pw.Font> _loadFont(String path) async {
   final fontData = await rootBundle.load(path);
@@ -71,7 +71,11 @@ class PdfInvoiceApi {
     final ttdPembuat = (ttd != null && ttd!.isNotEmpty)
         ? await _loadNetworkImg('${MainUrl}/${ttd}')
         : null;
-    final ttdDirektur = await _loadImg('assets/nyoto.jpeg');
+    final ttdDirektur = (invoiceData.ttd != null && invoiceData.ttd.isNotEmpty)
+        ? await _loadNetworkImg('${MainUrl}/${invoiceData.ttd}')
+        : null;
+    print(invoiceData.ttd);
+    print(invoiceData.fullnamePemasaran);
 
     pdf.addPage(MultiPage(
       build: (context) => [
@@ -95,7 +99,7 @@ class PdfInvoiceApi {
   }
 
   static Widget InvoiceFooter(
-          invoiceData, pw.MemoryImage? img1, pw.MemoryImage img2) =>
+          invoiceData, pw.MemoryImage? img1, pw.MemoryImage? img2) =>
       pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Dibuat oleh,'),
@@ -104,15 +108,17 @@ class PdfInvoiceApi {
               ? pw.Image(img1, height: 60, width: 60)
               : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
-          pw.Text(fullName!),
+          pw.Text(fullNamePembuat!),
           pw.Container(height: 1, width: 100, color: PdfColors.black)
         ]),
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Text('Diketahui oleh,'),
           pw.SizedBox(height: 5),
-          pw.Image(img2, height: 200, width: 100),
+          img2 != null
+              ? pw.Image(img2, height: 200, width: 100)
+              : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
-          pw.Text('NYOTO SUTRISNO'),
+          pw.Text(invoiceData.fullnamePemasaran),
           pw.Container(height: 1, width: 100, color: PdfColors.black),
           pw.Text('Manajer Pemasaran'),
         ]),

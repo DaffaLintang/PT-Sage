@@ -76,7 +76,7 @@ class _ListInvoicePageState extends State<ListInvoicePage> {
                       ),
                     ),
                   ),
-                  title: Text(invoice.kodeInvoice),
+                  title: Text("${invoice.kodeInvoice}"),
                   subtitle: Text(invoice.kodePengiriman),
                   trailing: Icon(Icons.arrow_forward),
                   onTap: () {

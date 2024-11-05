@@ -19,6 +19,7 @@ class InvoiceController extends GetxController {
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
 
       if (response.statusCode == 200) {
+        print(response.body);
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         List<dynamic> invoicesJson = jsonResponse['data'];
         // print(invoicesJson);
