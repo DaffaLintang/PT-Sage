@@ -6,6 +6,8 @@ import 'package:pt_sage/page/login_page.dart';
 import 'package:sp_util/sp_util.dart';
 import 'dart:io' as io;
 
+import '../apiVar.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -17,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? username;
   String? email;
   int? roles;
+  String? avatar;
 
   String getRole(int i) {
     switch (i) {
@@ -47,21 +50,21 @@ class _ProfilePageState extends State<ProfilePage> {
       username = SpUtil.getString('username') ?? "Username";
       email = SpUtil.getString('email') ?? "email";
       roles = SpUtil.getInt('roles');
+      avatar = SpUtil.getString('avatar');
     });
   }
 
   io.File? _image;
-  final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage(ImageSource source) async {
-    final XFile? pickedFile = await _picker.pickImage(source: source);
+  // Future<void> _pickImage(ImageSource source) async {
+  //   final XFile? pickedFile = await _picker.pickImage(source: source);
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = io.File(pickedFile.path);
-      });
-    }
-  }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = io.File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,35 +86,49 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         children: [
           GestureDetector(
-            onTap: () => _pickImage(ImageSource.gallery),
             child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Center(
-                child: _image == null
-                    ? Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(150),
-                            border: Border.all(color: Color(0xff9E0507))),
-                        padding: EdgeInsets.all(8),
-                        width: 70,
-                        height: 70,
-                        child: Center(
-                            child: Text(
-                          "No Profile",
-                          textAlign: TextAlign.center,
-                        )),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(150),
-                            border: Border.all(color: Color(0xff6B8A7A))),
-                        padding: EdgeInsets.all(8),
-                        width: 70,
-                        height: 70,
-                        child: Image.file(_image!),
-                      ),
-              ),
-            ),
+                padding: const EdgeInsets.only(top: 20),
+                child: Center(
+                    child: avatar!.isNotEmpty
+                        ? Image.network(
+                            Uri.encodeFull('${MainUrl}/${avatar}'),
+                            width: 70,
+                            height: 70,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                );
+                              }
+                            },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Text('Gagal memuat gambar');
+                            },
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                border: Border.all(color: Color(0xff9E0507))),
+                            padding: EdgeInsets.all(8),
+                            width: 70,
+                            height: 70,
+                            child: Center(
+                                child: Text(
+                              "No Image",
+                              textAlign: TextAlign.center,
+                            )),
+                          ))),
           ),
           Center(
             child: Container(

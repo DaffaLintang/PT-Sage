@@ -33,6 +33,7 @@ class LoginController extends GetxController {
             SpUtil.putString('username', data["username"]);
             SpUtil.putString('email', data["email"]);
             SpUtil.putString('ttd', data["ttd"] ?? '');
+            SpUtil.putString('avatar', data["avatar"] ?? "");
             SpUtil.putString('fullname', data["fullname"]);
             SpUtil.putInt('roles', data["levels_id"]);
             Get.offAll(() => HomePage());

@@ -69,6 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
       username = SpUtil.getString('username') ?? "Username";
       roles = SpUtil.getInt('roles');
       checkIfIdExists();
+      print("vatar : ${SpUtil.getString('avatar')}");
     });
   }
 

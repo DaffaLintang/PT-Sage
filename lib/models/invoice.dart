@@ -34,8 +34,8 @@ class Invoice {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       delivery: Delivery.fromJson(json['delivery']),
-      fullnamePemasaran: json['fullname'],
-      ttd: json['ttd'],
+      fullnamePemasaran: json['po_user_fullname'],
+      ttd: json['po_user_ttd'],
     );
   }
 

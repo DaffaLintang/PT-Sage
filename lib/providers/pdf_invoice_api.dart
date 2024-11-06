@@ -105,7 +105,7 @@ class PdfInvoiceApi {
           pw.Text('Dibuat oleh,'),
           pw.SizedBox(height: 5),
           img1 != null
-              ? pw.Image(img1, height: 60, width: 60)
+              ? pw.Image(img1, height: 100, width: 100)
               : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
           pw.Text(fullNamePembuat!),
@@ -115,7 +115,7 @@ class PdfInvoiceApi {
           pw.Text('Diketahui oleh,'),
           pw.SizedBox(height: 5),
           img2 != null
-              ? pw.Image(img2, height: 200, width: 100)
+              ? pw.Image(img2, height: 100, width: 100)
               : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
           pw.Text(invoiceData.fullnamePemasaran),
