@@ -31,3 +31,5 @@ final String AdminKeluhanApi = roles == 1
 final String PaymentApi =
     roles == 1 ? "${MainUrl}/api/payment" : "${MainUrl}/api/data-payment";
 final String MenuApi = "${MainUrl}/api/menus";
+final String MenuApi = "${MainUrl}/api/menus";
+final String MenuApi = "${MainUrl}/api/menus";
