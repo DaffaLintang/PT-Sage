@@ -181,7 +181,7 @@ class KeluhanData {
       typeNonRetur: json['type_non_retur'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-      note: json['note'],
+      note: json['note'] ?? "",
       customer:
           json['customer'] != null ? Customer.fromJson(json['customer']) : null,
       invoice: json['invoice'] != null

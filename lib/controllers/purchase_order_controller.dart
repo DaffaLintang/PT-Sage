@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/models/product.dart';
 import 'package:pt_sage/models/purchase_order.dart';
+import 'package:pt_sage/models/transaksiPo.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/dashboard_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
@@ -33,7 +34,6 @@ class PoController extends GetxController {
   Future<PurchaseOrderList?> getPoData() async {
     try {
       final uri = Uri.parse(PoAPI);
-      print(PoAPI);
       final response = await http.get(
         uri,
         headers: {
@@ -46,6 +46,61 @@ class PoController extends GetxController {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         return PurchaseOrderList.fromJson(jsonResponse);
+      } else {
+        print('Error: Unexpected response format');
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<List<TransaksiPurchaseOrder>?> getTransaksiPoData() async {
+    try {
+      final uri =
+          Uri.parse(roles == 1 ? "$TransaksiPo/approvePO" : TransaksiPo);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse
+            .map((data) => TransaksiPurchaseOrder.fromJson(data))
+            .toList();
+      } else {
+        print('Error: Unexpected response format');
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return null;
+    }
+  }
+
+  Future<List<TransaksiPurchaseOrder>?> getKendaraanPo(id) async {
+    try {
+      final uri = Uri.parse("$TransaksiPo/no-polisi/$id");
+      final response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse
+            .map((data) => TransaksiPurchaseOrder.fromJson(data))
+            .toList();
       } else {
         print('Error: Unexpected response format');
         throw Exception('Failed to load data: ${response.statusCode}');
@@ -202,6 +257,7 @@ class PoController extends GetxController {
           "kemasan": kemasans,
         };
         PoProvider().store(token, data).then((value) {
+          print(value.body);
           if (value.statusCode == 201) {
             diskonController.text = '';
             jDpController.text = '';
@@ -211,6 +267,7 @@ class PoController extends GetxController {
                 colorText: Colors.white);
             jumlahBulat = 0;
           } else {
+            EasyLoading.dismiss();
             Get.snackbar('Error', 'Pembelian Gagal',
                 backgroundColor: Colors.red, colorText: Colors.white);
             return false;

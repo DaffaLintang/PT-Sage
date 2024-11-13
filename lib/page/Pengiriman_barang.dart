@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:pt_sage/controllers/pengiriman.dart';
 import 'package:pt_sage/controllers/purchase_order_controller.dart';
 import 'package:pt_sage/models/lot.dart';
+import 'package:pt_sage/models/transaksiPoKendaraan.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
@@ -24,11 +25,13 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   final List<String> items = [];
   final Map<String, int> customertMap = {};
   final Map<String, int> kendaraanMap = {};
-  final Map<String, String> noPolMap = {};
+  final Map<String, int> noPolMap = {};
   String? selectedValue;
   String? selectedValue1;
+  String? selectedValue2;
   int? customerId;
   int? KendaraanId;
+  late final rawValue;
   final order = Get.arguments;
   List<ProductLot>? productLots;
   List<bool>? isChecked;
@@ -38,35 +41,76 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   final List<String> itemsKendaraan = [];
   List<int> pcsKirim = [];
   bool isInitialized = false;
+  int? productId;
+  DateTime? pickedDate;
+  List<int> noPolIds = [];
+  List<String> noPol = [];
 
   @override
   @override
   void initState() {
     super.initState();
-
+    productId = order.productId;
     // Run initialization only if it's not already done
     if (!isInitialized) {
       // fetchCustomer();
-      fetchProductLot();
-      fetchKendaraan();
-      PengirimanController().getKendaraan();
-      PengirimanController.customerController.text = order.customersName;
+      if (order.status == "setengah di kirim") {
+        fetchKendaraan();
+        PengirimanController().getKendaraan();
+        fetchProductLot();
+      } else {
+        TransasiPofetchKendaraan();
+        fetchTransaksiProductLot();
+      }
+      PengirimanController.customerController.text =
+          order.customer.customersName;
+
+      PengirimanController.dateController
+        ..text =
+            DateFormat('yyyy-MM-dd').format(DateTime.parse(order.deliveryDate));
 
       // Set the flag to true after initialization
       isInitialized = true;
     }
   }
 
-  // void fetchCustomer() async {
-  //   final poController = PoController();
-  //   DataWrapper? dataWrapper = await poController.getProductData();
-  //   setState(() {
-  //     dataWrapper?.customers.forEach((customer) {
-  //       items.add(customer.customersName);
-  //       customertMap[customer.customersName] = customer.id;
-  //     });
-  //   });
-  // }
+  Future<void> fetchNoPol(id) async {
+    try {
+      var nopolData = await PengirimanController().TransaksiPogetNoPol(id);
+
+      setState(() {
+        noPolIds = nopolData?.map((nopols) => nopols.id).toList() ?? [];
+        noPol = nopolData?.map((nopols) => nopols.noPolisi).toList() ?? [];
+
+        // Memetakan nomor polisi (noPol) ke ID (noPolIds) menggunakan Map<String, List<int>>
+        for (int i = 0; i < noPol.length; i++) {
+          noPolMap[noPol[i]] = noPolIds[i];
+        }
+      });
+
+      // Debugging output untuk memeriksa hasil
+      print('noPolIds: $noPolIds');
+      print('noPol: $noPol');
+      print('noPolMap: $noPolMap');
+    } catch (e) {
+      print('Error fetching NoPol data: $e');
+    }
+  }
+
+  Future<void> selectedDate() async {
+    pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1945),
+      lastDate: DateTime(2900),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        PengirimanController.dateController.text =
+            DateFormat('yyyy-MM-dd').format(pickedDate!);
+      });
+    }
+  }
 
   void fetchKendaraan() async {
     List<Kendaraan>? kendaraanList =
@@ -76,14 +120,37 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
         itemsKendaraan.add(kendaraan.jenisKendaraan);
         print(kendaraan.jenisKendaraan);
         kendaraanMap[kendaraan.jenisKendaraan] = kendaraan.id;
-        noPolMap[kendaraan.jenisKendaraan] = kendaraan.noPolisi;
+        // noPolMap[kendaraan.jenisKendaraan] = kendaraan.noPolisi;
+      });
+    });
+  }
+
+  void TransasiPofetchKendaraan() async {
+    List<TransaksiPoKendaraan>? kendaraanList =
+        await PengirimanController().TransaksiPogetKendaraan();
+    setState(() {
+      kendaraanList?.forEach((kendaraan) {
+        itemsKendaraan.add(kendaraan.jenisKendaraan);
+        print(kendaraan.jenisKendaraan);
+        kendaraanMap[kendaraan.jenisKendaraan] = kendaraan.id;
+        // noPolMap[kendaraan.jenisKendaraan] = kendaraan.noPolisi;
       });
     });
   }
 
   void fetchProductLot() async {
     List<ProductLot>? productLotList =
-        await PengirimanController().getProductLotData();
+        await PengirimanController().getProductLotData(productId);
+
+    setState(() {
+      productLots = productLotList;
+      isChecked = List<bool>.filled(productLots!.length, false);
+    });
+  }
+
+  void fetchTransaksiProductLot() async {
+    List<ProductLot>? productLotList =
+        await PengirimanController().getTransaksiPoProductLotData(productId);
 
     setState(() {
       productLots = productLotList;
@@ -96,8 +163,8 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
       Get.snackbar('Error', 'Silahkan Pilih Jumlah Lot',
           backgroundColor: Colors.red, colorText: Colors.white);
     } else {
-      for (int i = 0; i < order.kemasan.length; i++) {
-        var id = order.kemasan[i].kemasanId;
+      for (int i = 0; i < order.detailPos.length; i++) {
+        var id = order.detailPos[i].kemasan.id;
         var quantity = pcsKirim[i];
         kemasan.addAll({"${id}": quantity});
       }
@@ -218,8 +285,10 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                               setState(() {
                                 selectedValue1 = value;
                                 KendaraanId = kendaraanMap[selectedValue1!];
-                                PengirimanController.noPolController.text =
-                                    noPolMap[selectedValue1] ?? '';
+                                // PengirimanController.noPolController.text =
+                                //     noPolMap[selectedValue1] ?? '';
+
+                                fetchNoPol(KendaraanId);
                               });
                             },
                           ),
@@ -262,6 +331,69 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                 //     ],
                 //   ),
                 // ),
+
+                selectedValue1 == null
+                    ? SizedBox()
+                    : Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Pilih Nomor Polisi",
+                                style: TextStyle(
+                                    fontFamily:
+                                        GoogleFonts.rubik().fontFamily)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 5),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.black.withOpacity(0.05)),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                    isExpanded: true,
+                                    hint: Text(
+                                      'Pilih Kendaraan',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor,
+                                      ),
+                                    ),
+                                    items: noPol.map((String no) {
+                                      return DropdownMenuItem<String>(
+                                        value: no,
+                                        child: Text(
+                                          no,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    value: selectedValue2,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectedValue2 = value;
+                                        print(
+                                            'selectedValue2: $selectedValue2'); // Cek nilai selectedValue2
+
+                                        // Cek apakah selectedValue2 ada di noPolMap
+                                        rawValue =
+                                            noPolMap[selectedValue2!] ?? '';
+                                        print(rawValue);
+                                      });
+                                    },
+                                  ),
+                                )),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -292,37 +424,37 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Nomor Polisi",
-                          style: TextStyle(
-                              fontFamily: GoogleFonts.rubik().fontFamily)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.black.withOpacity(0.05)),
-                        child: TextField(
-                          enabled: false,
-                          controller: PengirimanController.noPolController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Nomor Polisi',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text("Nomor Polisi",
+                //           style: TextStyle(
+                //               fontFamily: GoogleFonts.rubik().fontFamily)),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Container(
+                //         padding:
+                //             EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                //         decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(12),
+                //             color: Colors.black.withOpacity(0.05)),
+                //         child: TextField(
+                //           enabled: false,
+                //           controller: PengirimanController.noPolController,
+                //           decoration: InputDecoration(
+                //             border: InputBorder.none,
+                //             hintText: 'Nomor Polisi',
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         height: 20,
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,15 +472,17 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                             borderRadius: BorderRadius.circular(12),
                             color: Colors.black.withOpacity(0.05)),
                         child: TextField(
-                          controller: PengirimanController.dateController
-                            ..text = DateFormat('yyyy-MM-dd')
-                                .format(order.tanggalPengiriman),
-                          enabled: false,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Tanggal',
-                          ),
-                        ),
+                            controller: PengirimanController.dateController,
+                            // enabled: false,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Tanggal',
+                            ),
+                            onTap: () {
+                              selectedDate();
+                            },
+                            showCursor: true,
+                            readOnly: true),
                       ),
                       SizedBox(
                         height: 20,
@@ -373,7 +507,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                               backgroundColor: Color(0xff9E0507),
                               child: Text(productLot.id.toString()),
                             ),
-                            title: Text('Lot Number: ${productLot.lotNumber}'),
+                            title: Text(' ${productLot.lotNumber}'),
                             subtitle: Text('Quantity: ${productLot.quantity}'),
                             trailing: Checkbox(
                               value: isChecked![index],
@@ -386,32 +520,38 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                     selectedJumlahProductLotIds
                                         .add(int.parse(productLot.quantity));
                                     for (int z = 0;
-                                        z < order.kemasan.length;
+                                        z < order.detailPos.length;
                                         z++) {
                                       int jlmPcs =
                                           ((int.parse(productLot.quantity) /
-                                                      order.kemasan.length) /
-                                                  order.kemasan[z].berat)
+                                                      order.detailPos.length) /
+                                                  order.detailPos[z].kemasan
+                                                      .weight)
                                               .toInt();
-                                      if (jlmPcs * order.kemasan[z].berat <=
-                                          order.kemasan[z].quantity) {
+                                      if (jlmPcs *
+                                              order.detailPos[z].kemasan
+                                                  .weight <=
+                                          order.detailPos[z].jumlahKgKemasan) {
                                         pcsKirim.add(
                                             ((int.parse(productLot.quantity) /
-                                                        order.kemasan.length) /
-                                                    order.kemasan[z].berat)
+                                                        order
+                                                            .detailPos.length) /
+                                                    order.detailPos[z].kemasan
+                                                        .weight)
                                                 .toInt());
                                       } else {
-                                        num totalBerat =
-                                            jlmPcs * order.kemasan[z].berat;
+                                        num totalBerat = jlmPcs *
+                                            order.detailPos[z].kemasan.weight;
                                         num selisih = totalBerat -
-                                            order.kemasan[z].quantity;
+                                            order.detailPos[z].jumlahKgKemasan;
                                         num jumlahAsli = totalBerat - selisih;
-                                        print(
-                                            jumlahAsli * order.kemasan.length);
+                                        print(jumlahAsli *
+                                            order.detailPos.length);
                                         pcsKirim.add(((jumlahAsli *
-                                                    order.kemasan.length /
-                                                    order.kemasan.length) /
-                                                order.kemasan[z].berat)
+                                                    order.detailPos.length /
+                                                    order.detailPos.length) /
+                                                order.detailPos[z].kemasan
+                                                    .weight)
                                             .toInt());
                                       }
                                     }
@@ -433,15 +573,15 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: order.kemasan.length,
+                  itemCount: order.detailPos.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                        title:
-                            Text('Kemasan: ${order.kemasan[index].berat} Kg'),
+                        title: Text(
+                            'Kemasan: ${order.detailPos[index].kemasan.weight} Kg'),
                         subtitle: Text(
                             'Pcs: ${pcsKirim.length > 0 ? pcsKirim[index] : 0}'),
                         trailing: Text(
-                            "Jumlah: ${order.kemasan[index].quantity} Kg"));
+                            "Jumlah: ${order.detailPos[index].jumlahKgKemasan} Kg"));
                   },
                 ),
                 Container(
@@ -464,28 +604,40 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                 } else {
                                   printValue();
                                   // if (pcsKirim[index] == 0)
-                                  PengirimanController().store(
-                                      order.kodePo,
-                                      order.customersId,
-                                      KendaraanId,
-                                      PengirimanController.supirController.text,
-                                      PengirimanController.noPolController.text,
-                                      PengirimanController.dateController.text,
-                                      selectedProductLotIds,
-                                      kemasan,
-                                      selectedJumlahProductLotIds,
-                                      order.quantity);
+                                  if (order.status == "setengah di kirim") {
+                                    // PengirimanController().store(
+                                    //     NopolIds,
+                                    //     order.kodePo,
+                                    //     order.customersId,
+                                    //     KendaraanId,
+                                    //     PengirimanController
+                                    //         .supirController.text,
+                                    //     PengirimanController
+                                    //         .noPolController.text,
+                                    //     PengirimanController
+                                    //         .dateController.text,
+                                    //     selectedProductLotIds,
+                                    //     kemasan,
+                                    //     selectedJumlahProductLotIds,
+                                    //     order.quantity);
+                                  } else {
+                                    PengirimanController().TransaksiPostore(
+                                        rawValue,
+                                        order.kodePo,
+                                        order.customersId,
+                                        KendaraanId,
+                                        PengirimanController
+                                            .supirController.text,
+                                        PengirimanController
+                                            .noPolController.text,
+                                        PengirimanController
+                                            .dateController.text,
+                                        selectedProductLotIds,
+                                        kemasan,
+                                        selectedJumlahProductLotIds,
+                                        order.quantity);
+                                  }
                                 }
-                                // print(customerId);
-                                // print(PengirimanController
-                                //     .kendaraanController.text);
-                                // print(
-                                //     PengirimanController.supirController.text);
-                                // print(
-                                //     PengirimanController.noPolController.text);
-                                // print(PengirimanController.dateController.text);
-                                // print(selectedProductLotIds);
-                                // print(order.kemasan);
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

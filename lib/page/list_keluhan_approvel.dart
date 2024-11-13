@@ -38,13 +38,13 @@ class _ListKeluhanApprovalState extends State<ListKeluhanApproval> {
       fetchNonReturKeluhan();
       fetchReturKeluhan();
       fetchNonReturKeluhan();
-    } else if (widget.menuIds.contains(15) && widget.menuIds.contains(16) ||
+    } else if (widget.menuIds.contains(16) && widget.menuIds.contains(17) ||
         roles == 1) {
       fetchReturKeluhan();
       fetchNonReturKeluhan();
-    } else if (widget.menuIds.contains(15) || roles == 1) {
-      fetchReturKeluhan();
     } else if (widget.menuIds.contains(16) || roles == 1) {
+      fetchReturKeluhan();
+    } else if (widget.menuIds.contains(17) || roles == 1) {
       fetchNonReturKeluhan();
     }
   }
@@ -68,8 +68,8 @@ class _ListKeluhanApprovalState extends State<ListKeluhanApproval> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> menuOptions = [
-      {'id': 15, 'label': 'Retur'},
-      {'id': 16, 'label': 'Non-Retur'},
+      {'id': 16, 'label': 'Retur'},
+      {'id': 17, 'label': 'Non-Retur'},
     ];
     final filteredOptions = menuOptions
         .where((option) => widget.menuIds.contains(option['id']))
@@ -242,7 +242,7 @@ class _ListKeluhanApprovalState extends State<ListKeluhanApproval> {
                                     });
                               }
                             })
-                      : widget.menuIds.contains(15) || roles == 1
+                      : widget.menuIds.contains(16) || roles == 1
                           ? Obx(() {
                               if (controller.isLoading.value || retur == null) {
                                 return Center(
@@ -280,7 +280,7 @@ class _ListKeluhanApprovalState extends State<ListKeluhanApproval> {
                                     });
                               }
                             })
-                          : widget.menuIds.contains(16) || roles == 1
+                          : widget.menuIds.contains(17) || roles == 1
                               ? Obx(() {
                                   if (controller.isLoading.value ||
                                       nonRetur == null) {

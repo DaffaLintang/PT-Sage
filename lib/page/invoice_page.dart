@@ -69,7 +69,6 @@ class _InvoicePageState extends State<InvoicePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(invoice.fullnamePemasaran);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -562,19 +561,19 @@ class _InvoicePageState extends State<InvoicePage> {
                             SizedBox(
                               height: 8,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Nomor Polisi",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800)),
-                                Text(invoice.delivery.kendaraan.NoPolisi,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w800)),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text("Nomor Polisi",
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //     Text(invoice.delivery.kendaraan.NoPolisi,
+                            //         style: TextStyle(
+                            //             fontSize: 12,
+                            //             fontWeight: FontWeight.w800)),
+                            //   ],
+                            // ),
                             SizedBox(
                               height: 8,
                             ),
@@ -647,417 +646,417 @@ class _InvoicePageState extends State<InvoicePage> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Color(0xff9E0507)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 7,
-                        offset: Offset(0, 5), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bukti Pengiriman",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff000000)),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          invoice.buktiKirim != null
-                              ? Image.network(
-                                  Uri.encodeFull(
-                                      '${MainUrl}/${invoice.buktiKirim}'),
-                                  width: 70,
-                                  height: 70,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace) {
-                                    return Text('Gagal memuat gambar');
-                                  },
-                                )
-                              : _image1 == null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Color(0xff9E0507))),
-                                      padding: EdgeInsets.all(8),
-                                      width: 70,
-                                      height: 70,
-                                      child: Center(
-                                          child: Text(
-                                        "No Image",
-                                        textAlign: TextAlign.center,
-                                      )),
-                                    )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Color(0xff6B8A7A))),
-                                      padding: EdgeInsets.all(8),
-                                      width: 70,
-                                      height: 70,
-                                      child: Image.file(_image1!),
-                                    ),
-                          invoice.buktiKirim != null
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    primary: Color(0xff9E0507),
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Image.network(
-                                                Uri.encodeFull(
-                                                    '${MainUrl}/${invoice.buktiKirim}'),
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 10),
-                                      child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 1),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                "Lihat",
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                              Text(
-                                                "Bukti",
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                            ],
-                                          ))))
-                              : Row(
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          onPrimary: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          primary: Color(0xff9E0507),
-                                        ),
-                                        onPressed: () =>
-                                            _pickImage1(ImageSource.gallery),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 10),
-                                            child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5, vertical: 1),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      "Choose",
-                                                      style: TextStyle(
-                                                          fontSize: 12),
-                                                    ),
-                                                    Text(
-                                                      "Photo",
-                                                      style: TextStyle(
-                                                          fontSize: 12),
-                                                    ),
-                                                  ],
-                                                )))),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          onPrimary: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          primary: Color(0xff9E0507),
-                                        ),
-                                        onPressed: () =>
-                                            _pickImage1(ImageSource.camera),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "Take",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                                Text(
-                                                  "Photo",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ],
-                                            ))),
-                                  ],
-                                ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Color(0xff9E0507)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 7,
-                        offset: Offset(0, 5), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Bukti Pembayaran",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff000000)),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          invoice.buktiBayar != null
-                              ? Image.network(
-                                  Uri.encodeFull(
-                                      '${MainUrl}/${invoice.buktiBayar}'),
-                                  width: 70,
-                                  height: 70,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace) {
-                                    return Text('Gagal memuat gambar');
-                                  },
-                                )
-                              : _image == null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Color(0xff9E0507))),
-                                      padding: EdgeInsets.all(8),
-                                      width: 70,
-                                      height: 70,
-                                      child: Center(
-                                          child: Text(
-                                        "No Image",
-                                        textAlign: TextAlign.center,
-                                      )),
-                                    )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Color(0xff6B8A7A))),
-                                      padding: EdgeInsets.all(8),
-                                      width: 70,
-                                      height: 70,
-                                      child: Image.file(_image!),
-                                    ),
-                          invoice.buktiKirim != null
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    primary: Color(0xff9E0507),
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Image.network(
-                                                Uri.encodeFull(
-                                                    '${MainUrl}/${invoice.buktiBayar}'),
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 10),
-                                      child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 1),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                "Lihat",
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                              Text(
-                                                "Bukti",
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                            ],
-                                          ))))
-                              : Row(
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          onPrimary: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          primary: Color(0xff9E0507),
-                                        ),
-                                        onPressed: () =>
-                                            _pickImage(ImageSource.gallery),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 10),
-                                            child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5, vertical: 1),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      "Choose",
-                                                      style: TextStyle(
-                                                          fontSize: 12),
-                                                    ),
-                                                    Text(
-                                                      "Photo",
-                                                      style: TextStyle(
-                                                          fontSize: 12),
-                                                    ),
-                                                  ],
-                                                )))),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          onPrimary: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          primary: Color(0xff9E0507),
-                                        ),
-                                        onPressed: () =>
-                                            _pickImage(ImageSource.camera),
-                                        child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 10),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  "Take",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                                Text(
-                                                  "Photo",
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ],
-                                            ))),
-                                  ],
-                                ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.all(8),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(16),
+                //     border: Border.all(color: Color(0xff9E0507)),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.5),
+                //         spreadRadius: 2,
+                //         blurRadius: 7,
+                //         offset: Offset(0, 5), // changes position of shadow
+                //       ),
+                //     ],
+                //   ),
+                // child: Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Text(
+                //       "Bukti Pengiriman",
+                //       style: TextStyle(
+                //           fontSize: 20,
+                //           fontWeight: FontWeight.w600,
+                //           color: Color(0xff000000)),
+                //     ),
+                // SizedBox(
+                //   height: 10,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     invoice.buktiKirim != null
+                //         ? Image.network(
+                //             Uri.encodeFull(
+                //                 '${MainUrl}/${invoice.buktiKirim}'),
+                //             width: 70,
+                //             height: 70,
+                //             loadingBuilder: (BuildContext context,
+                //                 Widget child,
+                //                 ImageChunkEvent? loadingProgress) {
+                //               if (loadingProgress == null) {
+                //                 return child;
+                //               } else {
+                //                 return Center(
+                //                   child: CircularProgressIndicator(
+                //                     value: loadingProgress
+                //                                 .expectedTotalBytes !=
+                //                             null
+                //                         ? loadingProgress
+                //                                 .cumulativeBytesLoaded /
+                //                             loadingProgress
+                //                                 .expectedTotalBytes!
+                //                         : null,
+                //                   ),
+                //                 );
+                //               }
+                //             },
+                //             errorBuilder: (BuildContext context,
+                //                 Object exception,
+                //                 StackTrace? stackTrace) {
+                //               return Text('Gagal memuat gambar');
+                //             },
+                //           )
+                //         : _image1 == null
+                //             ? Container(
+                //                 decoration: BoxDecoration(
+                //                     borderRadius:
+                //                         BorderRadius.circular(10),
+                //                     border: Border.all(
+                //                         color: Color(0xff9E0507))),
+                //                 padding: EdgeInsets.all(8),
+                //                 width: 70,
+                //                 height: 70,
+                //                 child: Center(
+                //                     child: Text(
+                //                   "No Image",
+                //                   textAlign: TextAlign.center,
+                //                 )),
+                //               )
+                //             : Container(
+                //                 decoration: BoxDecoration(
+                //                     borderRadius:
+                //                         BorderRadius.circular(10),
+                //                     border: Border.all(
+                //                         color: Color(0xff6B8A7A))),
+                //                 padding: EdgeInsets.all(8),
+                //                 width: 70,
+                //                 height: 70,
+                //                 child: Image.file(_image1!),
+                //               ),
+                //     invoice.buktiKirim != null
+                //         ? ElevatedButton(
+                //             style: ElevatedButton.styleFrom(
+                //               onPrimary: Colors.white,
+                //               shape: RoundedRectangleBorder(
+                //                   borderRadius:
+                //                       BorderRadius.circular(10)),
+                //               primary: Color(0xff9E0507),
+                //             ),
+                //             onPressed: () {
+                //               showDialog(
+                //                   context: context,
+                //                   builder: (BuildContext context) {
+                //                     return Dialog(
+                //                       child: GestureDetector(
+                //                         onTap: () {
+                //                           Navigator.of(context).pop();
+                //                         },
+                //                         child: Image.network(
+                //                           Uri.encodeFull(
+                //                               '${MainUrl}/${invoice.buktiKirim}'),
+                //                           fit: BoxFit.contain,
+                //                         ),
+                //                       ),
+                //                     );
+                //                   });
+                //             },
+                //             child: Container(
+                //                 padding: EdgeInsets.symmetric(
+                //                     horizontal: 5, vertical: 10),
+                //                 child: Container(
+                //                     padding: EdgeInsets.symmetric(
+                //                         horizontal: 5, vertical: 1),
+                //                     child: Column(
+                //                       children: [
+                //                         Text(
+                //                           "Lihat",
+                //                           style: TextStyle(fontSize: 12),
+                //                         ),
+                //                         Text(
+                //                           "Bukti",
+                //                           style: TextStyle(fontSize: 12),
+                //                         ),
+                //                       ],
+                //                     ))))
+                //         : Row(
+                //             children: [
+                //               ElevatedButton(
+                //                   style: ElevatedButton.styleFrom(
+                //                     onPrimary: Colors.white,
+                //                     shape: RoundedRectangleBorder(
+                //                         borderRadius:
+                //                             BorderRadius.circular(10)),
+                //                     primary: Color(0xff9E0507),
+                //                   ),
+                //                   onPressed: () =>
+                //                       _pickImage1(ImageSource.gallery),
+                //                   child: Container(
+                //                       padding: EdgeInsets.symmetric(
+                //                           horizontal: 5, vertical: 10),
+                //                       child: Container(
+                //                           padding: EdgeInsets.symmetric(
+                //                               horizontal: 5, vertical: 1),
+                //                           child: Column(
+                //                             children: [
+                //                               Text(
+                //                                 "Choose",
+                //                                 style: TextStyle(
+                //                                     fontSize: 12),
+                //                               ),
+                //                               Text(
+                //                                 "Photo",
+                //                                 style: TextStyle(
+                //                                     fontSize: 12),
+                //                               ),
+                //                             ],
+                //                           )))),
+                //               SizedBox(
+                //                 width: 10,
+                //               ),
+                //               ElevatedButton(
+                //                   style: ElevatedButton.styleFrom(
+                //                     onPrimary: Colors.white,
+                //                     shape: RoundedRectangleBorder(
+                //                         borderRadius:
+                //                             BorderRadius.circular(10)),
+                //                     primary: Color(0xff9E0507),
+                //                   ),
+                //                   onPressed: () =>
+                //                       _pickImage1(ImageSource.camera),
+                //                   child: Container(
+                //                       padding: EdgeInsets.symmetric(
+                //                           horizontal: 5, vertical: 10),
+                //                       child: Column(
+                //                         children: [
+                //                           Text(
+                //                             "Take",
+                //                             style:
+                //                                 TextStyle(fontSize: 12),
+                //                           ),
+                //                           Text(
+                //                             "Photo",
+                //                             style:
+                //                                 TextStyle(fontSize: 12),
+                //                           ),
+                //                         ],
+                //                       ))),
+                //             ],
+                //           ),
+                //   ],
+                // ),
+                //     ],
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // Container(
+                //   padding: EdgeInsets.all(8),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(16),
+                //     border: Border.all(color: Color(0xff9E0507)),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.5),
+                //         spreadRadius: 2,
+                //         blurRadius: 7,
+                //         offset: Offset(0, 5), // changes position of shadow
+                //       ),
+                //     ],
+                //   ),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         "Bukti Pembayaran",
+                //         style: TextStyle(
+                //             fontSize: 20,
+                //             fontWeight: FontWeight.w600,
+                //             color: Color(0xff000000)),
+                //       ),
+                //       SizedBox(
+                //         height: 10,
+                //       ),
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           invoice.buktiBayar != null
+                //               ? Image.network(
+                //                   Uri.encodeFull(
+                //                       '${MainUrl}/${invoice.buktiBayar}'),
+                //                   width: 70,
+                //                   height: 70,
+                //                   loadingBuilder: (BuildContext context,
+                //                       Widget child,
+                //                       ImageChunkEvent? loadingProgress) {
+                //                     if (loadingProgress == null) {
+                //                       return child;
+                //                     } else {
+                //                       return Center(
+                //                         child: CircularProgressIndicator(
+                //                           value: loadingProgress
+                //                                       .expectedTotalBytes !=
+                //                                   null
+                //                               ? loadingProgress
+                //                                       .cumulativeBytesLoaded /
+                //                                   loadingProgress
+                //                                       .expectedTotalBytes!
+                //                               : null,
+                //                         ),
+                //                       );
+                //                     }
+                //                   },
+                //                   errorBuilder: (BuildContext context,
+                //                       Object exception,
+                //                       StackTrace? stackTrace) {
+                //                     return Text('Gagal memuat gambar');
+                //                   },
+                //                 )
+                //               : _image == null
+                //                   ? Container(
+                //                       decoration: BoxDecoration(
+                //                           borderRadius:
+                //                               BorderRadius.circular(10),
+                //                           border: Border.all(
+                //                               color: Color(0xff9E0507))),
+                //                       padding: EdgeInsets.all(8),
+                //                       width: 70,
+                //                       height: 70,
+                //                       child: Center(
+                //                           child: Text(
+                //                         "No Image",
+                //                         textAlign: TextAlign.center,
+                //                       )),
+                //                     )
+                //                   : Container(
+                //                       decoration: BoxDecoration(
+                //                           borderRadius:
+                //                               BorderRadius.circular(10),
+                //                           border: Border.all(
+                //                               color: Color(0xff6B8A7A))),
+                //                       padding: EdgeInsets.all(8),
+                //                       width: 70,
+                //                       height: 70,
+                //                       child: Image.file(_image!),
+                //                     ),
+                //           invoice.buktiKirim != null
+                //               ? ElevatedButton(
+                //                   style: ElevatedButton.styleFrom(
+                //                     onPrimary: Colors.white,
+                //                     shape: RoundedRectangleBorder(
+                //                         borderRadius:
+                //                             BorderRadius.circular(10)),
+                //                     primary: Color(0xff9E0507),
+                //                   ),
+                //                   onPressed: () {
+                //                     showDialog(
+                //                         context: context,
+                //                         builder: (BuildContext context) {
+                //                           return Dialog(
+                //                             child: GestureDetector(
+                //                               onTap: () {
+                //                                 Navigator.of(context).pop();
+                //                               },
+                //                               child: Image.network(
+                //                                 Uri.encodeFull(
+                //                                     '${MainUrl}/${invoice.buktiBayar}'),
+                //                                 fit: BoxFit.contain,
+                //                               ),
+                //                             ),
+                //                           );
+                //                         });
+                //                   },
+                //                   child: Container(
+                //                       padding: EdgeInsets.symmetric(
+                //                           horizontal: 5, vertical: 10),
+                //                       child: Container(
+                //                           padding: EdgeInsets.symmetric(
+                //                               horizontal: 5, vertical: 1),
+                //                           child: Column(
+                //                             children: [
+                //                               Text(
+                //                                 "Lihat",
+                //                                 style: TextStyle(fontSize: 12),
+                //                               ),
+                //                               Text(
+                //                                 "Bukti",
+                //                                 style: TextStyle(fontSize: 12),
+                //                               ),
+                //                             ],
+                //                           ))))
+                //               : Row(
+                //                   children: [
+                //                     ElevatedButton(
+                //                         style: ElevatedButton.styleFrom(
+                //                           onPrimary: Colors.white,
+                //                           shape: RoundedRectangleBorder(
+                //                               borderRadius:
+                //                                   BorderRadius.circular(10)),
+                //                           primary: Color(0xff9E0507),
+                //                         ),
+                //                         onPressed: () =>
+                //                             _pickImage(ImageSource.gallery),
+                //                         child: Container(
+                //                             padding: EdgeInsets.symmetric(
+                //                                 horizontal: 5, vertical: 10),
+                //                             child: Container(
+                //                                 padding: EdgeInsets.symmetric(
+                //                                     horizontal: 5, vertical: 1),
+                //                                 child: Column(
+                //                                   children: [
+                //                                     Text(
+                //                                       "Choose",
+                //                                       style: TextStyle(
+                //                                           fontSize: 12),
+                //                                     ),
+                //                                     Text(
+                //                                       "Photo",
+                //                                       style: TextStyle(
+                //                                           fontSize: 12),
+                //                                     ),
+                //                                   ],
+                //                                 )))),
+                //                     SizedBox(
+                //                       width: 10,
+                //                     ),
+                //                     ElevatedButton(
+                //                         style: ElevatedButton.styleFrom(
+                //                           onPrimary: Colors.white,
+                //                           shape: RoundedRectangleBorder(
+                //                               borderRadius:
+                //                                   BorderRadius.circular(10)),
+                //                           primary: Color(0xff9E0507),
+                //                         ),
+                //                         onPressed: () =>
+                //                             _pickImage(ImageSource.camera),
+                //                         child: Container(
+                //                             padding: EdgeInsets.symmetric(
+                //                                 horizontal: 5, vertical: 10),
+                //                             child: Column(
+                //                               children: [
+                //                                 Text(
+                //                                   "Take",
+                //                                   style:
+                //                                       TextStyle(fontSize: 12),
+                //                                 ),
+                //                                 Text(
+                //                                   "Photo",
+                //                                   style:
+                //                                       TextStyle(fontSize: 12),
+                //                                 ),
+                //                               ],
+                //                             ))),
+                //                   ],
+                //                 ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(
                   height: 20,
                 ),
@@ -1108,37 +1107,46 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
-                                if (invoice.buktiKirim != null &&
-                                    invoice.buktiBayar != null) {
-                                  // If both buktiKirim and buktiBayar are not null
-                                  final status =
-                                      await Permission.storage.request();
-                                  if (status.isGranted) {
-                                    final pdfFile =
-                                        await PdfInvoiceApi.generate(invoice);
-                                    PdfApi.openFile(pdfFile);
-                                  } else {
-                                    print('print error');
-                                  }
-                                } else if (_image == null || _image1 == null) {
-                                  // If images are null
-                                  Get.snackbar('Error', 'Bukti Belum Di Upload',
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white);
+                                final status =
+                                    await Permission.storage.request();
+                                if (status.isGranted) {
+                                  final pdfFile =
+                                      await PdfInvoiceApi.generate(invoice);
+                                  PdfApi.openFile(pdfFile);
                                 } else {
-                                  // If images are present, submit the form and generate the PDF
-                                  InvoiceController().submitForm(
-                                      _image!, _image1!, invoice.kodeInvoice);
-                                  final status =
-                                      await Permission.storage.request();
-                                  if (status.isGranted) {
-                                    final pdfFile =
-                                        await PdfInvoiceApi.generate(invoice);
-                                    PdfApi.openFile(pdfFile);
-                                  } else {
-                                    print('print error');
-                                  }
+                                  print('print error');
                                 }
+                                // if (invoice.buktiKirim != null &&
+                                //     invoice.buktiBayar != null) {
+                                //   // If both buktiKirim and buktiBayar are not null
+                                //   final status =
+                                //       await Permission.storage.request();
+                                //   if (status.isGranted) {
+                                //     final pdfFile =
+                                //         await PdfInvoiceApi.generate(invoice);
+                                //     PdfApi.openFile(pdfFile);
+                                //   } else {
+                                //     print('print error');
+                                //   }
+                                // } else if (_image == null || _image1 == null) {
+                                //   // If images are null
+                                //   Get.snackbar('Error', 'Bukti Belum Di Upload',
+                                //       backgroundColor: Colors.red,
+                                //       colorText: Colors.white);
+                                // } else {
+                                //   // If images are present, submit the form and generate the PDF
+                                //   InvoiceController().submitForm(
+                                //       _image!, _image1!, invoice.kodeInvoice);
+                                //   final status =
+                                //       await Permission.storage.request();
+                                //   if (status.isGranted) {
+                                //     final pdfFile =
+                                //         await PdfInvoiceApi.generate(invoice);
+                                //     PdfApi.openFile(pdfFile);
+                                //   } else {
+                                //     print('print error');
+                                //   }
+                                // }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

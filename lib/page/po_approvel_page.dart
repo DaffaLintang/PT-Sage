@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pt_sage/controllers/approved_controller.dart';
+import 'package:pt_sage/models/approvelPo.dart';
 import 'package:pt_sage/models/purchase_order.dart';
 import 'package:pt_sage/page/detail_po_approve_page.dart';
 import 'package:pt_sage/page/invoice_page.dart';
@@ -17,7 +19,7 @@ class ListPOApprovel extends StatefulWidget {
 }
 
 class _ListPOApprovelState extends State<ListPOApprovel> {
-  PurchaseOrderList? orders;
+  ApprovelPurchaseOrderList? orders;
 
   @override
   void initState() {
@@ -26,8 +28,9 @@ class _ListPOApprovelState extends State<ListPOApprovel> {
   }
 
   void fetchOrders() async {
-    final poController = PoController();
-    PurchaseOrderList? fetchedOrders = await poController.getPoData();
+    final poController = ApprovedController();
+    ApprovelPurchaseOrderList? fetchedOrders =
+        await poController.getAprovePoData();
     setState(() {
       orders = fetchedOrders;
     });

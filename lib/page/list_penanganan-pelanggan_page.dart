@@ -57,17 +57,17 @@ class _ListPenanggananKeluhanPelangganPageState
               icon: Image.asset('assets/LineRed.png')),
           backgroundColor: Colors.white,
           elevation: 5,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Get.to(() => FeedBackPage());
-                  KeluhanPelangganController.keluhanController.text = '';
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Color(0xffBF1619),
-                )),
-          ],
+          // actions: [
+          //   IconButton(
+          //       onPressed: () {
+          //         Get.to(() => FeedBackPage());
+          //         KeluhanPelangganController.keluhanController.text = '';
+          //       },
+          //       icon: Icon(
+          //         Icons.add,
+          //         color: Color(0xffBF1619),
+          //       )),
+          // ],
         ),
         body: keluhanData == null
             ? Center(child: Text("Tidak ada data"))

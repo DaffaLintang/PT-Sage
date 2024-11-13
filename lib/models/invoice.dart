@@ -146,7 +146,7 @@ class Kendaraan {
     return Kendaraan(
       id: json['id'],
       jenisKendaraan: json['jenis_kendaraan'],
-      NoPolisi: json['no_polisi'], // Changed to String
+      NoPolisi: json['no_polisi'] ?? "", // Changed to String
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -299,7 +299,7 @@ class PurchaseOrder {
       totalPrice: json['total_price'],
       paymentTerm: json['payment_term'],
       dp: json['dp'],
-      dpAmount: json['dp_amount'] ?? "",
+      dpAmount: json['dp_amount'] ?? "0",
       status: json['status'],
       deliveryStatus: json['delivery_status'],
       discount: json['discount'] ?? "Tidak Diskon",

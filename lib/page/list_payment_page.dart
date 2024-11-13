@@ -69,7 +69,7 @@ class _ListPaymentPageState extends State<ListPaymentPage> {
           // ],
         ),
         body: payments == null
-            ? Center(child: Text("Tidak ada data"))
+            ? Center(child: CircularProgressIndicator())
             : ListView.builder(
                 itemCount: payments!.length,
                 itemBuilder: (context, index) {

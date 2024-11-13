@@ -66,7 +66,7 @@ class _listPoPageState extends State<listPoPage> {
           ],
         ),
         body: orders == null
-            ? Center(child: Text("Tidak ada data"))
+            ? Center(child: CircularProgressIndicator())
             : ListView.builder(
                 itemCount: orders!.orders.length,
                 itemBuilder: (context, index) {
