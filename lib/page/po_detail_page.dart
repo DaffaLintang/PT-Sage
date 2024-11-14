@@ -151,6 +151,20 @@ class _PoDetailPageState extends State<PoDetailPage> {
                         height: 15,
                       ),
                       Text(
+                        "Nama Petugas",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(order.petugas),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
                         "Nama Produk",
                         style: TextStyle(
                             color: Color(0xff9E0507),

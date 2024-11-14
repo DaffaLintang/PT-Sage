@@ -208,27 +208,56 @@ class PdfInvoiceApi {
       '${invoiceData.delivery.purchaseOrder.address}',
     ];
 
+    // Fungsi untuk memformat alamat agar terpisah per kata
+    String formatAddress(String address) {
+      const maxLength = 19; // Batas panjang untuk satu baris
+      List<String> words =
+          address.split(' '); // Membagi alamat menjadi daftar kata
+      List<String> result = [];
+      String currentLine = '';
+
+      // Menambahkan kata-kata ke dalam baris baru jika melebihi batas panjang
+      for (String word in words) {
+        if ((currentLine.length + word.length + 1) <= maxLength) {
+          // Jika kata masih muat dalam baris saat ini, tambahkan kata tersebut
+          if (currentLine.isEmpty) {
+            currentLine = word;
+          } else {
+            currentLine += ' ' + word;
+          }
+        } else {
+          // Jika kata tidak muat, tambahkan baris baru
+          result.add(currentLine);
+          currentLine = word;
+        }
+      }
+
+      // Menambahkan baris terakhir jika ada sisa kata
+      if (currentLine.isNotEmpty) {
+        result.add(currentLine);
+      }
+
+      return result.join('\n'); // Gabungkan baris-barisan dengan newline
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(titles.length, (index) {
         final title = titles[index];
-        final value = data[index];
+        String value = data[index];
 
-        return buildText(title: title, value: value, width: 170, font: font);
+        // Format alamat jika panjang lebih dari 50 karakter
+        if (index == 2) {
+          value = formatAddress(value);
+        }
+
+        return Wrap(
+          children: [
+            buildText(title: title, value: value, width: 170, font: font),
+          ],
+        );
       }),
     );
-
-    // return Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     Text(
-    //       customer.name,
-    //       style: TextStyle(fontWeight: FontWeight.bold, font: font),
-    //     ),
-    //     Text(customer.contact, style: TextStyle(font: font)),
-    //     Text(customer.tujuan, style: TextStyle(font: font)),
-    //   ],
-    // );
   }
 
   static Widget buildInvoiceInfo(invoiceData, pw.Font font) {

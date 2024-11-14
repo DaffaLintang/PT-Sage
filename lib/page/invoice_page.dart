@@ -1107,6 +1107,8 @@ class _InvoicePageState extends State<InvoicePage> {
                             child: ElevatedButton(
                               child: Text('Cetak Invoice'),
                               onPressed: () async {
+                                print(
+                                    "length ${invoice.delivery.purchaseOrder.address.length}");
                                 final status =
                                     await Permission.storage.request();
                                 if (status.isGranted) {

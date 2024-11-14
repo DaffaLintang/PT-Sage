@@ -15,6 +15,7 @@ import 'package:pt_sage/page/po_approvel_page.dart';
 import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
 
+import 'DataLot_page.dart';
 import 'list_keluhan_approvel.dart';
 import 'list_payment_page.dart';
 import 'list_penanganan-pelanggan_page.dart';
@@ -232,7 +233,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => ListPOApprovel());
                                 },
-                                title: 'Purchase Order Approvel',
+                                title: 'Sales Order Approvel',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
                           if (menuIds!.contains(16) ||
@@ -250,7 +251,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => listPoPage());
                                 },
-                                title: 'Purchase Order',
+                                title: 'Sales Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
                           ],
                           if (menuIds!.contains(20) ||
@@ -309,6 +310,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pembayaran',
                                 imageAsset: 'assets/money.png'),
                           ],
+                          Menu(
+                              onTap: () {
+                                Get.to(() => DataGoodTurnOvrSlip());
+                              },
+                              title: 'Data Food Good Turn Over Slip',
+                              imageAsset: 'assets/Info.png'),
                         ],
                       ),
                     ],

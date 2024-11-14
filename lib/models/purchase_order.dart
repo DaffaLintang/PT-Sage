@@ -5,6 +5,7 @@ class PurchaseOrder {
   int usersId;
   int customersId;
   String customersName;
+  String petugas;
   int productId;
   String productName;
   int quantity;
@@ -26,6 +27,7 @@ class PurchaseOrder {
     required this.usersId,
     required this.customersId,
     required this.customersName,
+    required this.petugas,
     required this.productId,
     required this.productName,
     required this.quantity,
@@ -49,6 +51,7 @@ class PurchaseOrder {
       usersId: json['users_id'],
       customersId: json['customers_id'],
       customersName: json['customers_name'],
+      petugas: json['nama_petugas'],
       productId: json['product_id'] ?? 0,
       productName: json['product_name'],
       quantity: int.parse(json['quantity']),
