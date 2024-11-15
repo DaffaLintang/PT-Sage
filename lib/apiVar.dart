@@ -1,6 +1,6 @@
 import 'package:sp_util/sp_util.dart';
 
-final String MainUrl = "https://4a92-125-161-161-78.ngrok-free.app";
+final String MainUrl = "https://f917-103-160-183-15.ngrok-free.app";
 
 final int? roles = SpUtil.getInt('roles');
 final String LoginAPI = "${MainUrl}/api/login";
@@ -34,7 +34,12 @@ final String ApprovelPO = roles == 1
     ? "${MainUrl}/api/purchase-orders"
     : "${MainUrl}/api/purchase-order/get-approvel-po";
 final String MenuApi = "${MainUrl}/api/menus";
-final String DataProductLot = "${MainUrl}/api/product-lot";
+final String DataProductLot = roles == 1
+    ? "${MainUrl}/api/product-lot"
+    : "${MainUrl}/api/data-product-lot";
+final String DataApproveCustomer = roles == 1
+    ? "${MainUrl}/api/approval-customer"
+    : "${MainUrl}/api/data-approval-customer";
 final String TransaksiPo = roles == 1
     ? "${MainUrl}/api/delivery"
     : "${MainUrl}/api/data-purchase-order";

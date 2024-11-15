@@ -36,7 +36,7 @@ class _listPoPageState extends State<listPoPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "List Purchase Order",
+            "List Sales Order",
             style: TextStyle(
                 color: Color(0xffBF1619),
                 fontFamily: GoogleFonts.rubik().fontFamily,

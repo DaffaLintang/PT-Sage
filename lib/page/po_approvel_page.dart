@@ -41,7 +41,7 @@ class _ListPOApprovelState extends State<ListPOApprovel> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Purchase Order Approvel",
+            "Purchase Order Approval",
             style: TextStyle(
                 color: Color(0xffBF1619),
                 fontFamily: GoogleFonts.rubik().fontFamily,

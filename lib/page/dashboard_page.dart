@@ -16,6 +16,7 @@ import 'package:pt_sage/utils/menu.dart';
 import 'package:sp_util/sp_util.dart';
 
 import 'DataLot_page.dart';
+import 'List_customer_approval_page.dart';
 import 'list_keluhan_approvel.dart';
 import 'list_payment_page.dart';
 import 'list_penanganan-pelanggan_page.dart';
@@ -233,7 +234,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => ListPOApprovel());
                                 },
-                                title: 'Sales Order Approvel',
+                                title: 'Sales Order Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
                           if (menuIds!.contains(16) ||
@@ -243,9 +244,15 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => ListKeluhanApproval());
                                 },
-                                title: 'Keluhan Approvel',
+                                title: 'Keluhan Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
+                          Menu(
+                              onTap: () {
+                                Get.to(() => ListCustomerApprovel());
+                              },
+                              title: 'Pelanggan Approval',
+                              imageAsset: 'assets/Done_ring_round.png'),
                           if (menuIds!.contains(28) || roles == 1) ...[
                             Menu(
                                 onTap: () {
