@@ -56,10 +56,10 @@ class PoController extends GetxController {
     }
   }
 
-  Future<List<TransaksiPurchaseOrder>?> getTransaksiPoData() async {
+  Future<List<TransaksiPurchaseOrder>?> getTransaksiPoData(roles) async {
     try {
       final uri =
-          Uri.parse(roles == 1 ? "$TransaksiPo/approvePO" : TransaksiPo);
+          Uri.parse(roles == 1 ? "$TransaksiPo/approvePO" : "$TransaksiPo");
       final response = await http.get(
         uri,
         headers: {
@@ -68,7 +68,9 @@ class PoController extends GetxController {
           'Accept': 'application/json',
         },
       );
-
+      print("status ${response.statusCode}");
+      print("Uri: $uri");
+      // print(response.body);
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
         return jsonResponse
@@ -131,49 +133,74 @@ class PoController extends GetxController {
     }
   }
 
+  // Future<DataWrapper?> getProductData() async {
+  //   try {
+  //     isLoading2.value = true;
+  //     final uri = Uri.parse(PoCreateAPI);
+
+  //     var client = http.Client();
+  //     var request = http.Request('GET', uri)
+  //       ..headers['Authorization'] = 'Bearer $token';
+
+  //     var streamedResponse = await client.send(request);
+
+  //     // Reading the streamed response
+  //     var byteStream = streamedResponse.stream;
+  //     var jsonDecoder = Utf8Decoder().bind(byteStream).transform(json.decoder);
+
+  //     await for (var chunk in jsonDecoder) {
+  //       try {
+  //         // Check if the chunk is a Map
+  //         if (chunk is Map<String, dynamic>) {
+  //           isLoading2.value = false;
+  //           return DataWrapper.fromJson(chunk);
+  //         } else {
+  //           print('Unexpected JSON structure or type.');
+  //         }
+  //       } catch (e) {
+  //         print('Error parsing JSON chunk: $e');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Error: ${e.toString()}');
+  //   } finally {
+  //     isLoading2.value = false;
+  //   }
+  //   return null;
+  // }
   Future<DataWrapper?> getProductData() async {
     try {
       isLoading2.value = true;
-      final uri = Uri.parse(PoCreateAPI);
 
-      // Menggunakan http.Client untuk streaming data
-      var client = http.Client();
-      var request = http.Request('GET', uri)
-        ..headers['Authorization'] = 'Bearer $token';
+      final response = await http.get(
+        Uri.parse(PoCreateAPI),
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
-      var streamedResponse = await client.send(request);
+      if (response.statusCode == 200) {
+        print('Raw response body: ${response.body}');
 
-      // Menggunakan ByteStream untuk membaca respons secara bertahap
-      var byteStream = streamedResponse.stream;
-      var jsonDecoder = Utf8Decoder().bind(byteStream).transform(json.decoder);
-
-      // Memvalidasi respons JSON
-      await for (var chunk in jsonDecoder) {
         try {
-          // Validasi JSON chunk
-          if (isValidJson(chunk)) {
-            // JSON valid, lanjutkan parsing
-            Map<String, dynamic> jsonResponse = chunk as Map<String, dynamic>;
-            isLoading2.value = false;
-            return DataWrapper.fromJson(jsonResponse);
+          var jsonResponse = jsonDecode(response.body);
+
+          if (jsonResponse is Map<String, dynamic>) {
+            return DataWrapper.fromJson(
+                jsonResponse); // Ensure DataWrapper handles all types properly.
           } else {
-            // JSON tidak valid
-            print('Invalid JSON format in the chunk.');
-            isLoading2.value = false;
-            return null;
+            print('Unexpected JSON structure.');
           }
         } catch (e) {
-          // Tangani kesalahan jika terjadi pada bagian tertentu dari respons
-          print('Error parsing JSON chunk: $e');
-          isLoading2.value = false;
-          return null;
+          print('Error decoding JSON: $e');
         }
+      } else {
+        print('Error: ${response.statusCode} - ${response.reasonPhrase}');
       }
     } catch (e) {
+      print('Error: $e');
+    } finally {
       isLoading2.value = false;
-      print('Error: ${e.toString()}');
-      return null;
     }
+    return null;
   }
 
 // Fungsi untuk memvalidasi JSON
@@ -257,7 +284,6 @@ class PoController extends GetxController {
           "kemasan": kemasans,
         };
         PoProvider().store(token, data).then((value) {
-          print(value.body);
           if (value.statusCode == 201) {
             diskonController.text = '';
             jDpController.text = '';

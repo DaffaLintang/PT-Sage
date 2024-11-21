@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pt_sage/controllers/payment_controller.dart';
 import 'package:pt_sage/controllers/pengiriman.dart';
 import 'package:pt_sage/page/list_payment_page.dart';
 import 'package:pt_sage/page/list_penanganan-pelanggan_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
+import 'dart:io' as io;
 
 import '../controllers/keluahanPelanggan_controller.dart';
+import '../models/detailPayment.dart';
 import '../models/keluhanCustomer.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -36,6 +39,21 @@ class _PaymentPageState extends State<PaymentPage> {
     "Khusus",
   ];
   String? selectedValue;
+  io.File? _image1;
+
+  List<DetailPayment>? detailPayments;
+
+  final ImagePicker _picker1 = ImagePicker();
+
+  Future<void> _pickImage1(ImageSource source) async {
+    final XFile? pickedFile = await _picker1.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image1 = io.File(pickedFile.path);
+      });
+    }
+  }
 
   String getRawValue(String formattedValue) {
     String plainValue = formattedValue.replaceAll(RegExp(r'[^\d]'), '');
@@ -50,6 +68,15 @@ class _PaymentPageState extends State<PaymentPage> {
   void initState() {
     super.initState();
     PaymentController.bayarText.text = '';
+    fetchPayment();
+  }
+
+  void fetchPayment() async {
+    List<DetailPayment>? fetchPayment =
+        await PaymentController().getDetailPayment(payment.id);
+    setState(() {
+      detailPayments = fetchPayment;
+    });
   }
 
   @override
@@ -277,6 +304,146 @@ class _PaymentPageState extends State<PaymentPage> {
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Color(0xff9E0507)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 5), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Bukti Pembayaran",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xff000000)),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _image1 == null
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                      color:
+                                                          Color(0xff9E0507))),
+                                              padding: EdgeInsets.all(8),
+                                              width: 70,
+                                              height: 70,
+                                              child: Center(
+                                                  child: Text(
+                                                "No Image",
+                                                textAlign: TextAlign.center,
+                                              )),
+                                            )
+                                          : Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                      color:
+                                                          Color(0xff6B8A7A))),
+                                              padding: EdgeInsets.all(8),
+                                              width: 70,
+                                              height: 70,
+                                              child: Image.file(_image1!),
+                                            ),
+                                      Row(
+                                        children: [
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                onPrimary: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                primary: Color(0xff9E0507),
+                                              ),
+                                              onPressed: () => _pickImage1(
+                                                  ImageSource.gallery),
+                                              child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 5,
+                                                              vertical: 1),
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            "Choose",
+                                                            style: TextStyle(
+                                                                fontSize: 12),
+                                                          ),
+                                                          Text(
+                                                            "Photo",
+                                                            style: TextStyle(
+                                                                fontSize: 12),
+                                                          ),
+                                                        ],
+                                                      )))),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                onPrimary: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                primary: Color(0xff9E0507),
+                                              ),
+                                              onPressed: () => _pickImage1(
+                                                  ImageSource.camera),
+                                              child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      Text(
+                                                        "Take",
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                      Text(
+                                                        "Photo",
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  ))),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                             Container(
                               margin: EdgeInsets.only(top: 20),
                               child: SizedBox(
@@ -285,17 +452,58 @@ class _PaymentPageState extends State<PaymentPage> {
                                   child: ElevatedButton(
                                     child: Text('Bayar'),
                                     onPressed: () {
-                                      PaymentController().store(
-                                          int.tryParse(getRawValue(
-                                              PaymentController
-                                                  .bayarText.text)),
-                                          payment.kodePengiriman);
+                                      if (_image1 == null) {
+                                        Get.snackbar(
+                                            'Error', 'Bukti Belum Di Upload',
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      } else {
+                                        // If images are present, submit the form and generate the PDF
+                                        PaymentController().store(
+                                            int.tryParse(getRawValue(
+                                                PaymentController
+                                                    .bayarText.text)),
+                                            payment.kodePengiriman,
+                                            _image1);
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       primary: Color(0xff9E0507),
+                                    ),
+                                  )),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    child: Text('Lihat Histori Pembayaran'),
+                                    onPressed: () {
+                                      if (_image1 == null) {
+                                        Get.snackbar(
+                                            'Error', 'Bukti Belum Di Upload',
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      } else {
+                                        // If images are present, submit the form and generate the PDF
+                                        PaymentController().store(
+                                            int.tryParse(getRawValue(
+                                                PaymentController
+                                                    .bayarText.text)),
+                                            payment.kodePengiriman,
+                                            _image1);
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      primary:
+                                          Color.fromARGB(255, 47, 133, 225),
                                     ),
                                   )),
                             ),

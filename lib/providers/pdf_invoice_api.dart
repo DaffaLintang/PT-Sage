@@ -336,7 +336,7 @@ class PdfInvoiceApi {
         invoiceData.delivery.purchaseOrder.discountType == "nominal"
             ? '${currencyFormatter.format(double.tryParse(invoiceData.delivery.purchaseOrder.discount)?.toInt())}'
             : '${invoiceData.delivery.purchaseOrder.discount.toString()}',
-        '${currencyFormatter.format(double.parse(invoiceData.delivery.purchaseOrder.totalPrice))}',
+        '${currencyFormatter.format(invoiceData.hutang)}',
       ]
     ];
 
@@ -363,7 +363,7 @@ class PdfInvoiceApi {
     // final total = invoice.items
     //     .map((item) => item.harga * item.jumlah)
     //     .reduce((item1, item2) => item1 + item2);
-    final total = int.parse(invoiceData.delivery.purchaseOrder.totalPrice);
+    final total = invoiceData.hutang;
 
     return Container(
       alignment: Alignment.centerRight,

@@ -247,12 +247,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Keluhan Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          Menu(
-                              onTap: () {
-                                Get.to(() => ListCustomerApprovel());
-                              },
-                              title: 'Pelanggan Approval',
-                              imageAsset: 'assets/Done_ring_round.png'),
+                          if (menuIds!.contains(14) || roles == 1) ...[
+                            Menu(
+                                onTap: () {
+                                  Get.to(() => ListCustomerApprovel());
+                                },
+                                title: 'Pelanggan Approval',
+                                imageAsset: 'assets/Done_ring_round.png'),
+                          ],
                           if (menuIds!.contains(28) || roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -317,12 +319,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pembayaran',
                                 imageAsset: 'assets/money.png'),
                           ],
-                          Menu(
-                              onTap: () {
-                                Get.to(() => DataGoodTurnOvrSlip());
-                              },
-                              title: 'Data Food Good Turn Over Slip',
-                              imageAsset: 'assets/Info.png'),
+                          if (menuIds!.contains(18) || roles == 1) ...[
+                            Menu(
+                                onTap: () {
+                                  Get.to(() => DataGoodTurnOvrSlip());
+                                },
+                                title: 'Stock FG',
+                                imageAsset: 'assets/Info.png'),
+                          ]
                         ],
                       ),
                     ],

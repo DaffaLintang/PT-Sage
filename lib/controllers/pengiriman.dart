@@ -33,14 +33,27 @@ class PengirimanController extends GetxController {
   Future<List<ProductLot>?> getProductLotData(id) async {
     try {
       final uri = Uri.parse('$Delivery/productLot/$id');
-      final response =
-          await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      print(uri);
+      print(response.statusCode);
+      print(response.body);
 
       if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
+        final jsonResponse = jsonDecode(response.body);
 
-        // Convert the JSON list into a list of ProductLot objects
-        return jsonResponse.map((json) => ProductLot.fromJson(json)).toList();
+        // Pastikan 'data' adalah daftar sebelum memprosesnya
+        if (jsonResponse['data'] is List) {
+          List<dynamic> data = jsonResponse['data'];
+
+          // Convert the JSON list into a list of ProductLot objects
+          return data.map((json) => ProductLot.fromJson(json)).toList();
+        } else {
+          print('Error: Data is not a list');
+          return null;
+        }
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');
       }
@@ -54,7 +67,6 @@ class PengirimanController extends GetxController {
     try {
       isLoading.value = true;
       final uri = Uri.parse("$Delivery");
-      print(uri);
       final response = await http.get(
         uri,
         headers: {
@@ -63,7 +75,9 @@ class PengirimanController extends GetxController {
           'Accept': 'application/json',
         },
       );
-
+      print("Delivery ${response.statusCode}");
+      print("Delivery uri ${uri}");
+      print("Roles ${uri}");
       if (response.statusCode == 200) {
         print(response.body);
 
@@ -88,6 +102,7 @@ class PengirimanController extends GetxController {
       final uri = Uri.parse('$TransaksiPo/productLot/$id');
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      print(uri);
       print(response.body);
       print(response.statusCode);
 

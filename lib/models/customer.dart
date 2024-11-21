@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Customer {
   final String name;
   final String contact;
@@ -16,9 +18,9 @@ class Customers {
   final int id;
   final String customersName;
   final String phone;
-  final String provinceCode;
-  final String regencyCode;
-  final String districtCode;
+  final int provinceCode;
+  final int regencyCode;
+  final int districtCode;
   final String address;
   final String noMoU;
   final String activePeriodFrom;

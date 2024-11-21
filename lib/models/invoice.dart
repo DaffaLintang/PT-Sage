@@ -11,6 +11,7 @@ class Invoice {
   final DateTime updatedAt;
   final Delivery delivery;
   final String? fullnamePemasaran;
+  final int hutang;
   final String? ttd;
 
   Invoice({
@@ -21,6 +22,7 @@ class Invoice {
     required this.createdAt,
     required this.updatedAt,
     required this.delivery,
+    required this.hutang,
     required this.fullnamePemasaran,
     required this.ttd,
   });
@@ -35,6 +37,7 @@ class Invoice {
       updatedAt: DateTime.parse(json['updated_at']),
       delivery: Delivery.fromJson(json['delivery']),
       fullnamePemasaran: json['po_user_fullname'],
+      hutang: json['tagihan_hutang'],
       ttd: json['po_user_ttd'],
     );
   }
@@ -58,6 +61,7 @@ class Delivery {
   final String kodePo;
   final DateTime tanggalPengiriman;
   final Kendaraan kendaraan;
+  final NoPol noPolisi;
   final String namaSopir;
   // final String noPolisi;
   final int jumlahDikirim;
@@ -74,6 +78,7 @@ class Delivery {
     required this.kodePo,
     required this.tanggalPengiriman,
     required this.kendaraan,
+    required this.noPolisi,
     required this.namaSopir,
     // required this.noPolisi,
     required this.jumlahDikirim,
@@ -93,6 +98,7 @@ class Delivery {
       tanggalPengiriman: DateTime.parse(json['tanggal_pengiriman']),
       kendaraan: Kendaraan.fromJson(json['kendaraan'] as Map<String, dynamic>),
       namaSopir: json['nama_sopir'],
+      noPolisi: NoPol.fromJson(json['no_polisi'] as Map<String, dynamic>),
       // noPolisi: json['no_polisi'],
       jumlahDikirim: json['jumlah_dikirim'],
       jumlahKurang: json['jumlah_kurang'],
@@ -156,6 +162,38 @@ class Kendaraan {
     return {
       'id': id,
       'jenis_kendaraan': jenisKendaraan,
+      'no_polisi': NoPolisi,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
+}
+
+class NoPol {
+  final int id;
+  final String NoPolisi; // Should be a String, not an int
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  NoPol({
+    required this.id,
+    required this.NoPolisi, // Changed to String
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory NoPol.fromJson(Map<String, dynamic> json) {
+    return NoPol(
+      id: json['id'],
+      NoPolisi: json['no_polisi'] ?? "", // Changed to String
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
       'no_polisi': NoPolisi,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

@@ -44,7 +44,7 @@ class _DataGoodTurnOvrSlipState extends State<DataGoodTurnOvrSlip> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Data Food Good Turn Over Slip",
+            "Stock FG",
             style: TextStyle(
                 color: Color(0xffBF1619),
                 fontFamily: GoogleFonts.rubik().fontFamily,
@@ -74,7 +74,14 @@ class _DataGoodTurnOvrSlipState extends State<DataGoodTurnOvrSlip> {
                     ),
                     title: Text(dataLot.product.productName),
                     subtitle: Text(dataLot.lotNumber),
-                    trailing: Text(dataLot.quantity),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Stock"),
+                        Text(dataLot.quantity),
+                      ],
+                    ),
                     // onTap: () {
                     //   Get.to(() => PaymentPage(), arguments: payment);
                     // },

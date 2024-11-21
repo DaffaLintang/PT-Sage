@@ -548,6 +548,22 @@ class _InvoicePageState extends State<InvoicePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                Text("Hutang",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                                Text(currencyFormatter.format(invoice.hutang),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 Text("Jenis Kendaraan",
                                     style: TextStyle(
                                         fontSize: 12,
@@ -561,6 +577,23 @@ class _InvoicePageState extends State<InvoicePage> {
                             SizedBox(
                               height: 8,
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("No Polisi",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                                Text(invoice.delivery.noPolisi.NoPolisi,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+
                             // Row(
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
