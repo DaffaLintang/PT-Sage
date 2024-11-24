@@ -91,6 +91,7 @@ class DetailDelivery {
   final int totalPcs;
   final String createdAt;
   final String updatedAt;
+  final Kemasan kemasan;
 
   DetailDelivery({
     required this.id,
@@ -101,6 +102,7 @@ class DetailDelivery {
     required this.totalPcs,
     required this.createdAt,
     required this.updatedAt,
+    required this.kemasan,
   });
 
   factory DetailDelivery.fromJson(Map<String, dynamic> json) {
@@ -113,7 +115,46 @@ class DetailDelivery {
       totalPcs: json['total_pcs'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
+      kemasan: Kemasan.fromJson(json['kemasan']),
     );
+  }
+}
+
+class Kemasan {
+  final int id;
+  final int weight;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Kemasan({
+    required this.id,
+    required this.weight,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Kemasan.fromJson(Map<String, dynamic> json) {
+    return Kemasan(
+      id: json['id'],
+      weight: json['weight'],
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'weight': weight,
+      'deleted_at': deletedAt?.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
   }
 }
 
@@ -135,6 +176,7 @@ class PurchaseOrder {
   final String createdAt;
   final String updatedAt;
   final Product product;
+  final List<DetailPo> detailPos; // Tambahan baru
 
   PurchaseOrder({
     required this.kodePo,
@@ -154,6 +196,7 @@ class PurchaseOrder {
     required this.createdAt,
     required this.updatedAt,
     required this.product,
+    required this.detailPos, // Tambahkan ke constructor
   });
 
   factory PurchaseOrder.fromJson(Map<String, dynamic> json) {
@@ -169,12 +212,47 @@ class PurchaseOrder {
       dpAmount: json['dp_amount'] ?? "0",
       status: json['status'],
       deliveryStatus: json['delivery_status'],
-      discount: json['discount'],
-      discountType: json['discount_type'],
+      discount: json['discount'] ?? '0',
+      discountType: json['discount_type'] ?? '-',
       deliveryDate: json['delivery_date'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       product: Product.fromJson(json['product']),
+      detailPos: (json['detail_pos'] as List)
+          .map((item) => DetailPo.fromJson(item))
+          .toList(), // Parse detail_pos
+    );
+  }
+}
+
+class DetailPo {
+  final int id;
+  final String kodePo;
+  final int kemasanId;
+  final int jumlahKgKemasan;
+  final int price;
+  final String createdAt;
+  final String updatedAt;
+
+  DetailPo({
+    required this.id,
+    required this.kodePo,
+    required this.kemasanId,
+    required this.jumlahKgKemasan,
+    required this.price,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory DetailPo.fromJson(Map<String, dynamic> json) {
+    return DetailPo(
+      id: json['id'],
+      kodePo: json['kode_po'],
+      kemasanId: json['kemasan_id'],
+      jumlahKgKemasan: json['jumlah_kg_kemasan'],
+      price: json['price'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 }

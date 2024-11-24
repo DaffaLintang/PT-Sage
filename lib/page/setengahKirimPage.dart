@@ -31,7 +31,7 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
   String? selectedValue2;
   int? customerId;
   int? KendaraanId;
-  late final rawValue;
+  late var rawValue = '';
   final order = Get.arguments;
   List<ProductLot>? productLots;
   List<bool>? isChecked;
@@ -46,7 +46,6 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
   List<int> noPolIds = [];
   List<String> noPol = [];
 
-  @override
   @override
   void initState() {
     super.initState();
@@ -162,7 +161,7 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
       Get.snackbar('Error', 'Silahkan Pilih Jumlah Lot',
           backgroundColor: Colors.red, colorText: Colors.white);
     } else {
-      for (int i = 0; i < order.detailPos.length; i++) {
+      for (int i = 0; i < order.detailDelivery.length; i++) {
         var id = order.detailDelivery[i].kemasanId;
         var quantity = pcsKirim[i];
         kemasan.addAll({"${id}": quantity});
@@ -379,9 +378,9 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
                                             'selectedValue2: $selectedValue2'); // Cek nilai selectedValue2
 
                                         // Cek apakah selectedValue2 ada di noPolMap
-                                        rawValue =
-                                            noPolMap[selectedValue2!] ?? '';
-                                        print(rawValue);
+
+                                        rawValue = noPolMap[selectedValue2!]
+                                            .toString();
                                       });
                                     },
                                   ),
@@ -521,40 +520,40 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
                                     for (int z = 0;
                                         z < order.detailDelivery.length;
                                         z++) {
-                                      int jlmPcs = ((int.parse(
-                                                      productLot.quantity) /
-                                                  order.detailDelivery.length) /
-                                              order.detailDelivery[z].quantity)
-                                          .toInt();
+                                      int jlmPcs =
+                                          ((int.parse(productLot.quantity) /
+                                                      order.detailDelivery
+                                                          .length) /
+                                                  order.detailDelivery[z]
+                                                      .kemasan.weight)
+                                              .toInt();
                                       if (jlmPcs *
-                                              order
-                                                  .detailDelivery[z].quantity <=
-                                          order.detailDelivery[z].totalPcs) {
+                                              order.detailDelivery[z].kemasan
+                                                  .weight <=
+                                          order.purchaseOrder.detailPos[z]
+                                              .jumlahKgKemasan) {
                                         pcsKirim.add(
                                             ((int.parse(productLot.quantity) /
                                                         order.detailDelivery
                                                             .length) /
                                                     order.detailDelivery[z]
-                                                        .quantity)
+                                                        .kemasan.weight)
                                                 .toInt());
                                       } else {
                                         num totalBerat = jlmPcs *
-                                            order.detailDelivery[z].quantity;
+                                            order.detailDelivery[z].kemasan
+                                                .weight;
                                         num selisih = totalBerat -
-                                            order.detailDelivery[z].totalPcs;
+                                            order.purchaseOrder.detailPos[z]
+                                                .jumlahKgKemasan;
                                         num jumlahAsli = totalBerat - selisih;
-                                        print(jumlahAsli *
-                                            order.detailDelivery.length);
-                                        print((jumlahAsli *
-                                            order.detailDelivery.length /
-                                            order.detailDelivery.length));
                                         pcsKirim.add(((jumlahAsli *
                                                     order
                                                         .detailDelivery.length /
                                                     order.detailDelivery
                                                         .length) /
-                                                order
-                                                    .detailDelivery[z].quantity)
+                                                order.detailDelivery[z].kemasan
+                                                    .weight)
                                             .toInt());
                                       }
                                     }
@@ -580,11 +579,11 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
                   itemBuilder: (context, index) {
                     return ListTile(
                         title: Text(
-                            'Kemasan: ${order.detailDelivery[index].quantity} Kg'),
+                            'Kemasan: ${order.detailDelivery[index].kemasan.weight} Kg'),
                         subtitle: Text(
                             'Pcs: ${pcsKirim.length > 0 ? pcsKirim[index] : 0}'),
                         trailing: Text(
-                            "Jumlah: ${order.detailDelivery[index].totalPcs} Kg"));
+                            "Jumlah: ${order.purchaseOrder.detailPos[index].jumlahKgKemasan} Kg"));
                   },
                 ),
                 Container(
@@ -606,40 +605,18 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
                                       colorText: Colors.white);
                                 } else {
                                   printValue();
-                                  // if (pcsKirim[index] == 0)
-                                  if (order.status == "setengah di kirim") {
-                                    // PengirimanController().store(
-                                    //     NopolIds,
-                                    //     order.kodePo,
-                                    //     order.customersId,
-                                    //     KendaraanId,
-                                    //     PengirimanController
-                                    //         .supirController.text,
-                                    //     PengirimanController
-                                    //         .noPolController.text,
-                                    //     PengirimanController
-                                    //         .dateController.text,
-                                    //     selectedProductLotIds,
-                                    //     kemasan,
-                                    //     selectedJumlahProductLotIds,
-                                    //     order.quantity);
-                                  } else {
-                                    PengirimanController().TransaksiPostore(
-                                        rawValue,
-                                        order.kodePo,
-                                        order.customersId,
-                                        KendaraanId,
-                                        PengirimanController
-                                            .supirController.text,
-                                        PengirimanController
-                                            .noPolController.text,
-                                        PengirimanController
-                                            .dateController.text,
-                                        selectedProductLotIds,
-                                        kemasan,
-                                        selectedJumlahProductLotIds,
-                                        order.quantity);
-                                  }
+                                  PengirimanController()
+                                      .TransaksiDeliveryUpdate(
+                                    rawValue,
+                                    order.kodePengiriman,
+                                    KendaraanId,
+                                    PengirimanController.supirController.text,
+                                    PengirimanController.noPolController.text,
+                                    PengirimanController.dateController.text,
+                                    selectedProductLotIds,
+                                    kemasan,
+                                    selectedJumlahProductLotIds,
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(

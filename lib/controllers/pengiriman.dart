@@ -249,7 +249,7 @@ class PengirimanController extends GetxController {
     final endpoint = '$TransaksiPo/store/$poId';
     num totalLotTersedia = 0;
     try {
-      if (namaSupir.isEmpty && NoPol.isEmpty) {
+      if (namaSupir.isEmpty && NoPol.isEmpty && noPolId.isBlank) {
         Get.snackbar('Error', 'Data Tidak Boleh Kosong',
             backgroundColor: Colors.red, colorText: Colors.white);
       } else {
@@ -270,8 +270,52 @@ class PengirimanController extends GetxController {
 
         // if (totalLotTersedia >= totalQuantity) {
         PengirimanProvider().store(data, endpoint, token).then((value) {
-          print(value.statusCode);
-          print(value.body);
+          if (value.statusCode == 200) {
+            PengirimanController.kendaraanController.text = '';
+            PengirimanController.noPolController.text = '';
+            PengirimanController.supirController.text = '';
+            Get.offAll(() => HomePage());
+            Get.snackbar('Success', 'Pengiriman Berhasil',
+                backgroundColor: Color.fromARGB(255, 75, 212, 146),
+                colorText: Colors.white);
+          } else {
+            Get.snackbar('Error', 'Pengiriman Gagal',
+                backgroundColor: Colors.red, colorText: Colors.white);
+          }
+
+          EasyLoading.dismiss();
+        });
+      }
+    } catch (e, stackTrace) {
+      print('Exception occurred: $e\n$stackTrace');
+    }
+  }
+
+  void TransaksiDeliveryUpdate(noPolId, pengirimanId, int? kendaraan, namaSupir,
+      NoPol, tanggal, lot, Kemasan, jumlahLot) {
+    final endpoint = '$Delivery/update/$pengirimanId';
+    num totalLotTersedia = 0;
+    try {
+      if (namaSupir.isEmpty && NoPol.isEmpty && noPolId.isBlank) {
+        Get.snackbar('Error', 'Data Tidak Boleh Kosong',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        EasyLoading.show();
+        var data = {
+          "nomor_polisi_id": noPolId,
+          "kendaraan_id": kendaraan,
+          "nama_sopir": namaSupir,
+          "tanggal_pengiriman": tanggal,
+          "product_lot": lot,
+          "kemasan": Kemasan
+        };
+
+        for (int i = 0; i < jumlahLot.length; i++) {
+          totalLotTersedia += jumlahLot[i];
+        }
+
+        // if (totalLotTersedia >= totalQuantity) {
+        PengirimanProvider().update(data, endpoint, token).then((value) {
           if (value.statusCode == 200) {
             PengirimanController.kendaraanController.text = '';
             PengirimanController.noPolController.text = '';

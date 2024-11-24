@@ -31,7 +31,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   String? selectedValue2;
   int? customerId;
   int? KendaraanId;
-  late final rawValue;
+  late var rawValue = "";
   final order = Get.arguments;
   List<ProductLot>? productLots;
   List<bool>? isChecked;
@@ -46,7 +46,6 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   List<int> noPolIds = [];
   List<String> noPol = [];
 
-  @override
   @override
   void initState() {
     super.initState();
@@ -87,11 +86,6 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
           noPolMap[noPol[i]] = noPolIds[i];
         }
       });
-
-      // Debugging output untuk memeriksa hasil
-      print('noPolIds: $noPolIds');
-      print('noPol: $noPol');
-      print('noPolMap: $noPolMap');
     } catch (e) {
       print('Error fetching NoPol data: $e');
     }
@@ -285,6 +279,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                               setState(() {
                                 selectedValue1 = value;
                                 KendaraanId = kendaraanMap[selectedValue1!];
+                                selectedValue2 = null;
                                 // PengirimanController.noPolController.text =
                                 //     noPolMap[selectedValue1] ?? '';
 
@@ -355,7 +350,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                   child: DropdownButton2<String>(
                                     isExpanded: true,
                                     hint: Text(
-                                      'Pilih Kendaraan',
+                                      'Pilih Nomor Polisi',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Theme.of(context).hintColor,
@@ -376,13 +371,12 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                     onChanged: (String? value) {
                                       setState(() {
                                         selectedValue2 = value;
-                                        print(
-                                            'selectedValue2: $selectedValue2'); // Cek nilai selectedValue2
+                                        // Cek nilai selectedValue2
 
                                         // Cek apakah selectedValue2 ada di noPolMap
-                                        rawValue =
-                                            noPolMap[selectedValue2!] ?? '';
-                                        print(rawValue);
+
+                                        rawValue = noPolMap[selectedValue2!]
+                                            .toString();
                                       });
                                     },
                                   ),
@@ -545,8 +539,6 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                                         num selisih = totalBerat -
                                             order.detailPos[z].jumlahKgKemasan;
                                         num jumlahAsli = totalBerat - selisih;
-                                        print(jumlahAsli *
-                                            order.detailPos.length);
                                         pcsKirim.add(((jumlahAsli *
                                                     order.detailPos.length /
                                                     order.detailPos.length) /
@@ -596,6 +588,7 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                             child: ElevatedButton(
                               child: Text('Kirim'),
                               onPressed: () {
+                                print(rawValue);
                                 if (pcsKirim.length == 1 &&
                                     pcsKirim.contains(0)) {
                                   Get.snackbar('Error', 'Jumlah Lot Kurang',

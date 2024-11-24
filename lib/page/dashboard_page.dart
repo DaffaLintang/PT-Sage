@@ -196,7 +196,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Roles: " + roleText,
+                                    "Roles: ${SpUtil.getString("rolesName")}",
                                     style: TextStyle(
                                         color: Color(0xff9E0507),
                                         fontWeight: FontWeight.w600,

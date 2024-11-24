@@ -15,4 +15,16 @@ class PengirimanProvider extends GetConnect {
         },
         body: jsonEncode(data));
   }
+
+  Future<http.Response> update(
+      Map<String, dynamic> data, String endPoint, String? token) {
+    // return post(endPoint, data);
+    final uri = Uri.parse(endPoint);
+    return http.put(uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(data));
+  }
 }

@@ -55,6 +55,7 @@ class _DetailPenanggananKeluhanState extends State<DetailPenanggananKeluhan> {
     ;
     setState(() {
       detailKeluhan = fetchKeluhan;
+      print(fetchKeluhan);
     });
   }
 
