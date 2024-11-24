@@ -305,10 +305,11 @@ class PengirimanController extends GetxController {
           "nomor_polisi_id": noPolId,
           "kendaraan_id": kendaraan,
           "nama_sopir": namaSupir,
-          "tanggal_pengiriman": tanggal,
           "product_lot": lot,
           "kemasan": Kemasan
         };
+
+        print(data);
 
         for (int i = 0; i < jumlahLot.length; i++) {
           totalLotTersedia += jumlahLot[i];

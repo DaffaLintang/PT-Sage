@@ -12,6 +12,7 @@ import 'package:pt_sage/controllers/pengiriman.dart';
 import 'package:pt_sage/page/list_payment_page.dart';
 import 'package:pt_sage/page/list_penanganan-pelanggan_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
+import 'package:http/http.dart' as http;
 import 'dart:io' as io;
 
 import '../controllers/keluahanPelanggan_controller.dart';
@@ -59,6 +60,15 @@ class _PaymentPageState extends State<PaymentPage> {
       setState(() {
         _image1 = io.File(pickedFile.path);
       });
+    }
+  }
+
+  Future<bool> checkImageExists(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      return response.statusCode == 200; // URL valid jika status kode 200
+    } catch (e) {
+      return false; // Kesalahan jaringan atau lainnya
     }
   }
 
@@ -504,6 +514,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                                       (index) {
                                                     final detailPayment =
                                                         detailPayments[index];
+                                                    final imageUrl =
+                                                        '${MainUrl}/${detailPayment.buktiBayar}';
                                                     // print(detailPayment
                                                     //             .buktiBayar !=
                                                     //         null &&
@@ -518,60 +530,95 @@ class _PaymentPageState extends State<PaymentPage> {
                                                               detailPayment
                                                                   .buktiBayar
                                                                   .isNotEmpty)
-                                                          ? Container(
-                                                              width: 50,
-                                                              height: 50,
-                                                              child:
-                                                                  Image.network(
-                                                                Uri.encodeFull(
-                                                                    '${MainUrl}/${detailPayment.buktiBayar}'),
-                                                                width: 50,
-                                                                height: 50,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                loadingBuilder: (BuildContext
-                                                                        context,
-                                                                    Widget
-                                                                        child,
-                                                                    ImageChunkEvent?
-                                                                        loadingProgress) {
-                                                                  if (loadingProgress ==
-                                                                      null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Center(
-                                                                      child:
-                                                                          CircularProgressIndicator(
-                                                                        value: loadingProgress.expectedTotalBytes !=
-                                                                                null
-                                                                            ? loadingProgress.cumulativeBytesLoaded /
-                                                                                (loadingProgress.expectedTotalBytes!)
-                                                                            : null,
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                                errorBuilder: (BuildContext
-                                                                        context,
-                                                                    Object
-                                                                        exception,
-                                                                    StackTrace?
-                                                                        stackTrace) {
+                                                          ? FutureBuilder<bool>(
+                                                              future:
+                                                                  checkImageExists(
+                                                                      imageUrl),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .connectionState ==
+                                                                    ConnectionState
+                                                                        .waiting) {
+                                                                  // Indikator pemuatan saat memeriksa URL
+                                                                  return Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child:
+                                                                        CircularProgressIndicator(),
+                                                                  );
+                                                                } else if (snapshot
+                                                                        .hasError ||
+                                                                    snapshot.data ==
+                                                                        false) {
+                                                                  // Ikon fallback jika URL tidak valid atau kesalahan
                                                                   return Icon(
-                                                                      Icons
-                                                                          .broken_image,
-                                                                      size: 50,
-                                                                      color: Colors
-                                                                          .grey);
-                                                                },
-                                                              ),
+                                                                    Icons
+                                                                        .broken_image,
+                                                                    size: 50,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  );
+                                                                } else {
+                                                                  // Gambar jika URL valid
+                                                                  return Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child: Image
+                                                                        .network(
+                                                                      Uri.encodeFull(
+                                                                          imageUrl),
+                                                                      width: 50,
+                                                                      height:
+                                                                          50,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      loadingBuilder: (BuildContext context,
+                                                                          Widget
+                                                                              child,
+                                                                          ImageChunkEvent?
+                                                                              loadingProgress) {
+                                                                        if (loadingProgress ==
+                                                                            null) {
+                                                                          return child;
+                                                                        } else {
+                                                                          return Center(
+                                                                            child:
+                                                                                CircularProgressIndicator(
+                                                                              value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes!) : null,
+                                                                            ),
+                                                                          );
+                                                                        }
+                                                                      },
+                                                                      errorBuilder: (BuildContext context,
+                                                                          Object
+                                                                              exception,
+                                                                          StackTrace?
+                                                                              stackTrace) {
+                                                                        return Icon(
+                                                                          Icons
+                                                                              .broken_image,
+                                                                          size:
+                                                                              50,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
                                                             )
                                                           : Icon(
                                                               Icons
                                                                   .image_not_supported,
                                                               size: 50,
                                                               color:
-                                                                  Colors.grey),
+                                                                  Colors.grey,
+                                                            ),
                                                       title: Text(
                                                         currencyFormatter.format(
                                                             detailPayment
