@@ -83,7 +83,7 @@ class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
                         .center, // Centers the icon within the container
                     child: Icon(Icons.person),
                   ), // Center the icon vertically
-                  title: Text(customer.noMoU),
+                  title: Text("No MoU: ${customer.noMoU}"),
                   subtitle: Text(customer.customersName),
                   trailing: Icon(Icons.arrow_forward),
                   onTap: () {

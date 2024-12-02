@@ -17,6 +17,7 @@ class InvoiceController extends GetxController {
       final uri = Uri.parse(InvoiceApi);
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      print(response.body);
 
       if (response.statusCode == 200) {
         print(response.body);

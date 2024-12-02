@@ -70,6 +70,7 @@ class ApprovedController extends GetxController {
     final response =
         await ApprovedProvider().updateDataCustomer(token!, endpoint, data);
     print(response.statusCode);
+    print(response.headers);
     if (response.statusCode == 200) {
       Get.snackbar('Success', 'Customer Berhasil Di Approve',
           backgroundColor: Color.fromARGB(255, 75, 212, 146),

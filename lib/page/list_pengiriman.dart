@@ -378,9 +378,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                         itemCount: order!.length,
                                         itemBuilder: (context, index) {
                                           final orderDelivery = order![index];
-                                          print(orderDelivery.purchaseOrder
-                                              .detailPos[0].jumlahKgKemasan);
-                                          return widget.menuIds.contains(20) ||
+                                          return widget.menuIds.contains(21) ||
                                                   roles == 1
                                               ? orderDelivery.purchaseOrder
                                                               .status ==

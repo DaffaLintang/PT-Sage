@@ -234,7 +234,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => ListPOApprovel());
                                 },
-                                title: 'Sales Order Approval',
+                                title: 'Purchase Order Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
                           if (menuIds!.contains(16) ||
@@ -260,7 +260,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 onTap: () {
                                   Get.to(() => listPoPage());
                                 },
-                                title: 'Sales Order',
+                                title: 'Purchase Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
                           ],
                           if (menuIds!.contains(20) ||

@@ -49,6 +49,7 @@ class KeluhanPelangganController extends GetxController {
       final uri = Uri.parse("${KeluhanApi}");
       final response =
           await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      print(uri);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         List<dynamic> data = jsonResponse['data'];

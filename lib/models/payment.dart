@@ -25,7 +25,7 @@ class Payment {
     return Payment(
       id: json['id'],
       kodePengiriman: json['kode_pengiriman'],
-      jumlahBayar: json['jumlah_bayar'],
+      jumlahBayar: json['total_bayar'],
       kurangBayar: json['kurang_bayar'],
       statusPembayaran: json['status_pembayaran'],
       jatuhTempo: json['jatuh_tempo'],
