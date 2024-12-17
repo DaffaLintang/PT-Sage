@@ -1,6 +1,6 @@
 import 'package:sp_util/sp_util.dart';
 
-final String MainUrl = "https://testing.sikeppbas.com";
+final String MainUrl = "https://71b6-103-109-209-238.ngrok-free.app";
 
 final int? roles = SpUtil.getInt('roles');
 final String LoginAPI = "${MainUrl}/api/login";

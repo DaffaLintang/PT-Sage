@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pt_sage/apiVar.dart';
 import 'package:pt_sage/controllers/pengiriman.dart';
 import 'package:pt_sage/controllers/purchase_order_controller.dart';
 import 'package:pt_sage/models/lot.dart';
@@ -12,6 +13,7 @@ import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
 
+import '../controllers/menu_controller.dart';
 import '../models/kendaraan.dart';
 
 class PengirimanBarangPage extends StatefulWidget {
@@ -45,11 +47,14 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
   DateTime? pickedDate;
   List<int> noPolIds = [];
   List<String> noPol = [];
+  late final menus;
+  List<int> actionId = [];
 
   @override
   void initState() {
     super.initState();
     productId = order.productId;
+    checkIfIdExists();
     // Run initialization only if it's not already done
     if (!isInitialized) {
       // fetchCustomer();
@@ -71,6 +76,19 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
       // Set the flag to true after initialization
       isInitialized = true;
     }
+  }
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        if (action.actionId == 33) {
+          actionId.add(action.actionId);
+        }
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   Future<void> fetchNoPol(id) async {
@@ -576,72 +594,78 @@ class _PengirimanBarangPageState extends State<PengirimanBarangPage> {
                             "Jumlah: ${order.detailPos[index].jumlahKgKemasan} Kg"));
                   },
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 80),
-                        child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              child: Text('Kirim'),
-                              onPressed: () {
-                                print(rawValue);
-                                if (pcsKirim.length == 1 &&
-                                    pcsKirim.contains(0)) {
-                                  Get.snackbar('Error', 'Jumlah Lot Kurang',
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white);
-                                } else {
-                                  printValue();
-                                  // if (pcsKirim[index] == 0)
-                                  if (order.status == "setengah di kirim") {
-                                    // PengirimanController().store(
-                                    //     NopolIds,
-                                    //     order.kodePo,
-                                    //     order.customersId,
-                                    //     KendaraanId,
-                                    //     PengirimanController
-                                    //         .supirController.text,
-                                    //     PengirimanController
-                                    //         .noPolController.text,
-                                    //     PengirimanController
-                                    //         .dateController.text,
-                                    //     selectedProductLotIds,
-                                    //     kemasan,
-                                    //     selectedJumlahProductLotIds,
-                                    //     order.quantity);
-                                  } else {
-                                    PengirimanController().TransaksiPostore(
-                                        rawValue,
-                                        order.kodePo,
-                                        order.customersId,
-                                        KendaraanId,
-                                        PengirimanController
-                                            .supirController.text,
-                                        PengirimanController
-                                            .noPolController.text,
-                                        PengirimanController
-                                            .dateController.text,
-                                        selectedProductLotIds,
-                                        kemasan,
-                                        selectedJumlahProductLotIds,
-                                        order.quantity);
-                                  }
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff9E0507),
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
+                actionId.contains(33) || roles == 1
+                    ? Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 80),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    child: Text('Kirim'),
+                                    onPressed: () {
+                                      print(rawValue);
+                                      if (pcsKirim.length == 1 &&
+                                          pcsKirim.contains(0)) {
+                                        Get.snackbar(
+                                            'Error', 'Jumlah Lot Kurang',
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      } else {
+                                        printValue();
+                                        // if (pcsKirim[index] == 0)
+                                        if (order.status ==
+                                            "setengah di kirim") {
+                                          // PengirimanController().store(
+                                          //     NopolIds,
+                                          //     order.kodePo,
+                                          //     order.customersId,
+                                          //     KendaraanId,
+                                          //     PengirimanController
+                                          //         .supirController.text,
+                                          //     PengirimanController
+                                          //         .noPolController.text,
+                                          //     PengirimanController
+                                          //         .dateController.text,
+                                          //     selectedProductLotIds,
+                                          //     kemasan,
+                                          //     selectedJumlahProductLotIds,
+                                          //     order.quantity);
+                                        } else {
+                                          PengirimanController()
+                                              .TransaksiPostore(
+                                                  rawValue,
+                                                  order.kodePo,
+                                                  order.customersId,
+                                                  KendaraanId,
+                                                  PengirimanController
+                                                      .supirController.text,
+                                                  PengirimanController
+                                                      .noPolController.text,
+                                                  PengirimanController
+                                                      .dateController.text,
+                                                  selectedProductLotIds,
+                                                  kemasan,
+                                                  selectedJumlahProductLotIds,
+                                                  order.quantity);
+                                        }
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      primary: Color(0xff9E0507),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
               ],
             ),
           ),

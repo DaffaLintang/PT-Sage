@@ -32,7 +32,9 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   String? username;
   int? roles;
-  List<int>? menuIds;
+  late final menus;
+  List<int>? menuIds =
+      SpUtil.getStringList('menus')?.map((e) => int.parse(e)).toList();
 
   final MenuController controller = Get.put(MenuController());
 
@@ -59,9 +61,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void checkIfIdExists() async {
-    menuIds = await MenuController().getMenu();
+    menus = await MenuController().getMenu();
     setState(() {});
-    SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   @override
@@ -71,7 +73,6 @@ class _DashboardPageState extends State<DashboardPage> {
       username = SpUtil.getString('username') ?? "Username";
       roles = SpUtil.getInt('roles');
       checkIfIdExists();
-      print("vatar : ${SpUtil.getString('avatar')}");
     });
   }
 
@@ -229,7 +230,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         mainAxisSpacing: 10,
                         childAspectRatio: 1.2,
                         children: [
-                          if (menuIds!.contains(15) || roles == 1) ...[
+                          if (menuIds!.contains(16) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListPOApprovel());
@@ -237,8 +238,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Purchase Order Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          if (menuIds!.contains(16) ||
-                              menuIds!.contains(17) ||
+                          if (menuIds!.contains(0) ||
+                              menuIds!.contains(0) ||
                               roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -255,7 +256,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pelanggan Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          if (menuIds!.contains(28) || roles == 1) ...[
+                          if (menuIds!.contains(29) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => listPoPage());
@@ -263,8 +264,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Purchase Order',
                                 imageAsset: 'assets/Basket_alt_3.png'),
                           ],
-                          if (menuIds!.contains(20) ||
-                              menuIds!.contains(21) ||
+                          if (menuIds!.contains(21) ||
+                              menuIds!.contains(22) ||
                               roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -283,7 +284,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Keluhan Pelanggan',
                                 imageAsset: 'assets/Chat_alt_3.png'),
                           ],
-                          if (menuIds!.contains(22) || roles == 1) ...[
+                          if (menuIds!.contains(23) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListInvoicePage());
@@ -319,7 +320,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pembayaran',
                                 imageAsset: 'assets/money.png'),
                           ],
-                          if (menuIds!.contains(18) || roles == 1) ...[
+                          if (menuIds!.contains(19) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => DataGoodTurnOvrSlip());

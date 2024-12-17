@@ -21,7 +21,7 @@ class ListCustomerApprovel extends StatefulWidget {
 }
 
 class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
-  late Future<List<Customer>?> customers;
+  late Future<CustomerDataResponse?> customers;
 
   @override
   void initState() {
@@ -30,9 +30,10 @@ class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
     print(customers);
   }
 
-  Future<List<Customer>?> fetchApprovalCustomer() async {
+  Future<CustomerDataResponse?> fetchApprovalCustomer() async {
     final poController = ApprovedController();
-    List<Customer>? fetchedCustomer = await poController.getCustomerData();
+    CustomerDataResponse? fetchedCustomer =
+        await poController.getCustomerData();
     return fetchedCustomer;
   }
 
@@ -59,7 +60,7 @@ class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
         backgroundColor: Colors.white,
         elevation: 5,
       ),
-      body: FutureBuilder<List<Customer>?>(
+      body: FutureBuilder<CustomerDataResponse?>(
         future: customers,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,14 +69,17 @@ class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
           } else if (snapshot.hasError) {
             return Center(
                 child: Text("Error: ${snapshot.error}")); // Show error if any
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (!snapshot.hasData || snapshot.data!.customers.isEmpty) {
             return Center(child: Text("Tidak ada data")); // No data case
           } else {
             final customerList = snapshot.data!;
             return ListView.builder(
-              itemCount: customerList.length,
+              itemCount: customerList.customers.length,
               itemBuilder: (context, index) {
-                final customer = customerList[index];
+                final customer = customerList.customers[index];
+                final province = customerList.provinces[index];
+                final district = customerList.districts[index];
+                final regencie = customerList.regencies[index];
                 return ListTile(
                   leading: Container(
                     width: 40, // Set width to keep it within the leading slot
@@ -87,8 +91,15 @@ class _ListCustomerApprovelState extends State<ListCustomerApprovel> {
                   subtitle: Text(customer.customersName),
                   trailing: Icon(Icons.arrow_forward),
                   onTap: () {
-                    Get.to(() => DetailCustomerApprovalPage(),
-                        arguments: customer);
+                    Get.to(
+                      () => DetailCustomerApprovalPage(),
+                      arguments: {
+                        'customer': customer,
+                        'province': province,
+                        'district': district,
+                        'regencie': regencie,
+                      },
+                    );
                   },
                 );
               },

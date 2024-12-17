@@ -6,6 +6,7 @@ import 'package:pt_sage/controllers/approved_controller.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 import 'package:pt_sage/page/po_approvel_page.dart';
 
+import '../models/approveCustomer.dart';
 import 'List_customer_approval_page.dart';
 
 class DetailCustomerApprovalPage extends StatefulWidget {
@@ -18,8 +19,22 @@ class DetailCustomerApprovalPage extends StatefulWidget {
 
 class _DetailPoAppCustomervalPageState
     extends State<DetailCustomerApprovalPage> {
+  late final Customer customer;
+  late final Province province;
+  late final District district;
+  late final Regency regencie;
   DateTime? pickedDate;
-  final customer = Get.arguments;
+
+  @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments as Map<String, dynamic>;
+    customer = arguments['customer'] as Customer;
+    province = arguments['province'] as Province;
+    district = arguments['district'] as District;
+    regencie = arguments['regencie'] as Regency;
+  }
+
   // final NumberFormat currencyFormatter = NumberFormat.currency(
   //   locale: 'id',
   //   symbol: 'Rp',
@@ -203,6 +218,59 @@ class _DetailPoAppCustomervalPageState
                       SizedBox(
                         height: 15,
                       ),
+                      Text(
+                        "Provinsi",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(province.name),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "Kabupaten/ kota",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(regencie.name),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "Kecamatan",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(district.name),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "Alamat",
+                        style: TextStyle(
+                            color: Color(0xff9E0507),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(customer.address),
                       //       Text(
                       //         "DP",
                       //         style: TextStyle(

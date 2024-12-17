@@ -123,7 +123,7 @@ class ApprovedController extends GetxController {
     }
   }
 
-  Future<List<Customer>?> getCustomerData() async {
+  Future<CustomerDataResponse?> getCustomerData() async {
     try {
       final uri = Uri.parse(DataApproveCustomer);
       final response = await http.get(
@@ -136,12 +136,34 @@ class ApprovedController extends GetxController {
       );
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        List<dynamic> data = jsonResponse['data'];
-        List<Customer> customers = data.map((item) {
-          return Customer.fromJson(item as Map<String, dynamic>);
-        }).toList();
 
-        return customers;
+        // Parse customers
+        List<Customer> customers = (jsonResponse['data'] as List<dynamic>)
+            .map((item) => Customer.fromJson(item as Map<String, dynamic>))
+            .toList();
+
+        // Parse provinces
+        List<Province> provinces = (jsonResponse['province'] as List<dynamic>)
+            .map((item) => Province.fromJson(item))
+            .toList();
+
+        // Parse regencies
+        List<Regency> regencies = (jsonResponse['regency'] as List<dynamic>)
+            .map((item) => Regency.fromJson(item))
+            .toList();
+
+        // Parse districts
+        List<District> districts = (jsonResponse['district'] as List<dynamic>)
+            .map((item) => District.fromJson(item))
+            .toList();
+
+        // Return combined response
+        return CustomerDataResponse(
+          customers: customers,
+          provinces: provinces,
+          regencies: regencies,
+          districts: districts,
+        );
       } else {
         print('Error: Unexpected response format');
         throw Exception('Failed to load data: ${response.statusCode}');

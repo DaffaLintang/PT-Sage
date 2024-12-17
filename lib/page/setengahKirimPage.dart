@@ -11,7 +11,9 @@ import 'package:pt_sage/models/transaksiPoKendaraan.dart';
 import 'package:pt_sage/models/warper.dart';
 import 'package:pt_sage/page/home_page.dart';
 import 'package:pt_sage/page/list_pengiriman.dart';
+import 'package:sp_util/sp_util.dart';
 
+import '../controllers/menu_controller.dart';
 import '../models/kendaraan.dart';
 
 class SetenggahKirimPage extends StatefulWidget {
@@ -22,6 +24,7 @@ class SetenggahKirimPage extends StatefulWidget {
 }
 
 class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
+  final int? roles = SpUtil.getInt('roles');
   final List<String> items = [];
   final Map<String, int> customertMap = {};
   final Map<String, int> kendaraanMap = {};
@@ -45,12 +48,15 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
   DateTime? pickedDate;
   List<int> noPolIds = [];
   List<String> noPol = [];
+  late final menus;
+  List<int> actionId = [];
 
   @override
   void initState() {
     super.initState();
     // print(order);
     productId = order.purchaseOrder.productId;
+    checkIfIdExists();
 
     // Run initialization only if it's not already done
     if (!isInitialized) {
@@ -73,6 +79,19 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
       // Set the flag to true after initialization
       isInitialized = true;
     }
+  }
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        if (action.actionId == 36) {
+          actionId.add(action.actionId);
+        }
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   Future<void> fetchNoPol(id) async {
@@ -586,49 +605,56 @@ class _SetenggahKirimPageState extends State<SetenggahKirimPage> {
                             "Jumlah: ${order.purchaseOrder.detailPos[index].jumlahKgKemasan} Kg"));
                   },
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 80),
-                        child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              child: Text('Kirim'),
-                              onPressed: () {
-                                if (pcsKirim.length == 1 &&
-                                    pcsKirim.contains(0)) {
-                                  Get.snackbar('Error', 'Jumlah Lot Kurang',
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white);
-                                } else {
-                                  printValue();
-                                  PengirimanController()
-                                      .TransaksiDeliveryUpdate(
-                                    rawValue,
-                                    order.kodePengiriman,
-                                    KendaraanId,
-                                    PengirimanController.supirController.text,
-                                    PengirimanController.noPolController.text,
-                                    PengirimanController.dateController.text,
-                                    selectedProductLotIds,
-                                    kemasan,
-                                    selectedJumlahProductLotIds,
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xff9E0507),
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
+                actionId.contains(36) || roles == 1
+                    ? Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 80),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    child: Text('Kirim'),
+                                    onPressed: () {
+                                      if (pcsKirim.length == 1 &&
+                                          pcsKirim.contains(0)) {
+                                        Get.snackbar(
+                                            'Error', 'Jumlah Lot Kurang',
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white);
+                                      } else {
+                                        printValue();
+                                        PengirimanController()
+                                            .TransaksiDeliveryUpdate(
+                                          rawValue,
+                                          order.kodePengiriman,
+                                          KendaraanId,
+                                          PengirimanController
+                                              .supirController.text,
+                                          PengirimanController
+                                              .noPolController.text,
+                                          PengirimanController
+                                              .dateController.text,
+                                          selectedProductLotIds,
+                                          kemasan,
+                                          selectedJumlahProductLotIds,
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      primary: Color(0xff9E0507),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
               ],
             ),
           ),

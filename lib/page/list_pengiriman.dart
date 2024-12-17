@@ -35,13 +35,13 @@ class _ListPengirimanState extends State<ListPengiriman> {
     if (roles == 1) {
       fetchTransaksiPo();
       fetchDelivery();
-    } else if (widget.menuIds.contains(20) && widget.menuIds.contains(21) ||
+    } else if (widget.menuIds.contains(21) && widget.menuIds.contains(22) ||
         roles == 1) {
       fetchTransaksiPo();
       fetchDelivery();
-    } else if (widget.menuIds.contains(20) || roles == 1) {
-      fetchTransaksiPo();
     } else if (widget.menuIds.contains(21) || roles == 1) {
+      fetchTransaksiPo();
+    } else if (widget.menuIds.contains(22) || roles == 1) {
       fetchDelivery();
     }
   }
@@ -71,8 +71,8 @@ class _ListPengirimanState extends State<ListPengiriman> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> menuOptions = [
-      {'id': 20, 'label': 'Belum Kirim'},
-      {'id': 21, 'label': 'Setengah Kirim'},
+      {'id': 21, 'label': 'Belum Kirim'},
+      {'id': 22, 'label': 'Setengah Kirim'},
     ];
     final filteredOptions = menuOptions
         .where((option) => widget.menuIds.contains(option['id']))
@@ -165,7 +165,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                           borderRadius: BorderRadius.circular(12),
                           borderWidth: 1,
                         ),
-                  widget.menuIds.contains(20) && widget.menuIds.contains(21) ||
+                  widget.menuIds.contains(21) && widget.menuIds.contains(22) ||
                           roles == 1
                       ? _currentSelection == 0
                           ? Obx(() {
@@ -184,7 +184,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                     itemCount: orders?.length,
                                     itemBuilder: (context, index) {
                                       final order = orders![index];
-                                      return widget.menuIds.contains(20) ||
+                                      return widget.menuIds.contains(21) ||
                                               roles == 1
                                           ? order.status == 'approved' &&
                                                   order.deliveryStatus ==
@@ -246,7 +246,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                     itemCount: order!.length,
                                     itemBuilder: (context, index) {
                                       final orderDelivery = order![index];
-                                      return widget.menuIds.contains(20) ||
+                                      return widget.menuIds.contains(22) ||
                                               roles == 1
                                           ? orderDelivery.purchaseOrder
                                                           .status ==
@@ -298,7 +298,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                     });
                               }
                             })
-                      : widget.menuIds.contains(20)
+                      : widget.menuIds.contains(21)
                           ? Obx(() {
                               if (controller.isLoading.value) {
                                 return Center(
@@ -315,7 +315,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                     itemCount: orders?.length,
                                     itemBuilder: (context, index) {
                                       final order = orders![index];
-                                      return widget.menuIds.contains(20) ||
+                                      return widget.menuIds.contains(21) ||
                                               roles == 1
                                           ? order.status == 'approved' &&
                                                   order.deliveryStatus ==
@@ -361,7 +361,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                     });
                               }
                             })
-                          : widget.menuIds.contains(21)
+                          : widget.menuIds.contains(22)
                               ? Obx(() {
                                   if (controller.isLoading.value) {
                                     return Center(
@@ -378,7 +378,7 @@ class _ListPengirimanState extends State<ListPengiriman> {
                                         itemCount: order!.length,
                                         itemBuilder: (context, index) {
                                           final orderDelivery = order![index];
-                                          return widget.menuIds.contains(21) ||
+                                          return widget.menuIds.contains(22) ||
                                                   roles == 1
                                               ? orderDelivery.purchaseOrder
                                                               .status ==

@@ -89,7 +89,7 @@ class PdfInvoiceApi {
         SizedBox(height: 0.5 * PdfPageFormat.cm),
         buildPaymentInfo(font),
         SizedBox(height: 1 * PdfPageFormat.cm),
-        InvoiceFooter(invoiceData, ttdPembuat, ttdDirektur),
+        InvoiceFooter(invoiceData, ttdDirektur, ttdPembuat),
       ],
       footer: (context) => buildFooter(font),
     ));
@@ -108,7 +108,7 @@ class PdfInvoiceApi {
               ? pw.Image(img1, height: 100, width: 100)
               : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
-          pw.Text(fullNamePembuat!),
+          pw.Text(invoiceData.fullnamePemasaran),
           pw.Container(height: 1, width: 100, color: PdfColors.black)
         ]),
         pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
@@ -118,7 +118,7 @@ class PdfInvoiceApi {
               ? pw.Image(img2, height: 100, width: 100)
               : pw.SizedBox(height: 60, width: 60),
           pw.SizedBox(height: 5),
-          pw.Text(invoiceData.fullnamePemasaran),
+          pw.Text(fullNamePembuat!),
           pw.Container(height: 1, width: 100, color: PdfColors.black),
           pw.Text('Manajer Pemasaran'),
         ]),
@@ -267,7 +267,7 @@ class PdfInvoiceApi {
     ];
     final data = <String>[
       Utils.formatDate(invoiceData.delivery.purchaseOrder.deliveryDate),
-      'Tranfer',
+      'Tunai',
     ];
 
     return Column(

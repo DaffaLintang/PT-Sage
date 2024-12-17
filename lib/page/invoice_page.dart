@@ -15,6 +15,7 @@ import 'dart:io' as io;
 
 import 'package:pt_sage/providers/pdf_invoice_api.dart';
 
+import '../controllers/menu_controller.dart';
 import '../providers/pdf_api.dart';
 
 class InvoicePage extends StatefulWidget {
@@ -28,11 +29,32 @@ class _InvoicePageState extends State<InvoicePage> {
   io.File? _image;
   final ImagePicker _picker = ImagePicker();
   final invoice = Get.arguments;
+  late final menus;
+  List<int> actionId = [];
 
   final NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
     symbol: 'Rp',
   );
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        if (action.actionId == 39) {
+          actionId.add(action.actionId);
+        }
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfIdExists();
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -1128,71 +1150,75 @@ class _InvoicePageState extends State<InvoicePage> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
-                        child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              child: Text('Cetak Invoice'),
-                              onPressed: () async {
-                                print(
-                                    "length ${invoice.delivery.purchaseOrder.address.length}");
-                                final status =
-                                    await Permission.storage.request();
-                                if (status.isGranted) {
-                                  final pdfFile =
-                                      await PdfInvoiceApi.generate(invoice);
-                                  PdfApi.openFile(pdfFile);
-                                } else {
-                                  print('print error');
-                                }
-                                // if (invoice.buktiKirim != null &&
-                                //     invoice.buktiBayar != null) {
-                                //   // If both buktiKirim and buktiBayar are not null
-                                //   final status =
-                                //       await Permission.storage.request();
-                                //   if (status.isGranted) {
-                                //     final pdfFile =
-                                //         await PdfInvoiceApi.generate(invoice);
-                                //     PdfApi.openFile(pdfFile);
-                                //   } else {
-                                //     print('print error');
-                                //   }
-                                // } else if (_image == null || _image1 == null) {
-                                //   // If images are null
-                                //   Get.snackbar('Error', 'Bukti Belum Di Upload',
-                                //       backgroundColor: Colors.red,
-                                //       colorText: Colors.white);
-                                // } else {
-                                //   // If images are present, submit the form and generate the PDF
-                                //   InvoiceController().submitForm(
-                                //       _image!, _image1!, invoice.kodeInvoice);
-                                //   final status =
-                                //       await Permission.storage.request();
-                                //   if (status.isGranted) {
-                                //     final pdfFile =
-                                //         await PdfInvoiceApi.generate(invoice);
-                                //     PdfApi.openFile(pdfFile);
-                                //   } else {
-                                //     print('print error');
-                                //   }
-                                // }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                primary: Color(0xffBF1619),
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
+                actionId.contains(39) || roles == 1
+                    ? Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 20, bottom: 20),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    child: Text('Cetak Invoice'),
+                                    onPressed: () async {
+                                      print(
+                                          "length ${invoice.delivery.purchaseOrder.address.length}");
+                                      final status =
+                                          await Permission.storage.request();
+                                      if (status.isGranted) {
+                                        final pdfFile =
+                                            await PdfInvoiceApi.generate(
+                                                invoice);
+                                        PdfApi.openFile(pdfFile);
+                                      } else {
+                                        print('print error');
+                                      }
+                                      // if (invoice.buktiKirim != null &&
+                                      //     invoice.buktiBayar != null) {
+                                      //   // If both buktiKirim and buktiBayar are not null
+                                      //   final status =
+                                      //       await Permission.storage.request();
+                                      //   if (status.isGranted) {
+                                      //     final pdfFile =
+                                      //         await PdfInvoiceApi.generate(invoice);
+                                      //     PdfApi.openFile(pdfFile);
+                                      //   } else {
+                                      //     print('print error');
+                                      //   }
+                                      // } else if (_image == null || _image1 == null) {
+                                      //   // If images are null
+                                      //   Get.snackbar('Error', 'Bukti Belum Di Upload',
+                                      //       backgroundColor: Colors.red,
+                                      //       colorText: Colors.white);
+                                      // } else {
+                                      //   // If images are present, submit the form and generate the PDF
+                                      //   InvoiceController().submitForm(
+                                      //       _image!, _image1!, invoice.kodeInvoice);
+                                      //   final status =
+                                      //       await Permission.storage.request();
+                                      //   if (status.isGranted) {
+                                      //     final pdfFile =
+                                      //         await PdfInvoiceApi.generate(invoice);
+                                      //     PdfApi.openFile(pdfFile);
+                                      //   } else {
+                                      //     print('print error');
+                                      //   }
+                                      // }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      primary: Color(0xffBF1619),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
               ],
             ),
           ),
