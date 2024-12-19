@@ -61,7 +61,7 @@ class _ListKeluhanPageState extends State<ListKeluhanPage> {
           backgroundColor: Colors.white,
           elevation: 5,
           actions: [
-            widget.menuIds.contains(30) || roles == 1
+            widget.menuIds.contains(31) || roles == 1
                 ? IconButton(
                     onPressed: () {
                       Get.to(() => FeedBackPage());

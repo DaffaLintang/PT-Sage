@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io' as io;
 
 import '../controllers/keluahanPelanggan_controller.dart';
+import '../controllers/menu_controller.dart';
 import '../models/detailPayment.dart';
 import '../models/keluhanCustomer.dart';
 
@@ -32,6 +33,8 @@ class _PaymentPageState extends State<PaymentPage> {
     locale: 'id',
     symbol: 'Rp',
   );
+  late final menus;
+  List<int> actionId = [];
   DateTime? pickedDate;
   // final KeluhanPelangganController controller =
   //     Get.put(KeluhanPelangganController());
@@ -49,6 +52,18 @@ class _PaymentPageState extends State<PaymentPage> {
     super.initState();
     PaymentController.bayarText.text = '';
     fetchPayment();
+    checkIfIdExists();
+  }
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        actionId.add(action.actionId);
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   final ImagePicker _picker1 = ImagePicker();
@@ -285,319 +300,334 @@ class _PaymentPageState extends State<PaymentPage> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Bayar",
-                                style: TextStyle(
-                                    fontFamily:
-                                        GoogleFonts.rubik().fontFamily)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 5),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.black.withOpacity(0.05)),
-                              child: TextField(
-                                inputFormatters: <TextInputFormatter>[
-                                  CurrencyTextInputFormatter(
-                                    locale: 'id',
-                                    decimalDigits: 0,
-                                    symbol: 'Rp',
-                                  ),
-                                ],
-                                keyboardType: TextInputType.number,
-                                controller: PaymentController.bayarText,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Bayar',
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Color(0xff9E0507)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 7,
-                                    offset: Offset(
-                                        0, 5), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Bukti Pembayaran",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000)),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                            actionId.contains(41)
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      _image1 == null
-                                          ? Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xff9E0507))),
-                                              padding: EdgeInsets.all(8),
-                                              width: 70,
-                                              height: 70,
-                                              child: Center(
-                                                  child: Text(
-                                                "No Image",
-                                                textAlign: TextAlign.center,
-                                              )),
-                                            )
-                                          : Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xff6B8A7A))),
-                                              padding: EdgeInsets.all(8),
-                                              width: 70,
-                                              height: 70,
-                                              child: Image.file(_image1!),
+                                      Text("Bayar",
+                                          style: TextStyle(
+                                              fontFamily: GoogleFonts.rubik()
+                                                  .fontFamily)),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 5),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color:
+                                                Colors.black.withOpacity(0.05)),
+                                        child: TextField(
+                                          inputFormatters: <TextInputFormatter>[
+                                            CurrencyTextInputFormatter(
+                                              locale: 'id',
+                                              decimalDigits: 0,
+                                              symbol: 'Rp',
                                             ),
-                                      Row(
-                                        children: [
-                                          ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                onPrimary: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                primary: Color(0xff9E0507),
-                                              ),
-                                              onPressed: () => _pickImage1(
-                                                  ImageSource.gallery),
-                                              child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 10),
-                                                  child: Container(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 5,
-                                                              vertical: 1),
-                                                      child: Column(
-                                                        children: [
-                                                          Text(
-                                                            "Choose",
-                                                            style: TextStyle(
-                                                                fontSize: 12),
-                                                          ),
-                                                          Text(
-                                                            "Photo",
-                                                            style: TextStyle(
-                                                                fontSize: 12),
-                                                          ),
-                                                        ],
-                                                      )))),
-                                          SizedBox(
-                                            width: 10,
+                                          ],
+                                          keyboardType: TextInputType.number,
+                                          controller:
+                                              PaymentController.bayarText,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Bayar',
                                           ),
-                                          ElevatedButton(
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                              color: Color(0xff9E0507)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              spreadRadius: 2,
+                                              blurRadius: 7,
+                                              offset: Offset(0,
+                                                  5), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Bukti Pembayaran",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff000000)),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                _image1 == null
+                                                    ? Container(
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            border: Border.all(
+                                                                color: Color(
+                                                                    0xff9E0507))),
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        width: 70,
+                                                        height: 70,
+                                                        child: Center(
+                                                            child: Text(
+                                                          "No Image",
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        )),
+                                                      )
+                                                    : Container(
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            border: Border.all(
+                                                                color: Color(
+                                                                    0xff6B8A7A))),
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        width: 70,
+                                                        height: 70,
+                                                        child: Image.file(
+                                                            _image1!),
+                                                      ),
+                                                Row(
+                                                  children: [
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          primary:
+                                                              Color(0xff9E0507),
+                                                        ),
+                                                        onPressed: () =>
+                                                            _pickImage1(
+                                                                ImageSource
+                                                                    .gallery),
+                                                        child: Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        5,
+                                                                    vertical:
+                                                                        10),
+                                                            child: Container(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            5,
+                                                                        vertical:
+                                                                            1),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                      "Choose",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12),
+                                                                    ),
+                                                                    Text(
+                                                                      "Photo",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12),
+                                                                    ),
+                                                                  ],
+                                                                )))),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          onPrimary:
+                                                              Colors.white,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          primary:
+                                                              Color(0xff9E0507),
+                                                        ),
+                                                        onPressed: () =>
+                                                            _pickImage1(
+                                                                ImageSource
+                                                                    .camera),
+                                                        child: Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        5,
+                                                                    vertical:
+                                                                        10),
+                                                            child: Column(
+                                                              children: [
+                                                                Text(
+                                                                  "Take",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                Text(
+                                                                  "Photo",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                              ],
+                                                            ))),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 20),
+                                        child: SizedBox(
+                                            width: double.infinity,
+                                            height: 50,
+                                            child: ElevatedButton(
+                                              child: Text('Bayar'),
+                                              onPressed: () {
+                                                if (_image1 == null) {
+                                                  Get.snackbar('Error',
+                                                      'Bukti Belum Di Upload',
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      colorText: Colors.white);
+                                                } else {
+                                                  // If images are present, submit the form and generate the PDF
+                                                  PaymentController().store(
+                                                      int.tryParse(getRawValue(
+                                                          PaymentController
+                                                              .bayarText.text)),
+                                                      payment.kodePengiriman,
+                                                      _image1);
+                                                }
+                                              },
                                               style: ElevatedButton.styleFrom(
-                                                onPrimary: Colors.white,
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10)),
+                                                            12)),
                                                 primary: Color(0xff9E0507),
                                               ),
-                                              onPressed: () => _pickImage1(
-                                                  ImageSource.camera),
-                                              child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 10),
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        "Take",
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      Text(
-                                                        "Photo",
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                    ],
-                                                  ))),
-                                        ],
+                                            )),
                                       ),
                                     ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 20),
-                              child: SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    child: Text('Bayar'),
-                                    onPressed: () {
-                                      if (_image1 == null) {
-                                        Get.snackbar(
-                                            'Error', 'Bukti Belum Di Upload',
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white);
-                                      } else {
-                                        // If images are present, submit the form and generate the PDF
-                                        PaymentController().store(
-                                            int.tryParse(getRawValue(
-                                                PaymentController
-                                                    .bayarText.text)),
-                                            payment.kodePengiriman,
-                                            _image1);
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      primary: Color(0xff9E0507),
-                                    ),
-                                  )),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 20),
-                              child: SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    child: Text('Lihat Riwayat Pembayaran'),
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Riwayat Pembayaran"),
-                                            content: Container(
-                                              width: double
-                                                  .infinity, // Make sure content takes full width
-                                              constraints: BoxConstraints(
-                                                maxHeight:
-                                                    300, // Limit max height
-                                              ),
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize
-                                                      .min, // Ensure the column only takes necessary space
-                                                  children: List.generate(
-                                                      detailPayments.length,
-                                                      (index) {
-                                                    final detailPayment =
-                                                        detailPayments[index];
-                                                    final imageUrl =
-                                                        '${MainUrl}/${detailPayment.buktiBayar}';
-                                                    // print(detailPayment
-                                                    //             .buktiBayar !=
-                                                    //         null &&
-                                                    //     detailPayment.buktiBayar
-                                                    //         .isNotEmpty);
-                                                    // print(
-                                                    //     '${MainUrl}/${detailPayment.buktiBayar}');
-                                                    return ListTile(
-                                                      trailing: (detailPayment
-                                                                      .buktiBayar !=
-                                                                  null &&
-                                                              detailPayment
-                                                                  .buktiBayar
-                                                                  .isNotEmpty)
-                                                          ? FutureBuilder<bool>(
-                                                              future:
-                                                                  checkImageExists(
-                                                                      imageUrl),
-                                                              builder: (context,
-                                                                  snapshot) {
-                                                                if (snapshot
-                                                                        .connectionState ==
-                                                                    ConnectionState
-                                                                        .waiting) {
-                                                                  // Indikator pemuatan saat memeriksa URL
-                                                                  return Container(
-                                                                    width: 50,
-                                                                    height: 50,
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child:
-                                                                        CircularProgressIndicator(),
-                                                                  );
-                                                                } else if (snapshot
-                                                                        .hasError ||
-                                                                    snapshot.data ==
-                                                                        false) {
-                                                                  // Ikon fallback jika URL tidak valid atau kesalahan
-                                                                  return Icon(
-                                                                    Icons
-                                                                        .broken_image,
-                                                                    size: 50,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  );
-                                                                } else {
-                                                                  // Gambar jika URL valid
-                                                                  return Container(
-                                                                    width: 50,
-                                                                    height: 50,
-                                                                    child: Image
-                                                                        .network(
-                                                                      Uri.encodeFull(
-                                                                          imageUrl),
-                                                                      width: 50,
-                                                                      height:
-                                                                          50,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      loadingBuilder: (BuildContext context,
-                                                                          Widget
-                                                                              child,
-                                                                          ImageChunkEvent?
-                                                                              loadingProgress) {
-                                                                        if (loadingProgress ==
-                                                                            null) {
-                                                                          return child;
-                                                                        } else {
-                                                                          return Center(
-                                                                            child:
-                                                                                CircularProgressIndicator(
-                                                                              value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes!) : null,
-                                                                            ),
-                                                                          );
-                                                                        }
-                                                                      },
-                                                                      errorBuilder: (BuildContext context,
-                                                                          Object
-                                                                              exception,
-                                                                          StackTrace?
-                                                                              stackTrace) {
+                                  )
+                                : SizedBox(),
+                            actionId.contains(42)
+                                ? Container(
+                                    margin: EdgeInsets.only(top: 20),
+                                    child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          child:
+                                              Text('Lihat Riwayat Pembayaran'),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      "Riwayat Pembayaran"),
+                                                  content: Container(
+                                                    width: double
+                                                        .infinity, // Make sure content takes full width
+                                                    constraints: BoxConstraints(
+                                                      maxHeight:
+                                                          300, // Limit max height
+                                                    ),
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize
+                                                            .min, // Ensure the column only takes necessary space
+                                                        children: List.generate(
+                                                            detailPayments
+                                                                .length,
+                                                            (index) {
+                                                          final detailPayment =
+                                                              detailPayments[
+                                                                  index];
+                                                          final imageUrl =
+                                                              '${MainUrl}/${detailPayment.buktiBayar}';
+                                                          // print(detailPayment
+                                                          //             .buktiBayar !=
+                                                          //         null &&
+                                                          //     detailPayment.buktiBayar
+                                                          //         .isNotEmpty);
+                                                          // print(
+                                                          //     '${MainUrl}/${detailPayment.buktiBayar}');
+                                                          return ListTile(
+                                                            trailing: (detailPayment
+                                                                            .buktiBayar !=
+                                                                        null &&
+                                                                    detailPayment
+                                                                        .buktiBayar
+                                                                        .isNotEmpty)
+                                                                ? FutureBuilder<
+                                                                    bool>(
+                                                                    future: checkImageExists(
+                                                                        imageUrl),
+                                                                    builder:
+                                                                        (context,
+                                                                            snapshot) {
+                                                                      if (snapshot
+                                                                              .connectionState ==
+                                                                          ConnectionState
+                                                                              .waiting) {
+                                                                        // Indikator pemuatan saat memeriksa URL
+                                                                        return Container(
+                                                                          width:
+                                                                              50,
+                                                                          height:
+                                                                              50,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          child:
+                                                                              CircularProgressIndicator(),
+                                                                        );
+                                                                      } else if (snapshot
+                                                                              .hasError ||
+                                                                          snapshot.data ==
+                                                                              false) {
+                                                                        // Ikon fallback jika URL tidak valid atau kesalahan
                                                                         return Icon(
                                                                           Icons
                                                                               .broken_image,
@@ -606,54 +636,92 @@ class _PaymentPageState extends State<PaymentPage> {
                                                                           color:
                                                                               Colors.grey,
                                                                         );
-                                                                      },
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                            )
-                                                          : Icon(
-                                                              Icons
-                                                                  .image_not_supported,
-                                                              size: 50,
-                                                              color:
-                                                                  Colors.grey,
+                                                                      } else {
+                                                                        // Gambar jika URL valid
+                                                                        return Container(
+                                                                          width:
+                                                                              50,
+                                                                          height:
+                                                                              50,
+                                                                          child:
+                                                                              Image.network(
+                                                                            Uri.encodeFull(imageUrl),
+                                                                            width:
+                                                                                50,
+                                                                            height:
+                                                                                50,
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            loadingBuilder: (BuildContext context,
+                                                                                Widget child,
+                                                                                ImageChunkEvent? loadingProgress) {
+                                                                              if (loadingProgress == null) {
+                                                                                return child;
+                                                                              } else {
+                                                                                return Center(
+                                                                                  child: CircularProgressIndicator(
+                                                                                    value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes!) : null,
+                                                                                  ),
+                                                                                );
+                                                                              }
+                                                                            },
+                                                                            errorBuilder: (BuildContext context,
+                                                                                Object exception,
+                                                                                StackTrace? stackTrace) {
+                                                                              return Icon(
+                                                                                Icons.broken_image,
+                                                                                size: 50,
+                                                                                color: Colors.grey,
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                    },
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .image_not_supported,
+                                                                    size: 50,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                            title: Text(
+                                                              currencyFormatter.format(
+                                                                  detailPayment
+                                                                      .jumlahBayar),
                                                             ),
-                                                      title: Text(
-                                                        currencyFormatter.format(
-                                                            detailPayment
-                                                                .jumlahBayar),
+                                                            subtitle: Text(
+                                                                detailPayment
+                                                                    .tanggalBayar),
+                                                          );
+                                                        }),
                                                       ),
-                                                      subtitle: Text(
-                                                          detailPayment
-                                                              .tanggalBayar),
-                                                    );
-                                                  }),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Close the dialog
-                                                },
-                                                child: Text('Tutup'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      primary:
-                                          Color.fromARGB(255, 47, 133, 225),
-                                    ),
-                                  )),
-                            ),
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(); // Close the dialog
+                                                      },
+                                                      child: Text('Tutup'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            primary: Color.fromARGB(
+                                                255, 47, 133, 225),
+                                          ),
+                                        )),
+                                  )
+                                : SizedBox(),
                           ],
                         )
                 ],

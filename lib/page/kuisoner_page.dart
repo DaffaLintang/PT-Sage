@@ -56,17 +56,17 @@ class _KuisonerPageState extends State<KuisonerPage> {
   void initState() {
     super.initState();
 
-    if (widget.menuIds.contains(25) && widget.menuIds.contains(26) ||
+    if (widget.menuIds.contains(26) && widget.menuIds.contains(27) ||
         roles == 1) {
       fetchKuisioner();
       loadCustomersKp();
       fetchKuisionerPb();
       loadCustomersPb();
       getCompetitors();
-    } else if (widget.menuIds.contains(25) || roles == 1) {
+    } else if (widget.menuIds.contains(26) || roles == 1) {
       fetchKuisioner();
       loadCustomersKp();
-    } else if (widget.menuIds.contains(26) || roles == 1) {
+    } else if (widget.menuIds.contains(27) || roles == 1) {
       fetchKuisionerPb();
       loadCustomersPb();
       getCompetitors();
@@ -427,8 +427,8 @@ class _KuisonerPageState extends State<KuisonerPage> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> menuOptions = [
-      {'id': 25, 'label': 'Kepuasan Pelanggan'},
-      {'id': 26, 'label': 'Posisi Bersaing'},
+      {'id': 26, 'label': 'Kepuasan Pelanggan'},
+      {'id': 27, 'label': 'Posisi Bersaing'},
     ];
 
     final filteredOptions = menuOptions
@@ -532,8 +532,8 @@ class _KuisonerPageState extends State<KuisonerPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      widget.menuIds.contains(25) &&
-                                  widget.menuIds.contains(26) ||
+                      widget.menuIds.contains(26) &&
+                                  widget.menuIds.contains(27) ||
                               roles == 1
                           ? _currentSelection == 1
                               ? Padding(
@@ -1214,7 +1214,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     ],
                                   ),
                                 )
-                          : widget.menuIds.contains(25) || roles == 1
+                          : widget.menuIds.contains(26) || roles == 1
                               ? Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0,
@@ -1517,7 +1517,7 @@ class _KuisonerPageState extends State<KuisonerPage> {
                                     ],
                                   ),
                                 )
-                              : widget.menuIds.contains(26) || roles == 1
+                              : widget.menuIds.contains(27) || roles == 1
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0,

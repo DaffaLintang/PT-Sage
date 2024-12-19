@@ -6,6 +6,7 @@ import 'package:pt_sage/controllers/keluahanPelanggan_controller.dart';
 import 'package:pt_sage/page/feedback_page.dart';
 import 'package:pt_sage/page/invoice_page.dart';
 import 'package:pt_sage/page/penanganan_keluhan_pelanggan_page.dart';
+import '../controllers/menu_controller.dart';
 import '../models/invoice.dart';
 import '../models/keluhanCustomer.dart';
 import 'detail_keluhan_page.dart';
@@ -22,11 +23,26 @@ class ListPenanggananKeluhanPelangganPage extends StatefulWidget {
 class _ListPenanggananKeluhanPelangganPageState
     extends State<ListPenanggananKeluhanPelangganPage> {
   List<AdminKeluhanData>? keluhanData;
+  late final menus;
+  List<int> actionId = [];
 
   @override
   void initState() {
     super.initState();
     fetchKeluhan();
+    checkIfIdExists();
+    print(actionId);
+  }
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        actionId.add(action.actionId);
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   void fetchKeluhan() async {
@@ -91,10 +107,14 @@ class _ListPenanggananKeluhanPelangganPageState
                     title: Text(keluhan.kodeInvoice!),
                     subtitle: Text(keluhan.customer!.customersName!),
                     trailing: Icon(Icons.arrow_forward),
-                    onTap: () {
-                      Get.to(() => DetailPenanggananKeluhan(),
-                          arguments: keluhan);
-                    },
+                    onTap: actionId.contains(44)
+                        ? () {
+                            Get.to(
+                              DetailPenanggananKeluhan(),
+                              arguments: keluhan,
+                            );
+                          }
+                        : null,
                   );
                 }));
   }

@@ -238,8 +238,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Purchase Order Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          if (menuIds!.contains(0) ||
-                              menuIds!.contains(0) ||
+                          if (menuIds!.contains(17) ||
+                              menuIds!.contains(18) ||
                               roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -248,7 +248,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Keluhan Approval',
                                 imageAsset: 'assets/Done_ring_round.png'),
                           ],
-                          if (menuIds!.contains(14) || roles == 1) ...[
+                          if (menuIds!.contains(15) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListCustomerApprovel());
@@ -274,8 +274,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Pengiriman Barang',
                                 imageAsset: 'assets/package_car.png'),
                           ],
-                          if (menuIds!.contains(30) ||
-                              menuIds!.contains(31) ||
+                          if (menuIds!.contains(31) ||
+                              menuIds!.contains(32) ||
                               roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -292,8 +292,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Invoice',
                                 imageAsset: 'assets/File_dock.png'),
                           ],
-                          if (menuIds!.contains(25) ||
-                              menuIds!.contains(26) ||
+                          if (menuIds!.contains(26) ||
+                              menuIds!.contains(27) ||
                               roles == 1) ...[
                             Menu(
                                 onTap: () {
@@ -303,7 +303,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Kuisioner',
                                 imageAsset: 'assets/Desk_alt.png'),
                           ],
-                          if (menuIds!.contains(24) || roles == 1) ...[
+                          if (menuIds!.contains(25) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() =>
@@ -312,7 +312,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 title: 'Penangganan Keluhan',
                                 imageAsset: 'assets/comment-question.png'),
                           ],
-                          if (menuIds!.contains(23) || roles == 1) ...[
+                          if (menuIds!.contains(24) || roles == 1) ...[
                             Menu(
                                 onTap: () {
                                   Get.to(() => ListPaymentPage());

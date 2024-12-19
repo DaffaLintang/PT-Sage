@@ -8,6 +8,7 @@ import 'package:pt_sage/page/list_penanganan-pelanggan_page.dart';
 import 'package:pt_sage/page/list_po_page.dart';
 
 import '../controllers/keluahanPelanggan_controller.dart';
+import '../controllers/menu_controller.dart';
 import '../models/keluhanCustomer.dart';
 
 class DetailPenanggananKeluhan extends StatefulWidget {
@@ -32,6 +33,8 @@ class _DetailPenanggananKeluhanState extends State<DetailPenanggananKeluhan> {
     "Biasa",
     "Khusus",
   ];
+  late final menus;
+  List<int> actionId = [];
   String? selectedValue;
 
   String getRawValue(String formattedValue) {
@@ -47,6 +50,18 @@ class _DetailPenanggananKeluhanState extends State<DetailPenanggananKeluhan> {
   void initState() {
     super.initState();
     fetchKeluhan();
+    checkIfIdExists();
+  }
+
+  void checkIfIdExists() async {
+    menus = await MenuController().getMenu();
+    setState(() {});
+    for (var menu in menus) {
+      for (var action in menu.actions) {
+        actionId.add(action.actionId);
+      }
+    }
+    // SpUtil.putStringList('menus', menuIds!.map((id) => id.toString()).toList());
   }
 
   void fetchKeluhan() async {
@@ -248,142 +263,161 @@ class _DetailPenanggananKeluhanState extends State<DetailPenanggananKeluhan> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
-                          // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: 100,
-                              height: 45,
-                              child: ElevatedButton(
-                                child: Text(
-                                  'Retur',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                onPressed: () {
-                                  KeluhanPelangganController()
-                                      .retur(keluhan.id);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  primary: Color(0xff008000),
-                                ),
-                              )),
-                        ),
-                        Container(
-                          // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: 100,
-                              height: 45,
-                              child: ElevatedButton(
-                                child: Text('Non Retur',
-                                    style: TextStyle(fontSize: 12)),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text("Jenis Keluhan"),
-                                        content: StatefulBuilder(
-                                          builder: (BuildContext context,
-                                              StateSetter setState) {
-                                            return Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16, vertical: 5),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                color: Colors.black
-                                                    .withOpacity(0.05),
-                                              ),
-                                              child:
-                                                  DropdownButtonHideUnderline(
-                                                child: DropdownButton<String>(
-                                                  isExpanded: true,
-                                                  hint: Text(
-                                                    'Pilih Jenis Keluhan',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Theme.of(context)
-                                                          .hintColor,
+                        actionId.contains(44)
+                            ? Container(
+                                // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                child: SizedBox(
+                                    width: 100,
+                                    height: 45,
+                                    child: ElevatedButton(
+                                      child: Text(
+                                        'Retur',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      onPressed: () {
+                                        KeluhanPelangganController()
+                                            .retur(keluhan.id);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        primary: Color(0xff008000),
+                                      ),
+                                    )),
+                              )
+                            : SizedBox(),
+                        actionId.contains(45)
+                            ? Container(
+                                // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                child: SizedBox(
+                                    width: 100,
+                                    height: 45,
+                                    child: ElevatedButton(
+                                      child: Text('Non Retur',
+                                          style: TextStyle(fontSize: 12)),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text("Jenis Keluhan"),
+                                              content: StatefulBuilder(
+                                                builder: (BuildContext context,
+                                                    StateSetter setState) {
+                                                  return Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 16,
+                                                            vertical: 5),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      color: Colors.black
+                                                          .withOpacity(0.05),
                                                     ),
-                                                  ),
-                                                  items:
-                                                      items.map((String item) {
-                                                    return DropdownMenuItem<
-                                                        String>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item,
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          String>(
+                                                        isExpanded: true,
+                                                        hint: Text(
+                                                          'Pilih Jenis Keluhan',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .hintColor,
+                                                          ),
+                                                        ),
+                                                        items: items
+                                                            .map((String item) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: item,
+                                                            child: Text(
+                                                              item,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                        value:
+                                                            selectedValue, // Nilai yang dipilih
+                                                        onChanged:
+                                                            (String? value) {
+                                                          // Mengubah nilai yang dipilih dan memperbarui tampilan dialog
+                                                          setState(() {
+                                                            selectedValue =
+                                                                value;
+                                                          });
+                                                        },
                                                       ),
-                                                    );
-                                                  }).toList(),
-                                                  value:
-                                                      selectedValue, // Nilai yang dipilih
-                                                  onChanged: (String? value) {
-                                                    // Mengubah nilai yang dipilih dan memperbarui tampilan dialog
-                                                    setState(() {
-                                                      selectedValue = value;
-                                                    });
-                                                  },
-                                                ),
+                                                    ),
+                                                  );
+                                                },
                                               ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // Tutup dialog tanpa melakukan apapun
+                                                  },
+                                                  child: Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    // Ketika tombol submit ditekan
+                                                    KeluhanPelangganController()
+                                                        .nonRetur(keluhan.id,
+                                                            selectedValue);
+                                                    Navigator.of(context)
+                                                        .pop(); // Tutup dialog setelah submit
+                                                  },
+                                                  child: Text('Submit'),
+                                                ),
+                                              ],
                                             );
                                           },
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // Tutup dialog tanpa melakukan apapun
-                                            },
-                                            child: Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              // Ketika tombol submit ditekan
-                                              KeluhanPelangganController()
-                                                  .nonRetur(keluhan.id,
-                                                      selectedValue);
-                                              Navigator.of(context)
-                                                  .pop(); // Tutup dialog setelah submit
-                                            },
-                                            child: Text('Submit'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  primary: Color.fromARGB(255, 47, 133, 225),
-                                ),
-                              )),
-                        ),
-                        Container(
-                          // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: SizedBox(
-                              width: 100,
-                              height: 45,
-                              child: ElevatedButton(
-                                child: Text(
-                                  'Reject',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                onPressed: () {
-                                  KeluhanPelangganController()
-                                      .reject(keluhan.id);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  primary: Color(0xffBF1619),
-                                ),
-                              )),
-                        ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        primary:
+                                            Color.fromARGB(255, 47, 133, 225),
+                                      ),
+                                    )),
+                              )
+                            : SizedBox(),
+                        actionId.contains(46)
+                            ? Container(
+                                // margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                child: SizedBox(
+                                    width: 100,
+                                    height: 45,
+                                    child: ElevatedButton(
+                                      child: Text(
+                                        'Reject',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      onPressed: () {
+                                        KeluhanPelangganController()
+                                            .reject(keluhan.id);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        primary: Color(0xffBF1619),
+                                      ),
+                                    )),
+                              )
+                            : SizedBox(),
                       ],
                     )
                   ],
